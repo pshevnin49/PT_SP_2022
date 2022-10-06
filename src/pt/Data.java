@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class Data {
     private List<Stanice> vsicniZastavky;
+
+    private List<Velbloud> vsichniVelbloudy;
     private List<DruhVelbloudu> druhyVelbloudu;
     private List<Pozadavka> nesplnennePozadavky;
 
@@ -17,6 +19,7 @@ public class Data {
         this.vsicniZastavky = new ArrayList<>();
         this.druhyVelbloudu = new ArrayList<>();
         this.nesplnennePozadavky = new ArrayList<>();
+        vsichniVelbloudy = new ArrayList<>();
         this.aktualniCas = 0;
         this.oznaceniDeikstreho = 0;
 

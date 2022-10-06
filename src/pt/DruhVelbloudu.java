@@ -8,10 +8,8 @@ public class DruhVelbloudu {
     private int maxVzdalenost;
     private int minVzdalenost;
     private int vzdalenost;
-
     private int dobaPiti;
     private int maxZatizeni;
-
     private double pomerDruhuVelbloudu;
 
     public DruhVelbloudu(String nazev, int maxRychlost, int minRychlost, int maxVzdalenost, int minVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {

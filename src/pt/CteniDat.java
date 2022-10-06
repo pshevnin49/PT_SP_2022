@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class CteniDat {
     public String jmenoSouboru;
-
     public CteniDat(String jmenoSouboru){
         this.jmenoSouboru = jmenoSouboru;
     }

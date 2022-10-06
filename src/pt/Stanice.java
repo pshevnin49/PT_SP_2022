@@ -9,7 +9,6 @@ public abstract class Stanice {
     protected int id;
     protected int x;
     protected int y;
-
     protected boolean jeZpracovany; // pro algoritmus hledani kratsi cesty
     protected List<Soused> sousedi;
 
