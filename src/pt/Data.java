@@ -5,25 +5,28 @@ import java.util.List;
 import java.util.Random;
 
 public class Data {
-    private List<Stanice> vsicniZastavky;
-
+    private List<Stanice> graf;
     private List<Velbloud> vsichniVelbloudy;
+    private List<Sklad> vsichniSklady;
+    private List<Oaza> vsichniOazy;
     private List<DruhVelbloudu> druhyVelbloudu;
     private List<Pozadavka> nesplnennePozadavky;
-
     private List<Pozadavka> splnenePozadavky;
-    private int oznaceniDeikstreho;
     private int aktualniCas;
-    public Data(){
 
-        this.vsicniZastavky = new ArrayList<>();
+    public static final double MAX_VALUE = 1.7976931348623157E308;
+
+    public Data(){
+        this.graf = new ArrayList<>();
         this.druhyVelbloudu = new ArrayList<>();
         this.nesplnennePozadavky = new ArrayList<>();
         vsichniVelbloudy = new ArrayList<>();
+        vsichniSklady = new ArrayList<>();
+        vsichniOazy = new ArrayList<>();
         this.aktualniCas = 0;
-        this.oznaceniDeikstreho = 0;
-
     }
+
+
 
     /**
      * Methoda podle spravne pravdepodobnosti vraci nahodny druh noveho velbloudu
@@ -93,11 +96,32 @@ public class Data {
 
     }
 
-    public void inputPozadavka(Pozadavka pozadavka){
+    /**
+     * Vraci stanice, ktera jeste nebyla zpracovana to jest (jeji sousedi nemaji spoctenou vzdalenost
+     * a promnenna jeZpracovana == False) ale uz ma vlastni vzdalenost od zacatku cesty
+     * @return Stanice nezprStanice
+     */
+    public Stanice getNezpracovanouStanice(){
+        Stanice stanice = null;
 
-        this.nesplnennePozadavky.add(pozadavka);
-
+        for(int i = 0; i < graf.size(); i++){
+            if(!graf.get(i).jeZpracovany && jeVetsi(Data.MAX_VALUE, graf.get(i).getDistance()) && jeVetsi(graf.get(i).getDistance(), 0)){
+                stanice = graf.get(i);
+                return stanice;
+            }
+        }
+        return stanice;
     }
+
+    public void inputPozadavka(Pozadavka pozadavka){
+        this.nesplnennePozadavky.add(pozadavka);
+    }
+
+    public double getMinKrokCasu(){
+        double krok = -1;
+        return krok;
+    }
+
 
     /**
      * List vsech zastavek slouzi ke zpracovani sousedu.
@@ -106,9 +130,34 @@ public class Data {
      * @param zastavka
      */
     public void inputZastavka(Stanice zastavka){
+        this.graf.add(zastavka);
+    }
 
-        this.vsicniZastavky.add(zastavka);
+    public void pripravZastavky(){
+        for(int i = 0; i < graf.size(); i++){
+            graf.get(i).setDistance(Data.MAX_VALUE);
+            graf.get(i).setJeZpracovany(false);
+        }
+    }
 
+    public void inputOaza(Oaza oaza){
+        this.vsichniOazy.add(oaza);
+    }
+
+    public void inputSklad(Sklad sklad){
+        this.vsichniSklady.add(sklad);
+    }
+
+    public List<Sklad> getVsichniSklady(){
+        return vsichniSklady;
+    }
+
+    public List<Velbloud> getVsichniVelbloudy(){
+        return vsichniVelbloudy;
+    }
+
+    public List<Oaza> getVsichniOazy(){
+        return vsichniOazy;
     }
 
     public List<DruhVelbloudu> getDruhyVelbloudu() {
@@ -118,7 +167,12 @@ public class Data {
     public List<Pozadavka> getPozadavky() {
         return nesplnennePozadavky;
     }
-    public List<Stanice> getVsicniZastavky(){
-        return  vsicniZastavky;
+    public List<Stanice> getGraf(){
+        return graf;
+    }
+
+    public static boolean jeVetsi(double x1, double x2){
+        double eps = 0.0000000001;
+        return (x1 - x2) > eps;
     }
 }

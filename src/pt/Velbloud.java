@@ -5,11 +5,13 @@ import java.util.ArrayList;
 public class Velbloud {
 
     private Sklad domovskaStanice;
-    private ArrayList<Stanice> cesta;
+    private StackCesta cesta;
     private boolean jeNaCeste;
     private int indexAktStanice; // index aktualni stanici v listu
     private int rychlost;
     private double casBezPiti;
+
+    private Pozadavka actualniPozadavka;
     private int vzdalenost;
     private double aktualniCas;
 
@@ -21,10 +23,14 @@ public class Velbloud {
         this.jeNaCeste = false;
     }
 
+    public void zvetseniCasu(double cas){
+
+    }
+
     public Sklad getDomovskaStanice() {
         return domovskaStanice;
     }
-    public ArrayList<Stanice> getCesta() {
+    public StackCesta getCesta() {
         return cesta;
     }
     public int getRychlost() {
@@ -33,7 +39,7 @@ public class Velbloud {
     public int getVzdalenost() {
         return vzdalenost;
     }
-    public void zacniCestu(ArrayList<Stanice> cesta){
+    public void zacniCestu(StackCesta cesta){
         casBezPiti = 0;
         indexAktStanice = 0;
         this.cesta = cesta;

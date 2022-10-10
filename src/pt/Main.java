@@ -1,12 +1,11 @@
 package pt;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String [] args) throws FileNotFoundException {
+    public static void main(String [] args) throws FileNotFoundException, CloneNotSupportedException {
 
         CteniDat cteniDat = new CteniDat("tutorial.txt");
         Data baseDat = new Data();
@@ -16,14 +15,20 @@ public class Main {
         zpracovaniDat.zpracovani(data);
 
 
-        for(int i = 0; i < baseDat.getVsicniZastavky().size(); i++){
+        baseDat.getGraf().get(0).vypis();
+        System.out.println("vypis");
 
-            baseDat.getVsicniZastavky().get(i).vypis();
+        DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(baseDat);
 
+        dijkstra.getVsichniCesty(2);
+
+        for(int i = 0; i < baseDat.getGraf().size(); i++){
+            System.out.println((i+1) + ". " + baseDat.getGraf().get(i).getDistance());
         }
 
-        baseDat.getVsicniZastavky().get(0).vypis();
-        baseDat.getVsicniZastavky().get(0).getNejblizsiSoused().vypis();
+        for(int i = 0; i < baseDat.getGraf().size(); i++){
+            baseDat.getGraf().get(i).getCestaKeStanici().vypis();
+        }
 
     }
 }

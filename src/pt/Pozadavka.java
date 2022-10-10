@@ -7,16 +7,16 @@ public class Pozadavka {
     private int pocetKosu;
     private  int casOcekavani;
 
+    private int casDoruceni;
+
     public Pozadavka(int casPrichodu, int idOazy, int pocetKosu, int casOcekavani) {
         this.casPrichodu = casPrichodu;
         this.idOazy = idOazy;
         this.pocetKosu = pocetKosu;
         this.casOcekavani = casOcekavani;
+        this.casDoruceni = casPrichodu + casOcekavani;
     }
 
-    public Pozadavka() {
-
-    }
 
     public int getCasPrichodu() {
         return casPrichodu;

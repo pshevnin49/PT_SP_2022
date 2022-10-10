@@ -13,7 +13,7 @@ public class ZpracovaniDat {
     public void zpracovani(List<String> data){
 
         int pocetSkladu = Integer.parseInt(data.get(0));
-        int index = 1;
+        int indexSkladu = 1;
         int indexPoslSkladu = pocetSkladu * 5;
 
         for(int i = 1; i < indexPoslSkladu; i += 5){
@@ -23,28 +23,30 @@ public class ZpracovaniDat {
             int pocetKusu = Integer.parseInt(data.get(i + 2));
             int casObnoveni = Integer.parseInt(data.get(i + 3));
             int casNalozeni = Integer.parseInt(data.get(i + 4));
-            Stanice sklad = new Sklad(index, x, y, pocetKusu, casObnoveni, casNalozeni);
-            index++;
-            //baseDat.inputSklad(sklad);
+            Stanice sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni);
+
+            indexSkladu++;
+            baseDat.inputSklad((Sklad) sklad);
             baseDat.inputZastavka(sklad);
 
         }
 
         int pocetOaz = Integer.parseInt(data.get(indexPoslSkladu + 1));
+        int indexOaz = 1;
         int indexPoslOazy = indexPoslSkladu + (pocetOaz * 2) + 1;
-
 
         for(int i = indexPoslSkladu + 2; i < indexPoslOazy; i += 2){
 
             int x = Integer.parseInt(data.get(i));
             int y = Integer.parseInt(data.get(i + 1));
 
-            Stanice oaza = new Oaza(index, x, y);
+            Stanice oaza = new Oaza(indexSkladu, x, y);
 
-            //baseDat.inputOaza(oaza);
+            baseDat.inputOaza((Oaza) oaza);
             baseDat.inputZastavka(oaza);
 
-            index++;
+            indexSkladu++;
+            indexOaz++;
         }
 
         int pocetCest = Integer.parseInt(data.get(indexPoslOazy + 1));
@@ -56,13 +58,12 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
-            Stanice zastavka = baseDat.getVsicniZastavky().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
-            Stanice soused = baseDat.getVsicniZastavky().get(indexSousedu - 1);
+            Stanice zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
+            Stanice soused = baseDat.getGraf().get(indexSousedu - 1);
 
-            zastavka.vlozSouseda(soused);
-            soused.vlozSouseda(soused);
+            zastavka.vlozHranu(soused);
+            soused.vlozHranu(soused);
 
-            //System.out.println( index + ", " + x + ", " + y);
 
         }
 
