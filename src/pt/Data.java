@@ -14,6 +14,7 @@ public class Data {
     private List<Pozadavka> splnenePozadavky;
     private int oznaceniDeikstreho;
     private int aktualniCas;
+
     public Data(){
 
         this.vsicniZastavky = new ArrayList<>();
@@ -71,6 +72,7 @@ public class Data {
 
         while(index < nesplnennePozadavky.size()){
 
+//            TODO: posmotri 2 str zadani a pozadavkach, aktualni cas by nemel byt zahrnout, takze podminka bez =, proste < aktualniCas
             if(nesplnennePozadavky.get(index).getCasPrichodu() <= aktualniCas){
 
                 aktualniPozadavky.add(nesplnennePozadavky.get(index));

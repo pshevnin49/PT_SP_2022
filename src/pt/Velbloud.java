@@ -13,13 +13,14 @@ public class Velbloud {
     private int vzdalenost;
     private double aktualniCas;
 
-    public Velbloud(int rychlost, int vzdalenost, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, int aktualniCas) {
-        this.rychlost = rychlost;
-        this.vzdalenost = vzdalenost;
+    public Velbloud(DruhVelbloudu druhVelbloudu, Sklad domovskaStanice) {
+        this.rychlost = druhVelbloudu.randRych();
+        this.vzdalenost = druhVelbloudu.randVzdal();;
         this.domovskaStanice = domovskaStanice;
-        this.aktualniCas = aktualniCas;
+        this.aktualniCas = 0; // TODO: resolve this
         this.jeNaCeste = false;
     }
+
 
     public Sklad getDomovskaStanice() {
         return domovskaStanice;

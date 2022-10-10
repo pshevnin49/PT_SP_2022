@@ -100,5 +100,7 @@ public class ZpracovaniDat {
             baseDat.inputPozadavka(pozadavka);
 
         }
+//          just testing ;)
+//        Velbloud velbloud = ((Sklad) baseDat.getVsicniZastavky().get(0)).getNovyVelbloud(baseDat.getDruhyVelbloudu().get(0));
     }
 }

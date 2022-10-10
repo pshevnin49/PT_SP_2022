@@ -50,4 +50,10 @@ public class Sklad extends Stanice {
     }
 
 
+    public Velbloud getNovyVelbloud(DruhVelbloudu druh){
+
+        return new Velbloud(druh, this);
+    }
+
+
 }

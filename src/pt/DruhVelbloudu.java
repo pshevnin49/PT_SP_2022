@@ -1,5 +1,7 @@
 package pt;
 
+import java.util.Random;
+
 public class DruhVelbloudu {
     private String nazev;
     private int maxRychlost;
@@ -12,7 +14,9 @@ public class DruhVelbloudu {
     private int maxZatizeni;
     private double pomerDruhuVelbloudu;
 
-    public DruhVelbloudu(String nazev, int maxRychlost, int minRychlost, int maxVzdalenost, int minVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
+    private Random rand = new Random();
+
+    public DruhVelbloudu(String nazev, int minRychlost, int maxRychlost, int minVzdalenost, int maxVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
         this.nazev = nazev;
         this.maxRychlost = maxRychlost;
         this.minRychlost = minRychlost;
@@ -57,5 +61,13 @@ public class DruhVelbloudu {
 
     public void vypis(){
         System.out.println(nazev + " max rychlost:" + maxRychlost + " min rychlost:" + minRychlost + " max vzd.:" + maxVzdalenost + " min vzd.: " + minVzdalenost);
+    }
+
+    public int randRych() {
+        return minRychlost + rand.nextInt(maxRychlost - minRychlost + 1);
+    }
+
+    public int randVzdal() {
+        return minVzdalenost + rand.nextInt(maxVzdalenost - minVzdalenost + 1);
     }
 }
