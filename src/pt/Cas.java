@@ -18,9 +18,7 @@ public class Cas {
         List<Velbloud> velbloudy = baseDat.getVsichniVelbloudy();
 
         for(int i = 0; i < sklady.size(); i++){
-
             sklady.get(i).zvetseniCasu(cas);
-
         }
 
         for(int i = 0; i < velbloudy.size(); i++){

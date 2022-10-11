@@ -43,7 +43,6 @@ public class Data {
         for(int i = 0; i < druhyVelbloudu.size(); i++){
             horniHranice += (int) (druhyVelbloudu.get(i).getPomerDruhuVelbloudu() * 100);
 
-
             if(randCislo < horniHranice && randCislo >= dolniHranice){
                 druhVelbloudu = druhyVelbloudu.get(i);
                 return druhVelbloudu;
@@ -52,7 +51,6 @@ public class Data {
             dolniHranice = horniHranice;
 
         }
-
         return null;
     }
 
@@ -81,13 +79,9 @@ public class Data {
             else{
                 index++;
             }
-
         }
-
         return aktualniPozadavky;
     }
-
-
     public void inputDruhVelbloudu(DruhVelbloudu druh){
 
         this.druhyVelbloudu.add(druh);
@@ -115,11 +109,34 @@ public class Data {
         this.nesplnennePozadavky.add(pozadavka);
     }
 
+    /**
+     * Metoda prochazi vsichni velbloudy, a vsichni objednavky a hleda nejblizsi akci k aktualnimu casu
+     * pak vraci (casAkci - aktualniCas) = casovy posuv od aktualniho casu do casu splneni akci
+     * @return krok
+     */
     public double getMinKrokCasu(){
-        double krok = -1;
+        double krok = MAX_VALUE;
+        double novyKrok;
+
+        for(int i = 0; i < vsichniVelbloudy.size(); i++){
+            novyKrok = vsichniVelbloudy.get(i).getPristiAkce();
+
+            if(novyKrok < krok){
+                krok = novyKrok;
+            }
+        }
+
+        for(int i = 0; i < nesplnennePozadavky.size(); i++){
+
+            novyKrok = nesplnennePozadavky.get(i).getCasPrichodu();
+
+            if(novyKrok < krok){
+                krok = novyKrok;
+            }
+        }
+
         return krok;
     }
-
 
     /**
      * List vsech zastavek slouzi ke zpracovani sousedu.
@@ -131,6 +148,9 @@ public class Data {
         this.graf.add(zastavka);
     }
 
+    /**
+     * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
+     */
     public void pripravZastavky(){
         for(int i = 0; i < graf.size(); i++){
             graf.get(i).setDistance(Data.MAX_VALUE);
@@ -169,6 +189,12 @@ public class Data {
         return graf;
     }
 
+    /**
+     * Prijima dva double cisla, a vrati true pokud x1 je vetsi nez x2 v opacnem pripade vrati false
+     * @param x1
+     * @param x2
+     * @return
+     */
     public static boolean jeVetsi(double x1, double x2){
         double eps = 0.0000000001;
         return (x1 - x2) > eps;

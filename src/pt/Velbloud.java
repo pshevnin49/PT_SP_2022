@@ -14,7 +14,7 @@ public class Velbloud {
     private Pozadavka actualniPozadavka;
     private int vzdalenost;
     private double aktualniCas;
-
+    private double pristiAkce;
     public Velbloud(int rychlost, int vzdalenost, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
         this.rychlost = rychlost;
         this.vzdalenost = vzdalenost;
@@ -27,6 +27,9 @@ public class Velbloud {
 
     }
 
+    public double getPristiAkce(){
+        return pristiAkce;
+    }
     public Sklad getDomovskaStanice() {
         return domovskaStanice;
     }
