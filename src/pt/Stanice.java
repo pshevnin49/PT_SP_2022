@@ -60,6 +60,11 @@ public abstract class Stanice {
     }
     void vypis(){
         System.out.println(id + ". x:" + x + " y:" + y);
+        System.out.println("Sousedi: ");
+
+        for(int i = 0; i < hrany.size(); i++){
+            hrany.get(i).vypis();
+        }
     }
     public double spocitejVzdalenost(Stanice stanice) {
         return Math.sqrt((x - stanice.getX()) * (x - stanice.getX()) + (y - stanice.getY()) * (y - stanice.getY()));

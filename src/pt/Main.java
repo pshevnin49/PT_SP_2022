@@ -15,7 +15,9 @@ public class Main {
         zpracovaniDat.zpracovani(data);
 
 
-        baseDat.getGraf().get(0).vypis();
+        baseDat.getGraf().get(2).vypis();
+
+
         System.out.println("vypis");
 
         DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(baseDat);

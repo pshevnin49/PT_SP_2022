@@ -6,15 +6,15 @@
 🐪 Pocet oaz O: 🏜
 9
 🐪 Definice oaz (souradnice x,y) 🏜
-0 0
-1 1
-2 1
-3 1
-6 1
-1 3
-1 4
-2 4
-3 3
+0 0 🐪 2 🏜
+1 1 🐪 3 🏜
+2 1 🐪 4 🏜
+3 1 🐪 5 🏜
+6 1 🐪 6 🏜
+1 3 🐪 7 🏜
+1 4 🐪 8 🏜
+2 4 🐪 9 🏜
+3 3 🐪 10 🏜
 🐪 Pocet cest C: 🏜
 10
 🐪 Definice cest (jedineho skladu do kazde z oaz) 🏜

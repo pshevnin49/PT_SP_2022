@@ -58,11 +58,14 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
+//            System.out.println(indexZastavky + " IndexZastavky");
+//            System.out.println(indexSousedu + " IndexSousedu");
+
             Stanice zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
             Stanice soused = baseDat.getGraf().get(indexSousedu - 1);
 
             zastavka.vlozHranu(soused);
-            soused.vlozHranu(soused);
+            soused.vlozHranu(zastavka);
 
 
         }
@@ -101,5 +104,7 @@ public class ZpracovaniDat {
             baseDat.inputPozadavka(pozadavka);
 
         }
+//          just testing ;)
+//        Velbloud velbloud = ((Sklad) baseDat.getVsicniZastavky().get(0)).getNovyVelbloud(baseDat.getDruhyVelbloudu().get(0));
     }
 }

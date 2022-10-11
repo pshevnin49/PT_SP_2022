@@ -17,4 +17,8 @@ public class Hrana {
         return stanice;
     }
 
+    public void vypis(){
+        System.out.println("    Soused: " + stanice.getId() + " dalka: " + vzdalenost);
+    }
+
 }
