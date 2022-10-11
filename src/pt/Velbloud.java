@@ -15,7 +15,7 @@ public class Velbloud {
     private int vzdalenost;
     private double aktualniCas;
 
-    public Velbloud(int rychlost, int vzdalenost, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, int aktualniCas) {
+    public Velbloud(int rychlost, int vzdalenost, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
         this.rychlost = rychlost;
         this.vzdalenost = vzdalenost;
         this.domovskaStanice = domovskaStanice;

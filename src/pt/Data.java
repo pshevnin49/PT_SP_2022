@@ -26,8 +26,6 @@ public class Data {
         this.aktualniCas = 0;
     }
 
-
-
     /**
      * Methoda podle spravne pravdepodobnosti vraci nahodny druh noveho velbloudu
      * @return druhVelbloudu
