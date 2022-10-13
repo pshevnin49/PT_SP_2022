@@ -6,6 +6,7 @@ public class Velbloud {
 
     private Sklad domovskaStanice;
     private StackCesta cesta;
+    private StackCesta cestaZpatky;
     private boolean jeNaCeste;
     private int indexAktStanice; // index aktualni stanici v listu
     private int rychlost;
@@ -15,11 +16,13 @@ public class Velbloud {
     private int vzdalenost;
     private double aktualniCas;
     private double pristiAkce;
+
     public Velbloud(int rychlost, int vzdalenost, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
         this.rychlost = rychlost;
         this.vzdalenost = vzdalenost;
         this.domovskaStanice = domovskaStanice;
         this.aktualniCas = aktualniCas;
+        this.cestaZpatky = new StackCesta();
         this.jeNaCeste = false;
     }
 
@@ -44,10 +47,11 @@ public class Velbloud {
     }
     public void zacniCestu(StackCesta cesta){
         casBezPiti = 0;
-        indexAktStanice = 0;
         this.cesta = cesta;
         this.jeNaCeste = true;
     }
+
+
 
 }
 

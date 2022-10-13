@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Random;
 
 public class Data {
-    private List<Stanice> graf;
+    private List<Bod> graf;
     private List<Velbloud> vsichniVelbloudy;
     private List<Sklad> vsichniSklady;
     private List<Oaza> vsichniOazy;
     private List<DruhVelbloudu> druhyVelbloudu;
     private List<Pozadavka> nesplnennePozadavky;
     private List<Pozadavka> splnenePozadavky;
-    private int aktualniCas;
+    private double aktualniCas;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
 
@@ -93,8 +93,8 @@ public class Data {
      * a promnenna jeZpracovana == False) ale uz ma vlastni vzdalenost od zacatku cesty
      * @return Stanice nezprStanice
      */
-    public Stanice getNezpracovanouStanice(){
-        Stanice stanice = null;
+    public Bod getNezpracovanouStanice(){
+        Bod stanice = null;
 
         for(int i = 0; i < graf.size(); i++){
             if(!graf.get(i).jeZpracovany && jeVetsi(Data.MAX_VALUE, graf.get(i).getDistance()) && jeVetsi(graf.get(i).getDistance(), 0)){
@@ -139,14 +139,23 @@ public class Data {
     }
 
     /**
-     * List vsech zastavek slouzi ke zpracovani sousedu.
-     * V listu jsou sklady a oazy v rade, realny index = pozice v listu + 1
-     * (na nulove pozici se nachazi prvni prvek)
-     * @param zastavka
+     * Zvetsuje cas cele simulace o zadanou velikost
+     * @param cas
      */
-    public void inputZastavka(Stanice zastavka){
-        this.graf.add(zastavka);
+    public void zvetseniCasuSimulace(double cas){
+
+        for(int i = 0; i < vsichniSklady.size(); i++){
+            vsichniSklady.get(i).zvetseniCasu(cas);
+        }
+
+        for(int i = 0; i < vsichniSklady.size(); i++){
+            vsichniSklady.get(i).zvetseniCasu(cas);
+        }
+
+        aktualniCas += cas;
+
     }
+
 
     /**
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
@@ -157,6 +166,17 @@ public class Data {
             graf.get(i).setJeZpracovany(false);
         }
     }
+
+    /**
+     * List vsech zastavek slouzi ke zpracovani sousedu.
+     * V listu jsou sklady a oazy v rade, realny index = pozice v listu + 1
+     * (na nulove pozici se nachazi prvni prvek)
+     * @param zastavka
+     */
+    public void inputZastavka(Bod zastavka){
+        this.graf.add(zastavka);
+    }
+
 
     public void inputOaza(Oaza oaza){
         this.vsichniOazy.add(oaza);
@@ -185,7 +205,7 @@ public class Data {
     public List<Pozadavka> getPozadavky() {
         return nesplnennePozadavky;
     }
-    public List<Stanice> getGraf(){
+    public List<Bod> getGraf(){
         return graf;
     }
 

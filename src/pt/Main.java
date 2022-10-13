@@ -20,14 +20,19 @@ public class Main {
 
         DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(baseDat);
 
-        dijkstra.getVsichniCesty(2);
+        List<StackCesta> stackCest = dijkstra.getVsichniCesty(2);
 
-        for(int i = 0; i < baseDat.getGraf().size(); i++){
-            System.out.println((i+1) + ". " + baseDat.getGraf().get(i).getDistance());
+        for(int i = 0; i < stackCest.size(); i++){
+            stackCest.get(i).vypis();
         }
 
+
+        System.out.println("Vsichni cesty");
+
         for(int i = 0; i < baseDat.getGraf().size(); i++){
+
             baseDat.getGraf().get(i).getCestaKeStanici().vypis();
+
         }
 
     }

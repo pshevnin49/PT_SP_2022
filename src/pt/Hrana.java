@@ -3,8 +3,8 @@ package pt;
 public class Hrana {
 
     private double vzdalenost;
-    private Stanice stanice;
-    public Hrana(Stanice stanice, double vzdalenost){
+    private Bod stanice;
+    public Hrana(Bod stanice, double vzdalenost){
 
         this.stanice = stanice;
         this.vzdalenost = vzdalenost;
@@ -13,7 +13,7 @@ public class Hrana {
     public double getVzdalenost(){
         return vzdalenost;
     }
-    public Stanice getStanice(){
+    public Bod getStanice(){
         return stanice;
     }
 

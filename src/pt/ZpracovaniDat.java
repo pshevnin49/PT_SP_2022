@@ -23,7 +23,7 @@ public class ZpracovaniDat {
             int pocetKusu = Integer.parseInt(data.get(i + 2));
             int casObnoveni = Integer.parseInt(data.get(i + 3));
             int casNalozeni = Integer.parseInt(data.get(i + 4));
-            Stanice sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni);
+            Bod sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni);
 
             indexSkladu++;
             baseDat.inputSklad((Sklad) sklad);
@@ -40,7 +40,7 @@ public class ZpracovaniDat {
             int x = Integer.parseInt(data.get(i));
             int y = Integer.parseInt(data.get(i + 1));
 
-            Stanice oaza = new Oaza(indexSkladu, x, y);
+            Bod oaza = new Oaza(indexSkladu, x, y);
 
             baseDat.inputOaza((Oaza) oaza);
             baseDat.inputZastavka(oaza);
@@ -58,11 +58,11 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
-            Stanice zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
-            Stanice soused = baseDat.getGraf().get(indexSousedu - 1);
+            Bod zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
+            Bod soused = baseDat.getGraf().get(indexSousedu - 1);
 
             zastavka.vlozHranu(soused);
-            soused.vlozHranu(soused);
+            soused.vlozHranu(zastavka);
 
 
         }

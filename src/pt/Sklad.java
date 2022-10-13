@@ -3,7 +3,7 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sklad extends Stanice {
+public class Sklad extends Bod {
 
     private int pocetKosu;
     private int casObnoveni;
@@ -39,6 +39,8 @@ public class Sklad extends Stanice {
         }
 
     }
+
+
 
     public void pridejVelblouda(Velbloud velbloud){
         domVelbloudy.add(velbloud);

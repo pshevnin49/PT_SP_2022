@@ -4,7 +4,7 @@ public class StackCesta implements Cloneable{
 
     private BodCesty top = null;
 
-    public void pridej(Stanice novaStanice, double vzdalenost){// переписать чтобы принимало просто Stanice а BodCesty создавался внутри
+    public void pridej(Bod novaStanice, double vzdalenost){// переписать чтобы принимало просто Stanice а BodCesty создавался внутри
 
         BodCesty novyBod = new BodCesty(novaStanice, vzdalenost, top);
 
@@ -42,14 +42,17 @@ public class StackCesta implements Cloneable{
         BodCesty bodCesty = top;
 
         while(bodCesty != null){
-            System.out.print("Cesta: " + bodCesty.zastavka.getId()  + " -> " + bodCesty.vzdalenost + " -> ");
+            System.out.print("from: " + bodCesty.bod.getId()  + " -> " + bodCesty.vzdalenost + " -> ");
             bodCesty = bodCesty.next;
         }
-        System.out.println(getCelaDalka());
+        System.out.println(getCelaDalka() + "O");
+    }
+
+    public Bod getPrvniBod(){
+        return top.bod;
     }
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-
 }

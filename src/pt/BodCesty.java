@@ -2,13 +2,13 @@ package pt;
 
 public class BodCesty {
 
-    public Stanice zastavka;
+    public Bod bod;
     public double vzdalenost;
     public BodCesty next;
 
-    public BodCesty(Stanice zastavka, double vzdalenost, BodCesty next){
+    public BodCesty(Bod zastavka, double vzdalenost, BodCesty next){
 
-        this.zastavka = zastavka;
+        this.bod = zastavka;
         this.vzdalenost = vzdalenost;
         this.next = next;
 

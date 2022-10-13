@@ -2,7 +2,7 @@ package pt;
 
 import java.util.*;
 
-public abstract class Stanice {
+public abstract class Bod {
 
     protected int id;
     protected int x;
@@ -13,7 +13,7 @@ public abstract class Stanice {
     protected List<Hrana> hrany;
     private double distance;
 
-    public Stanice(int id, int x, int y){
+    public Bod(int id, int x, int y){
         this.id = id;
         this.x = x;
         this.y = y;
@@ -54,17 +54,14 @@ public abstract class Stanice {
         return hrany;
     }
 
-    public void vlozHranu(Stanice soused){
+    public void vlozHranu(Bod soused){
         Hrana hrana = new Hrana(soused, spocitejVzdalenost(soused));
         hrany.add(hrana);
     }
     void vypis(){
         System.out.println(id + ". x:" + x + " y:" + y);
     }
-    public double spocitejVzdalenost(Stanice stanice) {
+    public double spocitejVzdalenost(Bod stanice) {
         return Math.sqrt((x - stanice.getX()) * (x - stanice.getX()) + (y - stanice.getY()) * (y - stanice.getY()));
     }
-
-
-
 }
