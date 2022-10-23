@@ -2,7 +2,7 @@
 🐪 Pocet skladu S: 🏜
 1
 🐪 Definice skladu (souradnice x,y, pocet kosu ks, doba doplneni ts a doba nalozeni tn) 🏜
-20 30 3 1000 3
+20 30 30 1000 3
 🐪 Pocet oaz O: 🏜
 9
 🐪 Definice oaz (souradnice x,y) 🏜
@@ -30,10 +30,11 @@
 🐪 Pocet druhu velbloudu D: 🏜
 2
 🐪 Definice velblouda (nazev, minimalni rychlost, maximalni rychlost, minimalni vzdalenost, maximalni vzdalenost, doba piti, maximalni zatizeni a procentualni pomer druhu velblouda)  🏜
-Pomaly 1 5 5 5 5 1 0.5
-Ziznivy 10 10 1 1 10 1 0.5
+Pomaly 1 5 50 50 1 10 0.5
+Ziznivy 1 5 50 50 1 10 0.5
 🐪 Pocet pozadavku P: 🏜
-1
+2
 🐪 Definice pozadavku (kazda oaza chce jeden kos, moc na to nespechaji) 🏜
-0 1 1 10000
+0 4 1 10000
+10 5 3 10000
 

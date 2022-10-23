@@ -57,7 +57,6 @@ public class ZpracovaniDat {
 
         int pocetCest = Integer.parseInt(data.get(indexPoslOazy + 1));
         int indexPoslCesty = indexPoslOazy + (pocetCest * 2) + 1;
-        System.out.println(pocetCest + " pocet cest");
 
         for(int i = indexPoslOazy + 2; i < indexPoslCesty; i += 2){
 
@@ -105,6 +104,7 @@ public class ZpracovaniDat {
         baseDat.setMaxDalkaVelbloudu(maxStredniVzdal);
         baseDat.setMaxRychlostVelbloudu(maxStredniRychlost);
 
+        int idPozadavku = 1;
         int pocetPozadavku = Integer.parseInt(data.get(indexPoslDruhu + 1));
         int indexPoslPozadavku = indexPoslDruhu + (pocetPozadavku * 4) + 1;
 
@@ -116,8 +116,9 @@ public class ZpracovaniDat {
             int casCekani = Integer.parseInt(data.get(i + 3));
 
 
-            Pozadavka pozadavka = new Pozadavka(casPrichodu, indexOazy, mnozstviKosu, casCekani);
-            baseDat.inputPozadavka(pozadavka);
+            Pozadavek pozadavek = new Pozadavek(idPozadavku, casPrichodu, indexOazy, mnozstviKosu, casCekani);
+            baseDat.inputPozadavka(pozadavek);
+            idPozadavku++;
 
         }
     }

@@ -24,9 +24,7 @@ public class DijkstraAlgoritmus {
     public List<StackCesta> getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
 
         List<StackCesta> listCest = new ArrayList<>();
-
         baseDat.pripravZastavky();
-
         Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
         oaza.setDistance(0);
         StackCesta cestaKOaze = new StackCesta();

@@ -10,8 +10,8 @@ public class Data {
     private List<Sklad> vsichniSklady;
     private List<Oaza> vsichniOazy;
     private List<DruhVelbloudu> druhyVelbloudu;
-    private List<Pozadavka> nesplnennePozadavky;
-    private List<Pozadavka> splnenePozadavky;
+    private List<Pozadavek> nesplnennePozadavky;
+    private List<Pozadavek> splnenePozadavky;
     private double aktualniCas;
     private int indexVelbloudu;
 
@@ -65,10 +65,10 @@ public class Data {
      * a vraci list techto aktualnich pozadavek
      * @return
      */
-    public List<Pozadavka> getAktualniPozadavky(){
+    public List<Pozadavek> getAktualniPozadavky(){
 
         int index = 0;
-        List<Pozadavka> aktualniPozadavky = new ArrayList<>();
+        List<Pozadavek> aktualniPozadavky = new ArrayList<>();
 
         while(index < nesplnennePozadavky.size()){
 
@@ -107,8 +107,8 @@ public class Data {
         return stanice;
     }
 
-    public void inputPozadavka(Pozadavka pozadavka){
-        this.nesplnennePozadavky.add(pozadavka);
+    public void inputPozadavka(Pozadavek pozadavek){
+        this.nesplnennePozadavky.add(pozadavek);
     }
 
     /**
@@ -123,21 +123,20 @@ public class Data {
         for(int i = 0; i < vsichniVelbloudy.size(); i++){
             novyKrok = vsichniVelbloudy.get(i).getCasPristiAkce();
 
-            if(novyKrok < krok){
+            if(jeVetsi(krok, novyKrok)){
                 krok = novyKrok;
             }
         }
 
         for(int i = 0; i < nesplnennePozadavky.size(); i++){
-
             novyKrok = nesplnennePozadavky.get(i).getCasPrichodu();
 
-            if(novyKrok < krok){
+            if(jeVetsi(krok, novyKrok)){
                 krok = novyKrok;
             }
         }
 
-        return krok;
+        return krok - aktualniCas;
     }
 
     /**
@@ -165,6 +164,7 @@ public class Data {
         for(int i = 0; i < graf.size(); i++){
             graf.get(i).setDistance(Data.MAX_VALUE);
             graf.get(i).setJeZpracovany(false);
+            graf.get(i).obnoveniCesty();
         }
     }
 
@@ -214,7 +214,7 @@ public class Data {
         return druhyVelbloudu;
     }
 
-    public List<Pozadavka> getPozadavky() {
+    public List<Pozadavek> getPozadavky() {
         return nesplnennePozadavky;
     }
     public List<Bod> getGraf(){

@@ -18,7 +18,7 @@ public class Velbloud {
     private double predchoziVzdalenost; // pro cestu zpatky
     private int aktualniPocetKosu;
 
-    private Pozadavka aktualniPozadavka;
+    private Pozadavek aktualniPozadavek;
     private int vzdalenostMax;
     private double aktualniCas;
     private double casSplneniAkce;
@@ -128,7 +128,7 @@ public class Velbloud {
 
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         Math.round(aktualniCas), id, cesta.get().stanice.getId(), aktualniPocetKosu, Math.round(casVylozeni),
-                        Math.round((aktualniPozadavka.getCasPrichodu() + aktualniPozadavka.getCasOcekavani()) - casVylozeni)
+                        Math.round((aktualniPozadavek.getCasPrichodu() + aktualniPozadavek.getCasOcekavani()) - casVylozeni)
                 );
                 pridejBodCestyZpatky();
                 zacniVykladat();
@@ -178,14 +178,14 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavka pozadavka){
+    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek){
 
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(aktualniCas),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(aktualniCas + domovskaStanice.getCasNalozeni() * pocetKosu));
 
         aktualniPocetKosu = pocetKosu;
-        aktualniPozadavka = pozadavka;
+        aktualniPozadavek = pozadavek;
         domovskaStanice.odstranKose(pocetKosu);
         this.cesta = cesta;
         stav = StavVelbloudu.NAKLADA;
@@ -232,6 +232,10 @@ public class Velbloud {
         double cas;
         cas = dalka/rychlost;
         return cas;
+    }
+
+    public void vypis(){
+        System.out.println("Velbloud: " + id + " rychlost: " + rychlost);
     }
 
 }

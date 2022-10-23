@@ -3,19 +3,24 @@ package pt;
 public class StackCesta implements Cloneable{
 
     private BodCesty top = null;
+    private boolean jeSpoctenaCesta = false;
+    private double maxUsecka;
+    private double dalkaCesty;
+    private Bod stanice;
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
         BodCesty novyBod = new BodCesty(novaStanice, vzdalenost, top);
 
         if(top == null){
-            this.top = novyBod;
+            top = novyBod;
+            stanice = novyBod.stanice;
         }
         else{
+            novyBod.next = top;
             top = novyBod;
         }
     }
-
     BodCesty get(){
         return top;
     }
@@ -36,6 +41,10 @@ public class StackCesta implements Cloneable{
         else{
             top = top.next;
         }
+    }
+
+    public Bod getPosledniStanice(){
+        return stanice;
     }
 
     public void vypis(){
@@ -62,23 +71,38 @@ public class StackCesta implements Cloneable{
         double maxDalka = 0;
         double cestaBezPiti = 0;
         double celyCasCesty = 0;
+        double celaDalkaCesty = 0;
 
-        while(bodCesty != null){
-            if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
-                maxDalka = bodCesty.vzdalenost;
+        //if(!jeSpoctenaCesta){
+            while(bodCesty != null){
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                    maxDalka = bodCesty.vzdalenost;
+                }
+
+                if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
+                    cestaBezPiti = 0;
+                    celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
+                }
+
+                celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
+                celaDalkaCesty += bodCesty.vzdalenost;
+                cestaBezPiti += bodCesty.vzdalenost;
+                bodCesty = bodCesty.next;
+
             }
 
-            if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
-                cestaBezPiti = 0;
-                celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
-            }
+            jeSpoctenaCesta = true;
+            maxUsecka = maxDalka;
+            dalkaCesty = celaDalkaCesty;
 
-            celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
-            cestaBezPiti += bodCesty.vzdalenost;
-        }
+
+//        }else{
+//            maxDalka = maxUsecka;
+//            celaDalkaCesty = dalkaCesty;
+//            celyCasCesty = celaDalkaCesty / velbloud.getRychlost();
+//        }
 
         double realnyCasDoruceni = celyCasCesty + velbloud.getAktualniCas() + (2 * pocetKosu * velbloud.getDomovskaStanice().getCasNalozeni()); // cely cas
-
         if(Data.jeVetsi(casDoruceni, realnyCasDoruceni)){
             if(Data.jeVetsi(velbloud.getVzdalenostMax(), maxDalka)){
                 return 0;

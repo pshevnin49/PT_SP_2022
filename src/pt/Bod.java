@@ -9,7 +9,7 @@ public abstract class Bod {
     protected double y;
     protected boolean jeZpracovany; // pro algoritmus hledani kratsi cesty(stanice je zpracovana kdyz jsou spoctene cesty ke vsem jeji dousedim)
 
-    protected StackCesta cestaKeStanici;
+    protected StackCesta kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
     protected List<Hrana> hrany;
     private double distance;
 
@@ -20,8 +20,13 @@ public abstract class Bod {
         this.jeZpracovany = false;
         this.distance = Data.MAX_VALUE;
         this.hrany = new ArrayList<>();
-        this.cestaKeStanici = new StackCesta();
-        cestaKeStanici.pridej(this, 0);
+        this.kratsiCesta = new StackCesta();
+        kratsiCesta.pridej(this, 0);
+    }
+
+    public void obnoveniCesty(){
+        kratsiCesta = new StackCesta();
+        kratsiCesta.pridej(this, 0);
     }
 
     public boolean jeZpracovany() {
@@ -34,10 +39,10 @@ public abstract class Bod {
         this.distance = distance;
     }
     public StackCesta getCestaKeStanici(){
-        return cestaKeStanici;
+        return kratsiCesta;
     }
     public void setCestaKeStanici(StackCesta cestaKeStanici){
-        this.cestaKeStanici = cestaKeStanici;
+        this.kratsiCesta = cestaKeStanici;
     }
     public void setJeZpracovany(boolean jeZpracovany){
         this.jeZpracovany = jeZpracovany;
