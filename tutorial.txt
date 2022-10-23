@@ -2,7 +2,7 @@
 🐪 Pocet skladu S: 🏜
 1
 🐪 Definice skladu (souradnice x,y, pocet kosu ks, doba doplneni ts a doba nalozeni tn) 🏜
-2 3 3 1000 1
+20 30 30 100 1
 🐪 Pocet oaz O: 🏜
 9
 🐪 Definice oaz (souradnice x,y) 🏜
