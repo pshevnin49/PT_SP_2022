@@ -53,9 +53,11 @@ public class StackCesta implements Cloneable{
      * @param velbloud
      * @param casDoruceni - cas prichodu pozadavku + doba cekani
      * @param pocetKosu
-     * @return
+     * @return vraci 0, pokud velbloud stihne cestu, vraci 1 pokud velbloud
+     * ma mensi vzdalenost nez nejdelsi hrana cesty
+     * vraci 2, pokud velbloud nestihne cestu casove
      */
-    public boolean stihneCestuVelbloud(Velbloud velbloud, double casDoruceni, int pocetKosu){
+    public int stihneCestuVelbloud(Velbloud velbloud, double casDoruceni, int pocetKosu){
         BodCesty bodCesty = top;
         double maxDalka = 0;
         double cestaBezPiti = 0;
@@ -77,10 +79,18 @@ public class StackCesta implements Cloneable{
 
         double realnyCasDoruceni = celyCasCesty + velbloud.getAktualniCas() + (2 * pocetKosu * velbloud.getDomovskaStanice().getCasNalozeni()); // cely cas
 
-        if(Data.jeVetsi(casDoruceni, realnyCasDoruceni) && Data.jeVetsi(velbloud.getVzdalenostMax(), maxDalka)){
-            return true;
+        if(Data.jeVetsi(casDoruceni, realnyCasDoruceni)){
+            if(Data.jeVetsi(velbloud.getVzdalenostMax(), maxDalka)){
+                return 0;
+            }
+            else{
+                return 1;
+            }
         }
-        return false;
+        else{
+            return 2;
+        }
+
     }
 
     public Bod getPrvniBod(){

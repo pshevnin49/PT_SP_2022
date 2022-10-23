@@ -13,6 +13,11 @@ public class Data {
     private List<Pozadavka> nesplnennePozadavky;
     private List<Pozadavka> splnenePozadavky;
     private double aktualniCas;
+    private int indexVelbloudu;
+
+    private int maxRychlostVelbloudu;
+    private int dobaNapiti;
+    private int maxDalkaVelbloudu;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
 
@@ -24,6 +29,7 @@ public class Data {
         vsichniSklady = new ArrayList<>();
         vsichniOazy = new ArrayList<>();
         this.aktualniCas = 0;
+        this.indexVelbloudu = 1;
     }
 
     /**
@@ -35,7 +41,7 @@ public class Data {
         Random random = new Random();
 
         DruhVelbloudu druhVelbloudu;
-        int randCislo = random.nextInt(99);
+        int randCislo = random.nextInt(100);
 
         int dolniHranice = 0;
         int horniHranice = 0;
@@ -52,10 +58,6 @@ public class Data {
 
         }
         return null;
-    }
-
-    public void casIncrement(){
-        aktualniCas++;
     }
 
     /**
@@ -148,8 +150,8 @@ public class Data {
             vsichniSklady.get(i).zvetseniCasu(cas);
         }
 
-        for(int i = 0; i < vsichniSklady.size(); i++){
-            vsichniSklady.get(i).zvetseniCasu(cas);
+        for(int i = 0; i < vsichniVelbloudy.size(); i++){
+            vsichniVelbloudy.get(i).zvetseniCasu(cas);
         }
 
         aktualniCas += cas;
@@ -176,7 +178,6 @@ public class Data {
         this.graf.add(zastavka);
     }
 
-
     public void inputOaza(Oaza oaza){
         this.vsichniOazy.add(oaza);
     }
@@ -185,6 +186,18 @@ public class Data {
         this.vsichniSklady.add(sklad);
     }
 
+    public void setMaxRychlostVelbloudu(int maxRychlost){
+        this.maxRychlostVelbloudu = maxRychlost;
+    }
+    public void setMaxDalkaVelbloudu(int maxDalka){
+        this.maxDalkaVelbloudu = maxDalka;
+    }
+    public int getMaxRychlostVelbloudu(){
+        return  maxRychlostVelbloudu;
+    }
+    public int getMaxDalkaVelbloudu(){
+        return maxDalkaVelbloudu;
+    }
     public List<Sklad> getVsichniSklady(){
         return vsichniSklady;
     }
@@ -206,6 +219,17 @@ public class Data {
     }
     public List<Bod> getGraf(){
         return graf;
+    }
+
+    public double getAktualniCas(){
+        return aktualniCas;
+    }
+    public int getIndexVelbloudu(){
+        return indexVelbloudu;
+    }
+
+    public void indexVelblouduInc(){
+        indexVelbloudu++;
     }
 
     /**

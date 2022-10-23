@@ -6,24 +6,30 @@ public class ZpracovaniDat {
 
     private Data baseDat;
 
-    public ZpracovaniDat(Data baseDat){
+//    public ZpracovaniDat(Data baseDat){
+//        this.baseDat = baseDat;
+//    }
+
+    public void zpracovani(List<String> data, Data baseDat){
+
+        int maxStredniRychlost = 0; // maximalni stredni rychlost
+        //int dobaNapitiRychlejsiho = 0;
+        int maxStredniVzdal = 0; // maximalni stredni dalka
+
         this.baseDat = baseDat;
-    }
-
-    public void zpracovani(List<String> data){
-
         int pocetSkladu = Integer.parseInt(data.get(0));
         int indexSkladu = 1;
         int indexPoslSkladu = pocetSkladu * 5;
 
         for(int i = 1; i < indexPoslSkladu; i += 5){
 
-            int x = Integer.parseInt(data.get(i));
-            int y = Integer.parseInt(data.get(i + 1));
+
+            double x = Double.parseDouble(data.get(i));
+            double y = Double.parseDouble(data.get(i + 1));
             int pocetKusu = Integer.parseInt(data.get(i + 2));
             int casObnoveni = Integer.parseInt(data.get(i + 3));
             int casNalozeni = Integer.parseInt(data.get(i + 4));
-            Bod sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni);
+            Bod sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni, baseDat);
 
             indexSkladu++;
             baseDat.inputSklad((Sklad) sklad);
@@ -37,8 +43,8 @@ public class ZpracovaniDat {
 
         for(int i = indexPoslSkladu + 2; i < indexPoslOazy; i += 2){
 
-            int x = Integer.parseInt(data.get(i));
-            int y = Integer.parseInt(data.get(i + 1));
+            double x = Double.parseDouble(data.get(i));
+            double y = Double.parseDouble(data.get(i + 1));
 
             Bod oaza = new Oaza(indexOaz, x, y);
 
@@ -81,10 +87,23 @@ public class ZpracovaniDat {
             int maxZatizeni = Integer.parseInt(data.get(i + 6));
             double pomerDruhu = Double.parseDouble(data.get(i + 7));
 
+            int stredniRychlost = (minRychlost + maxRychlost)/2;
+            if(stredniRychlost > maxStredniRychlost){
+                maxStredniRychlost = stredniRychlost;
+            }
+
+            int stredniVzdalenost = (minVzdalenost + maxVzdalenost)/2;
+            if(stredniVzdalenost > maxStredniVzdal){
+                maxStredniVzdal = stredniVzdalenost;
+            }
+
             DruhVelbloudu druhVelbloudu = new DruhVelbloudu(nazev, minRychlost, maxRychlost, minVzdalenost, maxVzdalenost, dobaPiti, maxZatizeni, pomerDruhu);
             baseDat.inputDruhVelbloudu(druhVelbloudu);
 
         }
+
+        baseDat.setMaxDalkaVelbloudu(maxStredniVzdal);
+        baseDat.setMaxRychlostVelbloudu(maxStredniRychlost);
 
         int pocetPozadavku = Integer.parseInt(data.get(indexPoslDruhu + 1));
         int indexPoslPozadavku = indexPoslDruhu + (pocetPozadavku * 4) + 1;

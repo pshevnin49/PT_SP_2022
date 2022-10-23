@@ -23,10 +23,10 @@ public class Velbloud {
     private double aktualniCas;
     private double casSplneniAkce;
 
-    public Velbloud(int id, int rychlost, int vzdalenostMax, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
+    public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
         this.id = id;
-        this.rychlost = rychlost;
-        this.vzdalenostMax = vzdalenostMax;
+        this.rychlost = druhVelbloudu.randRych();
+        this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
         this.aktualniCas = aktualniCas;
         this.cestaZpatky = new StackCesta();
@@ -72,6 +72,7 @@ public class Velbloud {
     }
 
     public double getCasPristiAkce(){
+
         return casSplneniAkce;
     }
     public Sklad getDomovskaStanice() {
@@ -168,6 +169,8 @@ public class Velbloud {
         jeNaCeste = false;
         jeNaCesteZpatky = false;
         stav = StavVelbloudu.CEKA;
+        domovskaStanice.pridejVelblouda(this);
+        casSplneniAkce = Data.MAX_VALUE;
     }
 
     /**

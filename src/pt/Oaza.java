@@ -7,7 +7,7 @@ public class Oaza extends Bod {
 
     private boolean spustenAlg = false;
     private List<StackCesta> cestyDoOazy;
-    public Oaza(int id, int x, int y){
+    public Oaza(int id, double x, double y){
         super(id, x, y);
         cestyDoOazy = new ArrayList<>();
     }

@@ -2,13 +2,13 @@ package pt;
 
 public class Pozadavka {
 
-    private int casPrichodu;
+    private double casPrichodu;
     private int idOazy;
     private int pocetKosu;
-    private int casOcekavani;
-    private int casDoruceni;
+    private double casOcekavani;
+    private double casDoruceni;
 
-    public Pozadavka(int casPrichodu, int idOazy, int pocetKosu, int casOcekavani) {
+    public Pozadavka(double casPrichodu, int idOazy, int pocetKosu, double casOcekavani) {
         this.casPrichodu = casPrichodu;
         this.idOazy = idOazy;
         this.pocetKosu = pocetKosu;
@@ -17,7 +17,7 @@ public class Pozadavka {
     }
 
 
-    public int getCasPrichodu() {
+    public double getCasPrichodu() {
         return casPrichodu;
     }
     public int getIdOazy() {
@@ -28,9 +28,15 @@ public class Pozadavka {
         return pocetKosu;
     }
 
-    public int getCasOcekavani() {
+    public double getCasOcekavani() {
         return casOcekavani;
     }
+
+    public double getCasDoruceni(){
+        return casDoruceni;
+    }
+
+
 
     public void vypis(){
         System.out.println("Cas prichodu: " + casPrichodu + ". id oazy:" + idOazy + " pocet kosu:" + pocetKosu + " cas ocekavani:" + casOcekavani);
