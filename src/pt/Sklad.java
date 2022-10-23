@@ -16,7 +16,6 @@ public class Sklad extends Bod {
     private List<Velbloud> domVelbloudy;
 
     public Sklad(int id, int x, int y, int pocetKosu, int casObnoveni, int casNalozeni){
-
         super(id, x, y);
         this.pocetKosu = pocetKosu;
         this.casObnoveni = casObnoveni;
@@ -24,8 +23,8 @@ public class Sklad extends Bod {
         this.domVelbloudy = new ArrayList<>();
         this.aktualniPocetKosu = pocetKosu;
         this.casPoObnoveni = 0;
-        this.rezervovaneKose = 0;
         this.actualniCas = 0;
+        this.rezervovaneKose = 0;
     }
     public void zvetseniCasu(double cas){
 
@@ -40,13 +39,19 @@ public class Sklad extends Bod {
 
     }
 
+    public void setRezervovaneKose(int pocetKosu){
+        rezervovaneKose = pocetKosu;
+    }
 
-
+    public void odstranKose(int pocetKosu){
+        rezervovaneKose -= pocetKosu;
+        this.pocetKosu -= pocetKosu;
+    }
     public void pridejVelblouda(Velbloud velbloud){
         domVelbloudy.add(velbloud);
     }
     public int getPocetKosu() {
-        return pocetKosu;
+        return pocetKosu - rezervovaneKose;
     }
     public int getCasObnoveni() {
         return casObnoveni;

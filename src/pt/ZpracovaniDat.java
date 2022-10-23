@@ -40,7 +40,7 @@ public class ZpracovaniDat {
             int x = Integer.parseInt(data.get(i));
             int y = Integer.parseInt(data.get(i + 1));
 
-            Bod oaza = new Oaza(indexSkladu, x, y);
+            Bod oaza = new Oaza(indexOaz, x, y);
 
             baseDat.inputOaza((Oaza) oaza);
             baseDat.inputZastavka(oaza);

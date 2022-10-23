@@ -5,8 +5,7 @@ public class Pozadavka {
     private int casPrichodu;
     private int idOazy;
     private int pocetKosu;
-    private  int casOcekavani;
-
+    private int casOcekavani;
     private int casDoruceni;
 
     public Pozadavka(int casPrichodu, int idOazy, int pocetKosu, int casOcekavani) {
@@ -21,7 +20,6 @@ public class Pozadavka {
     public int getCasPrichodu() {
         return casPrichodu;
     }
-
     public int getIdOazy() {
         return idOazy;
     }

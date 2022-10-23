@@ -119,7 +119,7 @@ public class Data {
         double novyKrok;
 
         for(int i = 0; i < vsichniVelbloudy.size(); i++){
-            novyKrok = vsichniVelbloudy.get(i).getPristiAkce();
+            novyKrok = vsichniVelbloudy.get(i).getCasPristiAkce();
 
             if(novyKrok < krok){
                 krok = novyKrok;
@@ -155,7 +155,6 @@ public class Data {
         aktualniCas += cas;
 
     }
-
 
     /**
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
@@ -219,4 +218,5 @@ public class Data {
         double eps = 0.0000000001;
         return (x1 - x2) > eps;
     }
+
 }

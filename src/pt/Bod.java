@@ -5,15 +5,15 @@ import java.util.*;
 public abstract class Bod {
 
     protected int id;
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     protected boolean jeZpracovany; // pro algoritmus hledani kratsi cesty(stanice je zpracovana kdyz jsou spoctene cesty ke vsem jeji dousedim)
 
     protected StackCesta cestaKeStanici;
     protected List<Hrana> hrany;
     private double distance;
 
-    public Bod(int id, int x, int y){
+    public Bod(int id, double x, double y){
         this.id = id;
         this.x = x;
         this.y = y;
@@ -21,6 +21,7 @@ public abstract class Bod {
         this.distance = Data.MAX_VALUE;
         this.hrany = new ArrayList<>();
         this.cestaKeStanici = new StackCesta();
+        cestaKeStanici.pridej(this, 0);
     }
 
     public boolean jeZpracovany() {
@@ -44,10 +45,10 @@ public abstract class Bod {
     public int getId(){
         return id;
     }
-    public int getX() {
+    public double getX() {
         return x;
     }
-    public int getY() {
+    public double getY() {
         return y;
     }
     public List<Hrana> getHrany(){

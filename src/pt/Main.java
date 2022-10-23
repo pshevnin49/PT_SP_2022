@@ -15,24 +15,19 @@ public class Main {
         zpracovaniDat.zpracovani(data);
 
 
-        baseDat.getGraf().get(0).vypis();
-        System.out.println("vypis");
-
         DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(baseDat);
 
         List<StackCesta> stackCest = dijkstra.getVsichniCesty(2);
 
-        for(int i = 0; i < stackCest.size(); i++){
-            stackCest.get(i).vypis();
-        }
+
+        Velbloud velbloud = new Velbloud(1, 5, 22,
+                baseDat.getNahodnyDruhVelbloudu(), baseDat.getVsichniSklady().get(0), 0);
 
 
-        System.out.println("Vsichni cesty");
+        velbloud.zacniNakladat(2, baseDat.getGraf().get(0).getCestaKeStanici(), baseDat.getPozadavky().get(0));
 
-        for(int i = 0; i < baseDat.getGraf().size(); i++){
-
-            baseDat.getGraf().get(i).getCestaKeStanici().vypis();
-
+        for(int i = 0; i < 1000; i++){
+            velbloud.zvetseniCasu(1);
         }
 
     }

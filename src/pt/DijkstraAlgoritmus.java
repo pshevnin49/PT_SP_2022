@@ -14,7 +14,7 @@ public class DijkstraAlgoritmus {
     }
 
     /**
-     * Metoda prochazi cely graf pomoci Dijkstruveho algoritmem, a hleda vsichni
+     * Metoda prochazi cely graf pomoci Dijkstruveho algoritmu, a hleda vsichni
      * nejkratsi cesty do oazy daneho indexu. Pak vraci list nejkratsich cest od
      * vsech skladu do teto oazy
      * @param indexOazy
@@ -67,15 +67,10 @@ public class DijkstraAlgoritmus {
                 StackCesta cesta = (StackCesta) stanice.getCestaKeStanici().clone();
                 cesta.pridej(novaStanice, hrana.getVzdalenost());
 
-                //System.out.println(vzdalenost + " vzdalenost");
-
                 novaStanice.setDistance(vzdalenost);
                 novaStanice.setCestaKeStanici(cesta);
             }
 
         }
     }
-
-
-
 }
