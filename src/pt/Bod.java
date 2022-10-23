@@ -2,25 +2,31 @@ package pt;
 
 import java.util.*;
 
-public abstract class Stanice {
+public abstract class Bod {
 
     protected int id;
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     protected boolean jeZpracovany; // pro algoritmus hledani kratsi cesty(stanice je zpracovana kdyz jsou spoctene cesty ke vsem jeji dousedim)
 
-    protected StackCesta cestaKeStanici;
+    protected StackCesta kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
     protected List<Hrana> hrany;
     private double distance;
 
-    public Stanice(int id, int x, int y){
+    public Bod(int id, double x, double y){
         this.id = id;
         this.x = x;
         this.y = y;
         this.jeZpracovany = false;
         this.distance = Data.MAX_VALUE;
         this.hrany = new ArrayList<>();
-        this.cestaKeStanici = new StackCesta();
+        this.kratsiCesta = new StackCesta();
+        kratsiCesta.pridej(this, 0);
+    }
+
+    public void obnoveniCesty(){
+        kratsiCesta = new StackCesta();
+        kratsiCesta.pridej(this, 0);
     }
 
     public boolean jeZpracovany() {
@@ -33,10 +39,10 @@ public abstract class Stanice {
         this.distance = distance;
     }
     public StackCesta getCestaKeStanici(){
-        return cestaKeStanici;
+        return kratsiCesta;
     }
     public void setCestaKeStanici(StackCesta cestaKeStanici){
-        this.cestaKeStanici = cestaKeStanici;
+        this.kratsiCesta = cestaKeStanici;
     }
     public void setJeZpracovany(boolean jeZpracovany){
         this.jeZpracovany = jeZpracovany;
@@ -44,17 +50,17 @@ public abstract class Stanice {
     public int getId(){
         return id;
     }
-    public int getX() {
+    public double getX() {
         return x;
     }
-    public int getY() {
+    public double getY() {
         return y;
     }
     public List<Hrana> getHrany(){
         return hrany;
     }
 
-    public void vlozHranu(Stanice soused){
+    public void vlozHranu(Bod soused){
         Hrana hrana = new Hrana(soused, spocitejVzdalenost(soused));
         hrany.add(hrana);
     }
@@ -66,10 +72,7 @@ public abstract class Stanice {
             hrany.get(i).vypis();
         }
     }
-    public double spocitejVzdalenost(Stanice stanice) {
+    public double spocitejVzdalenost(Bod stanice) {
         return Math.sqrt((x - stanice.getX()) * (x - stanice.getX()) + (y - stanice.getY()) * (y - stanice.getY()));
     }
-
-
-
 }

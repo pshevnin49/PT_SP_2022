@@ -5,14 +5,19 @@ import java.util.List;
 import java.util.Random;
 
 public class Data {
-    private List<Stanice> graf;
+    private List<Bod> graf;
     private List<Velbloud> vsichniVelbloudy;
     private List<Sklad> vsichniSklady;
     private List<Oaza> vsichniOazy;
     private List<DruhVelbloudu> druhyVelbloudu;
-    private List<Pozadavka> nesplnennePozadavky;
-    private List<Pozadavka> splnenePozadavky;
-    private int aktualniCas;
+    private List<Pozadavek> nesplnennePozadavky;
+    private List<Pozadavek> splnenePozadavky;
+    private double aktualniCas;
+    private int indexVelbloudu;
+
+    private int maxRychlostVelbloudu;
+    private int dobaNapiti;
+    private int maxDalkaVelbloudu;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
 
@@ -24,6 +29,7 @@ public class Data {
         vsichniSklady = new ArrayList<>();
         vsichniOazy = new ArrayList<>();
         this.aktualniCas = 0;
+        this.indexVelbloudu = 1;
     }
 
     /**
@@ -35,14 +41,13 @@ public class Data {
         Random random = new Random();
 
         DruhVelbloudu druhVelbloudu;
-        int randCislo = random.nextInt(99);
+        int randCislo = random.nextInt(100);
 
         int dolniHranice = 0;
         int horniHranice = 0;
 
         for(int i = 0; i < druhyVelbloudu.size(); i++){
             horniHranice += (int) (druhyVelbloudu.get(i).getPomerDruhuVelbloudu() * 100);
-
 
             if(randCislo < horniHranice && randCislo >= dolniHranice){
                 druhVelbloudu = druhyVelbloudu.get(i);
@@ -52,12 +57,7 @@ public class Data {
             dolniHranice = horniHranice;
 
         }
-
         return null;
-    }
-
-    public void casIncrement(){
-        aktualniCas++;
     }
 
     /**
@@ -65,10 +65,10 @@ public class Data {
      * a vraci list techto aktualnich pozadavek
      * @return
      */
-    public List<Pozadavka> getAktualniPozadavky(){
+    public List<Pozadavek> getAktualniPozadavky(){
 
         int index = 0;
-        List<Pozadavka> aktualniPozadavky = new ArrayList<>();
+        List<Pozadavek> aktualniPozadavky = new ArrayList<>();
 
         while(index < nesplnennePozadavky.size()){
 
@@ -81,13 +81,9 @@ public class Data {
             else{
                 index++;
             }
-
         }
-
         return aktualniPozadavky;
     }
-
-
     public void inputDruhVelbloudu(DruhVelbloudu druh){
 
         this.druhyVelbloudu.add(druh);
@@ -99,8 +95,8 @@ public class Data {
      * a promnenna jeZpracovana == False) ale uz ma vlastni vzdalenost od zacatku cesty
      * @return Stanice nezprStanice
      */
-    public Stanice getNezpracovanouStanice(){
-        Stanice stanice = null;
+    public Bod getNezpracovanouStanice(){
+        Bod stanice = null;
 
         for(int i = 0; i < graf.size(); i++){
             if(!graf.get(i).jeZpracovany && jeVetsi(Data.MAX_VALUE, graf.get(i).getDistance()) && jeVetsi(graf.get(i).getDistance(), 0)){
@@ -111,15 +107,66 @@ public class Data {
         return stanice;
     }
 
-    public void inputPozadavka(Pozadavka pozadavka){
-        this.nesplnennePozadavky.add(pozadavka);
+    public void inputPozadavka(Pozadavek pozadavek){
+        this.nesplnennePozadavky.add(pozadavek);
     }
 
+    /**
+     * Metoda prochazi vsichni velbloudy, a vsichni objednavky a hleda nejblizsi akci k aktualnimu casu
+     * pak vraci (casAkci - aktualniCas) = casovy posuv od aktualniho casu do casu splneni akci
+     * @return krok
+     */
     public double getMinKrokCasu(){
-        double krok = -1;
-        return krok;
+        double krok = MAX_VALUE;
+        double novyKrok;
+
+        for(int i = 0; i < vsichniVelbloudy.size(); i++){
+            novyKrok = vsichniVelbloudy.get(i).getCasPristiAkce();
+
+            if(jeVetsi(krok, novyKrok)){
+                krok = novyKrok;
+            }
+        }
+
+        for(int i = 0; i < nesplnennePozadavky.size(); i++){
+            novyKrok = nesplnennePozadavky.get(i).getCasPrichodu();
+
+            if(jeVetsi(krok, novyKrok)){
+                krok = novyKrok;
+            }
+        }
+
+        return krok - aktualniCas;
     }
 
+    /**
+     * Zvetsuje cas cele simulace o zadanou velikost
+     * @param cas
+     */
+    public void zvetseniCasuSimulace(double cas){
+
+        for(int i = 0; i < vsichniSklady.size(); i++){
+            vsichniSklady.get(i).zvetseniCasu(cas);
+        }
+
+        for(int i = 0; i < vsichniVelbloudy.size(); i++){
+            vsichniVelbloudy.get(i).zvetseniCasu(cas);
+        }
+
+        aktualniCas += cas;
+
+    }
+
+    /**
+     * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
+     */
+    public void pripravZastavky(){
+        for(int i = 0; i < graf.size(); i++){
+            graf.get(i).setDistance(Data.MAX_VALUE);
+            graf.get(i).setJeZpracovany(false);
+            graf.get(i).obnoveniCesty();
+        }
+    }
 
     /**
      * List vsech zastavek slouzi ke zpracovani sousedu.
@@ -127,15 +174,8 @@ public class Data {
      * (na nulove pozici se nachazi prvni prvek)
      * @param zastavka
      */
-    public void inputZastavka(Stanice zastavka){
+    public void inputZastavka(Bod zastavka){
         this.graf.add(zastavka);
-    }
-
-    public void pripravZastavky(){
-        for(int i = 0; i < graf.size(); i++){
-            graf.get(i).setDistance(Data.MAX_VALUE);
-            graf.get(i).setJeZpracovany(false);
-        }
     }
 
     public void inputOaza(Oaza oaza){
@@ -146,6 +186,18 @@ public class Data {
         this.vsichniSklady.add(sklad);
     }
 
+    public void setMaxRychlostVelbloudu(int maxRychlost){
+        this.maxRychlostVelbloudu = maxRychlost;
+    }
+    public void setMaxDalkaVelbloudu(int maxDalka){
+        this.maxDalkaVelbloudu = maxDalka;
+    }
+    public int getMaxRychlostVelbloudu(){
+        return  maxRychlostVelbloudu;
+    }
+    public int getMaxDalkaVelbloudu(){
+        return maxDalkaVelbloudu;
+    }
     public List<Sklad> getVsichniSklady(){
         return vsichniSklady;
     }
@@ -162,15 +214,33 @@ public class Data {
         return druhyVelbloudu;
     }
 
-    public List<Pozadavka> getPozadavky() {
+    public List<Pozadavek> getPozadavky() {
         return nesplnennePozadavky;
     }
-    public List<Stanice> getGraf(){
+    public List<Bod> getGraf(){
         return graf;
     }
 
+    public double getAktualniCas(){
+        return aktualniCas;
+    }
+    public int getIndexVelbloudu(){
+        return indexVelbloudu;
+    }
+
+    public void indexVelblouduInc(){
+        indexVelbloudu++;
+    }
+
+    /**
+     * Prijima dva double cisla, a vrati true pokud x1 je vetsi nez x2 v opacnem pripade vrati false
+     * @param x1
+     * @param x2
+     * @return
+     */
     public static boolean jeVetsi(double x1, double x2){
         double eps = 0.0000000001;
         return (x1 - x2) > eps;
     }
+
 }

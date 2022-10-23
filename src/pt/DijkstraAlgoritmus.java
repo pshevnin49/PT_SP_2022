@@ -3,6 +3,8 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 public class DijkstraAlgoritmus {
 
     private Data baseDat;
@@ -11,10 +13,19 @@ public class DijkstraAlgoritmus {
         this.baseDat = baseDat;
     }
 
-    public void getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
-        baseDat.pripravZastavky();
+    /**
+     * Metoda prochazi cely graf pomoci Dijkstruveho algoritmu, a hleda vsichni
+     * nejkratsi cesty do oazy daneho indexu. Pak vraci list nejkratsich cest od
+     * vsech skladu do teto oazy
+     * @param indexOazy
+     * @return listCest (serazeny od nejkratsi do nejdelsi)
+     * @throws CloneNotSupportedException
+     */
+    public List<StackCesta> getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
 
-        Stanice oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
+        List<StackCesta> listCest = new ArrayList<>();
+        baseDat.pripravZastavky();
+        Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
         oaza.setDistance(0);
         StackCesta cestaKOaze = new StackCesta();
         cestaKOaze.pridej(oaza, 0);
@@ -24,6 +35,15 @@ public class DijkstraAlgoritmus {
             oaza.setJeZpracovany(true);
             oaza = baseDat.getNezpracovanouStanice();
         }
+
+        for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
+            StackCesta novaCesta = baseDat.getVsichniSklady().get(i).getCestaKeStanici();
+            listCest.add(novaCesta);
+        }
+
+        listCest.sort(comparing(StackCesta::getCelaDalka));
+
+        return listCest;
     }
 
     /**
@@ -31,31 +51,24 @@ public class DijkstraAlgoritmus {
      * pokud nalezena vzdalenost bude mensi nez aktualni vzdalenost, prepise tuto vzdalenost
      * @param stanice
      */
-    private void zpracujSousedi(Stanice stanice) throws CloneNotSupportedException {
+    private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
         List<Hrana> hrany = stanice.getHrany();
 
         for(int i = 0; i < hrany.size(); i++){
 
             Hrana hrana = hrany.get(i);
             double vzdalenost = hrana.getVzdalenost() + stanice.getDistance();
-            Stanice novaStanice = hrana.getStanice();
+            Bod novaStanice = hrana.getStanice();
 
             if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
                 StackCesta cesta = (StackCesta) stanice.getCestaKeStanici().clone();
                 cesta.pridej(novaStanice, hrana.getVzdalenost());
 
-                //System.out.println(vzdalenost + " vzdalenost");
-
                 novaStanice.setDistance(vzdalenost);
                 novaStanice.setCestaKeStanici(cesta);
             }
 
         }
-
-
     }
-
-
-
 }

@@ -11,6 +11,12 @@ public class CteniDat {
     public CteniDat(String jmenoSouboru){
         this.jmenoSouboru = jmenoSouboru;
     }
+
+    /**
+     * Cte data a ignoruje vsichni komentare, vraci List Stringu s uzitecnama datama
+     * @return cisla
+     * @throws FileNotFoundException
+     */
     public List<String> cteni() throws FileNotFoundException {
 
         List<String> cisla = new ArrayList<>();

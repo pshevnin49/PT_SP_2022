@@ -1,17 +1,24 @@
 package pt;
 
-public class BodCesty {
+public class BodCesty implements Cloneable{
 
-    public Stanice zastavka;
+    public Bod stanice;
     public double vzdalenost;
+    public boolean musiNapit;
     public BodCesty next;
 
-    public BodCesty(Stanice zastavka, double vzdalenost, BodCesty next){
+    public BodCesty(Bod zastavka, double vzdalenost, BodCesty next){
 
-        this.zastavka = zastavka;
+        this.stanice = zastavka;
         this.vzdalenost = vzdalenost;
+        this.musiNapit = false;
         this.next = next;
 
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
 }

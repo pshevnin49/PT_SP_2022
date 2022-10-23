@@ -6,24 +6,30 @@ public class ZpracovaniDat {
 
     private Data baseDat;
 
-    public ZpracovaniDat(Data baseDat){
+//    public ZpracovaniDat(Data baseDat){
+//        this.baseDat = baseDat;
+//    }
+
+    public void zpracovani(List<String> data, Data baseDat){
+
+        int maxStredniRychlost = 0; // maximalni stredni rychlost
+        //int dobaNapitiRychlejsiho = 0;
+        int maxStredniVzdal = 0; // maximalni stredni dalka
+
         this.baseDat = baseDat;
-    }
-
-    public void zpracovani(List<String> data){
-
         int pocetSkladu = Integer.parseInt(data.get(0));
         int indexSkladu = 1;
         int indexPoslSkladu = pocetSkladu * 5;
 
         for(int i = 1; i < indexPoslSkladu; i += 5){
 
-            int x = Integer.parseInt(data.get(i));
-            int y = Integer.parseInt(data.get(i + 1));
+
+            double x = Double.parseDouble(data.get(i));
+            double y = Double.parseDouble(data.get(i + 1));
             int pocetKusu = Integer.parseInt(data.get(i + 2));
             int casObnoveni = Integer.parseInt(data.get(i + 3));
             int casNalozeni = Integer.parseInt(data.get(i + 4));
-            Stanice sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni);
+            Bod sklad = new Sklad(indexSkladu, x, y, pocetKusu, casObnoveni, casNalozeni, baseDat);
 
             indexSkladu++;
             baseDat.inputSklad((Sklad) sklad);
@@ -37,10 +43,10 @@ public class ZpracovaniDat {
 
         for(int i = indexPoslSkladu + 2; i < indexPoslOazy; i += 2){
 
-            int x = Integer.parseInt(data.get(i));
-            int y = Integer.parseInt(data.get(i + 1));
+            double x = Double.parseDouble(data.get(i));
+            double y = Double.parseDouble(data.get(i + 1));
 
-            Stanice oaza = new Oaza(indexSkladu, x, y);
+            Bod oaza = new Oaza(indexOaz, x, y);
 
             baseDat.inputOaza((Oaza) oaza);
             baseDat.inputZastavka(oaza);
@@ -58,11 +64,8 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
-//            System.out.println(indexZastavky + " IndexZastavky");
-//            System.out.println(indexSousedu + " IndexSousedu");
-
-            Stanice zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
-            Stanice soused = baseDat.getGraf().get(indexSousedu - 1);
+            Bod zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
+            Bod soused = baseDat.getGraf().get(indexSousedu - 1);
 
             zastavka.vlozHranu(soused);
             soused.vlozHranu(zastavka);
@@ -84,11 +87,25 @@ public class ZpracovaniDat {
             int maxZatizeni = Integer.parseInt(data.get(i + 6));
             double pomerDruhu = Double.parseDouble(data.get(i + 7));
 
+            int stredniRychlost = (minRychlost + maxRychlost)/2;
+            if(stredniRychlost > maxStredniRychlost){
+                maxStredniRychlost = stredniRychlost;
+            }
+
+            int stredniVzdalenost = (minVzdalenost + maxVzdalenost)/2;
+            if(stredniVzdalenost > maxStredniVzdal){
+                maxStredniVzdal = stredniVzdalenost;
+            }
+
             DruhVelbloudu druhVelbloudu = new DruhVelbloudu(nazev, minRychlost, maxRychlost, minVzdalenost, maxVzdalenost, dobaPiti, maxZatizeni, pomerDruhu);
             baseDat.inputDruhVelbloudu(druhVelbloudu);
 
         }
 
+        baseDat.setMaxDalkaVelbloudu(maxStredniVzdal);
+        baseDat.setMaxRychlostVelbloudu(maxStredniRychlost);
+
+        int idPozadavku = 1;
         int pocetPozadavku = Integer.parseInt(data.get(indexPoslDruhu + 1));
         int indexPoslPozadavku = indexPoslDruhu + (pocetPozadavku * 4) + 1;
 
@@ -100,11 +117,10 @@ public class ZpracovaniDat {
             int casCekani = Integer.parseInt(data.get(i + 3));
 
 
-            Pozadavka pozadavka = new Pozadavka(casPrichodu, indexOazy, mnozstviKosu, casCekani);
-            baseDat.inputPozadavka(pozadavka);
+            Pozadavek pozadavek = new Pozadavek(idPozadavku, casPrichodu, indexOazy, mnozstviKosu, casCekani);
+            baseDat.inputPozadavka(pozadavek);
+            idPozadavku++;
 
         }
-//          just testing ;)
-//        Velbloud velbloud = ((Sklad) baseDat.getVsicniZastavky().get(0)).getNovyVelbloud(baseDat.getDruhyVelbloudu().get(0));
     }
 }

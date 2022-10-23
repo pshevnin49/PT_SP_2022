@@ -1,15 +1,16 @@
 package pt;
 
-public class Pozadavka {
+public class Pozadavek {
 
-    private int casPrichodu;
+    private double casPrichodu;
     private int idOazy;
     private int pocetKosu;
-    private  int casOcekavani;
+    private int id;
+    private double casOcekavani;
+    private double casDoruceni;
 
-    private int casDoruceni;
-
-    public Pozadavka(int casPrichodu, int idOazy, int pocetKosu, int casOcekavani) {
+    public Pozadavek(int id, double casPrichodu, int idOazy, int pocetKosu, double casOcekavani) {
+        this.id = id;
         this.casPrichodu = casPrichodu;
         this.idOazy = idOazy;
         this.pocetKosu = pocetKosu;
@@ -17,21 +18,26 @@ public class Pozadavka {
         this.casDoruceni = casPrichodu + casOcekavani;
     }
 
-
-    public int getCasPrichodu() {
+    public double getCasPrichodu() {
         return casPrichodu;
     }
-
     public int getIdOazy() {
         return idOazy;
     }
 
+    public int getId(){
+        return id;
+    }
     public int getPocetKosu() {
         return pocetKosu;
     }
 
-    public int getCasOcekavani() {
+    public double getCasOcekavani() {
         return casOcekavani;
+    }
+
+    public double getCasDoruceni(){
+        return casDoruceni;
     }
 
     public void vypis(){

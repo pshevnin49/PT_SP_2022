@@ -11,26 +11,12 @@ public class Main {
         Data baseDat = new Data();
         List<String> data = cteniDat.cteni();
 
-        ZpracovaniDat zpracovaniDat = new ZpracovaniDat(baseDat);
-        zpracovaniDat.zpracovani(data);
+        ZpracovaniDat zpracovaniDat = new ZpracovaniDat();
+        zpracovaniDat.zpracovani(data, baseDat);
 
+        Simulace simulace = new Simulace(baseDat);
 
-        baseDat.getGraf().get(2).vypis();
-
-
-        System.out.println("vypis");
-
-        DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(baseDat);
-
-        dijkstra.getVsichniCesty(2);
-
-        for(int i = 0; i < baseDat.getGraf().size(); i++){
-            System.out.println((i+1) + ". " + baseDat.getGraf().get(i).getDistance());
-        }
-
-        for(int i = 0; i < baseDat.getGraf().size(); i++){
-            baseDat.getGraf().get(i).getCestaKeStanici().vypis();
-        }
+        simulace.startSimulace();
 
     }
 }
