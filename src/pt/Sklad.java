@@ -29,14 +29,14 @@ public class Sklad extends Bod {
         this.baseDat = baseDat;
     }
     public void zvetseniCasu(double cas){
-
         double doubleCasObnoveni = (double) casObnoveni;
         casPoObnoveni += cas;
         actualniCas += cas;
 
-        if(Data.jeVetsi(casPoObnoveni, casObnoveni)){
+        if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
             casPoObnoveni = 0;
             aktualniPocetKosu += pocetKosu;
+            //System.out.println("Aktualni pocet kosu: " + aktualniPocetKosu);
         }
 
     }
@@ -61,7 +61,11 @@ public class Sklad extends Bod {
     }
 
     /**
-     * Metoda prochazi vsichni
+     * Metoda prochazi vsichni velbloudy, ktere nachazi na sklade, kdyz zadny z nich cestu
+     * nestihne, zacina generovat nove. Metoda zna stredni rychlost rychlejsiho druhu velblouda,
+     * a zna stredni cestu trvalejsiho druhu velblouda. Pokud rychlejsi velbloud nesiha cestu casove, nebo
+     * trvalejsi velbloud ma kratsi max vzdalenost, nez nejdelsi usecka cesty, metoda vrati null, protoze pravdepodobnost nalezeni
+     * vhodneho velblouda -> 0
      * @param pocetKosu
      * @param casDoruceni
      * @param cesta
@@ -90,12 +94,12 @@ public class Sklad extends Bod {
             }
             else if(stihneLi == 1){
                 domVelbloudy.add(velbloud);
-                if(bylNejdelsiVelbl){
+                if(velbloud.getVzdalenostMax() >= baseDat.getMaxDalkaVelbloudu()){
                     return velbloudPrazdny;
                 }
             }else{
                 domVelbloudy.add(velbloud);
-                if(bylRychlejsiVelbl){
+                if(velbloud.getRychlost() >= baseDat.getMaxRychlostVelbloudu()){
                     return velbloudPrazdny;
                 }
             }
@@ -105,6 +109,7 @@ public class Sklad extends Bod {
             if(velbloud.getVzdalenostMax() >= baseDat.getMaxDalkaVelbloudu()){
                 bylRychlejsiVelbl = true;
             }
+
         }
         return velbloudPrazdny;
 
@@ -112,8 +117,12 @@ public class Sklad extends Bod {
 
     private Velbloud getNovyVelbloud(DruhVelbloudu druh){
         Velbloud velbloud = new Velbloud(baseDat.getIndexVelbloudu(),
-                druh, this, baseDat.getAktualniCas());
+                druh, this, baseDat);
+
+
+        velbloud.vypis();
         baseDat.getVsichniVelbloudy().add(velbloud);
+        baseDat.indexVelblouduInc();
 
         return velbloud;
     }

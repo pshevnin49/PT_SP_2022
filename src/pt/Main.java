@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String [] args) throws FileNotFoundException, CloneNotSupportedException {
 
-        CteniDat cteniDat = new CteniDat("tutorial.txt");
+        CteniDat cteniDat = new CteniDat("sparse_very_small.txt");
         Data baseDat = new Data();
         List<String> data = cteniDat.cteni();
 

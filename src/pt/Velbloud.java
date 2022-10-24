@@ -13,42 +13,42 @@ public class Velbloud {
     private StavVelbloudu stav;
 
     private int id;
-    private int rychlost;
+    private double rychlost;
     private double vzdalenostBezPiti;
     private double predchoziVzdalenost; // pro cestu zpatky
     private int aktualniPocetKosu;
 
     private Pozadavek aktualniPozadavek;
-    private int vzdalenostMax;
-    private double aktualniCas;
+    private double vzdalenostMax;
+    private Data baseDat;
     private double casSplneniAkce;
 
-    public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, double aktualniCas) {
+    public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, Data baseDat) {
         this.id = id;
         this.rychlost = druhVelbloudu.randRych();
         this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
-        this.aktualniCas = aktualniCas;
         this.cestaZpatky = new StackCesta();
         this.druhVelbloudu = druhVelbloudu;
         this.jeNaCeste = false;
+        this.baseDat = baseDat;
         this.stav = StavVelbloudu.CEKA;
         this.aktualniPocetKosu = 0;
     }
 
     /**
      * Hlavni ridici metoda velbloudu. Kazdy krok kontroluje ma li byt splnena akce kterou aktualne dela velbloud
-     * @param cas
+     * Pokud velbloud este nevratil domu vraci false, pokud vratil, vraci true;
+     * @return
      */
-    public void zvetseniCasu(double cas){
-        aktualniCas += cas;
+    public boolean kontrolaCasu(){
 
         //System.out.println("Cas: " + aktualniCas);
 
-        if(!Data.jeVetsi(casSplneniAkce, aktualniCas)){
+        if(!Data.jeVetsi(casSplneniAkce, baseDat.getAktualniCas())){
             switch(stav){
                 case CEKA:
-                    //System.out.println("break v switc case zvetseniCasu");
+                    //System.out.println("break v switch case zvetseniCasu");
                     break;
 
                 case PIJE:
@@ -56,8 +56,9 @@ public class Velbloud {
                     break;
 
                 case POSOUVA:
-
-                    prijelDoStanici();
+                    if(prijelDoStanici()){
+                        return true;
+                    }
                     break;
 
                 case NAKLADA:
@@ -69,10 +70,14 @@ public class Velbloud {
                     break;
             }
         }
+        return false;
+    }
+
+    public double getAktualniCas(){
+        return baseDat.getAktualniCas();
     }
 
     public double getCasPristiAkce(){
-
         return casSplneniAkce;
     }
     public Sklad getDomovskaStanice() {
@@ -81,15 +86,11 @@ public class Velbloud {
     public StackCesta getCesta() {
         return cesta;
     }
-    public int getRychlost() {
+    public double getRychlost() {
         return rychlost;
     }
-    public int getVzdalenostMax() {
+    public double getVzdalenostMax() {
         return vzdalenostMax;
-    }
-
-    public double getAktualniCas(){
-        return aktualniCas;
     }
 
     public DruhVelbloudu getDruhVelbloudu(){
@@ -105,6 +106,7 @@ public class Velbloud {
         predchoziVzdalenost = 0;
         cestaZpatky = new StackCesta();
         vzdalenostBezPiti = 0;
+
         jeNaCeste = true;
         posuvDoDalsiSt();
     }
@@ -114,13 +116,15 @@ public class Velbloud {
         vzdalenostBezPiti = 0;
         jeNaCesteZpatky = true;
         posuvDoDalsiSt();
-
     }
 
     /**
      * Zpracovava prijezd velbloudu do jakekoliv stanici
+     * kdyz vratil domu, vraci true, v opacnem pripade - false
      */
-    private void prijelDoStanici(){
+    private boolean prijelDoStanici(){
+
+        double aktualniCas = baseDat.getAktualniCas();
         if(cesta.get().next == null){
             if(!jeNaCesteZpatky){
 
@@ -136,6 +140,7 @@ public class Velbloud {
             else{
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", Math.round(aktualniCas), id, domovskaStanice.getId());
                 prijelDomu();
+                return true;
             }
         }
         else{
@@ -160,6 +165,7 @@ public class Velbloud {
                 zacniPiti();
             }
         }
+        return false;
     }
 
     /**
@@ -179,17 +185,16 @@ public class Velbloud {
      * @param cesta
      */
     public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek){
-
-
-        System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(aktualniCas),
-                id, domovskaStanice.getId(), pocetKosu, Math.round(aktualniCas + domovskaStanice.getCasNalozeni() * pocetKosu));
+        System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
+                id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
 
         aktualniPocetKosu = pocetKosu;
         aktualniPozadavek = pozadavek;
+        baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
         this.cesta = cesta;
         stav = StavVelbloudu.NAKLADA;
-        casSplneniAkce = aktualniCas + domovskaStanice.getCasNalozeni() * pocetKosu;
+        casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
     }
 
     /**
@@ -198,7 +203,7 @@ public class Velbloud {
     private void posuvDoDalsiSt(){
         stav = StavVelbloudu.POSOUVA;
         BodCesty bodCesty = cesta.get();
-        casSplneniAkce = aktualniCas + getCasCesty(bodCesty.vzdalenost);
+        casSplneniAkce = baseDat.getAktualniCas() + getCasCesty(bodCesty.vzdalenost);
 
         if(!jeNaCesteZpatky){
             pridejBodCestyZpatky();
@@ -214,14 +219,14 @@ public class Velbloud {
      */
     private void zacniPiti(){
         vzdalenostBezPiti = 0;
-        casSplneniAkce = aktualniCas + druhVelbloudu.getDobaPiti();
+        casSplneniAkce = baseDat.getAktualniCas() + druhVelbloudu.getDobaPiti();
         stav = StavVelbloudu.PIJE;
     }
 
     private void zacniVykladat(){
         stav = StavVelbloudu.VYKLADA;
         aktualniPocetKosu = 0;
-        casSplneniAkce = aktualniCas + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
+        casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
     }
 
     public void pridejBodCestyZpatky(){// pridava bod do cesty zpatky pridava
