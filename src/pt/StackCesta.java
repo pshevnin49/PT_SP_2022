@@ -1,11 +1,14 @@
 package pt;
 
-public class StackCesta implements Cloneable{
+import java.util.List;
+
+public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak, aby spoustel vypocty jenom jednou, pak vyuzival promenne
 
     private BodCesty top = null;
     private boolean jeSpoctenaCesta = false;
     private double maxUsecka;
     private double dalkaCesty;
+    private List<Double> vsichniDelkyCesty;
     private Bod stanice;
 
     public void pridej(Bod novaStanice, double vzdalenost){

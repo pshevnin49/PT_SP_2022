@@ -1,8 +1,6 @@
 package pt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Data {
     private List<Bod> graf;
@@ -10,14 +8,16 @@ public class Data {
     private List<Sklad> vsichniSklady;
     private List<Oaza> vsichniOazy;
     private List<DruhVelbloudu> druhyVelbloudu;
+    private Set<Velbloud> velbloudyNaCeste;
+
     private List<Pozadavek> nesplnennePozadavky;
     private List<Pozadavek> splnenePozadavky;
     private double aktualniCas;
     private int indexVelbloudu;
 
-    private int maxRychlostVelbloudu;
+    private double maxRychlostVelbloudu;
     private int dobaNapiti;
-    private int maxDalkaVelbloudu;
+    private double maxDalkaVelbloudu;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
 
@@ -28,6 +28,7 @@ public class Data {
         vsichniVelbloudy = new ArrayList<>();
         vsichniSklady = new ArrayList<>();
         vsichniOazy = new ArrayList<>();
+        velbloudyNaCeste = new HashSet<>();
         this.aktualniCas = 0;
         this.indexVelbloudu = 1;
     }
@@ -69,14 +70,10 @@ public class Data {
 
         int index = 0;
         List<Pozadavek> aktualniPozadavky = new ArrayList<>();
-
         while(index < nesplnennePozadavky.size()){
-
             if(nesplnennePozadavky.get(index).getCasPrichodu() <= aktualniCas){
-
                 aktualniPozadavky.add(nesplnennePozadavky.get(index));
                 nesplnennePozadavky.remove(index);
-
             }
             else{
                 index++;
@@ -85,9 +82,7 @@ public class Data {
         return aktualniPozadavky;
     }
     public void inputDruhVelbloudu(DruhVelbloudu druh){
-
         this.druhyVelbloudu.add(druh);
-
     }
 
     /**
@@ -120,8 +115,8 @@ public class Data {
         double krok = MAX_VALUE;
         double novyKrok;
 
-        for(int i = 0; i < vsichniVelbloudy.size(); i++){
-            novyKrok = vsichniVelbloudy.get(i).getCasPristiAkce();
+        for(Velbloud velbloud : velbloudyNaCeste){
+            novyKrok = velbloud.getCasPristiAkce();
 
             if(jeVetsi(krok, novyKrok)){
                 krok = novyKrok;
@@ -145,16 +140,22 @@ public class Data {
      */
     public void zvetseniCasuSimulace(double cas){
 
+        List<Velbloud> velblKOdstr = new ArrayList<>();
         for(int i = 0; i < vsichniSklady.size(); i++){
             vsichniSklady.get(i).zvetseniCasu(cas);
         }
+       // System.out.println("Pocet skladu: " + vsichniSklady.size());
 
-        for(int i = 0; i < vsichniVelbloudy.size(); i++){
-            vsichniVelbloudy.get(i).zvetseniCasu(cas);
+        for(Velbloud velbloud : velbloudyNaCeste){
+            if(velbloud.kontrolaCasu()){
+                velblKOdstr.add(velbloud);
+            }
         }
 
+        for(Velbloud velbloud : velblKOdstr){
+            velbloudZkoncilCestu(velbloud);
+        }
         aktualniCas += cas;
-
     }
 
     /**
@@ -166,6 +167,13 @@ public class Data {
             graf.get(i).setJeZpracovany(false);
             graf.get(i).obnoveniCesty();
         }
+    }
+    public void velbloudNaCeste(Velbloud velbloud){
+        velbloudyNaCeste.add(velbloud);
+    }
+
+    public void velbloudZkoncilCestu(Velbloud velbloud){
+        velbloudyNaCeste.remove(velbloud);
     }
 
     /**
@@ -186,16 +194,16 @@ public class Data {
         this.vsichniSklady.add(sklad);
     }
 
-    public void setMaxRychlostVelbloudu(int maxRychlost){
+    public void setMaxRychlostVelbloudu(double maxRychlost){
         this.maxRychlostVelbloudu = maxRychlost;
     }
-    public void setMaxDalkaVelbloudu(int maxDalka){
+    public void setMaxDalkaVelbloudu(double maxDalka){
         this.maxDalkaVelbloudu = maxDalka;
     }
-    public int getMaxRychlostVelbloudu(){
+    public double getMaxRychlostVelbloudu(){
         return  maxRychlostVelbloudu;
     }
-    public int getMaxDalkaVelbloudu(){
+    public double getMaxDalkaVelbloudu(){
         return maxDalkaVelbloudu;
     }
     public List<Sklad> getVsichniSklady(){
