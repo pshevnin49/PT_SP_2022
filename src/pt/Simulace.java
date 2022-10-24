@@ -35,7 +35,12 @@ public class Simulace {
             }
             baseDat.zvetseniCasuSimulace(minKrokCas);
             minKrokCas = baseDat.getMinKrokCasu();
+            if(minKrokCas == Data.MAX_VALUE && aktPozList.size() > 0){
+                minKrokCas = 1;
+            }
         }
+
+
     }
 
     private void zpracovaniPoz(List<Pozadavek> pozadavekList, DijkstraAlgoritmus dijkstra) throws CloneNotSupportedException {
@@ -43,8 +48,12 @@ public class Simulace {
 
         for(int i = 0; i < pozadavekList.size(); i++){
             Pozadavek pozadavek = pozadavekList.get(i);
-            Oaza oaza = baseDat.getVsichniOazy().get(pozadavek.getIdOazy());
+            Oaza oaza = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1);
             StackCesta cesta = oaza.getNejlepsiCestu(pozadavek.getPocetKosu(), dijkstra);
+            if(cesta == null){
+                //System.out.println("cesta = null");
+                continue;
+            }
             Sklad sklad = (Sklad) cesta.get().stanice;
             Velbloud velbloud = sklad.getVhodnyVelbl(pozadavek.getPocetKosu(), pozadavek.getCasDoruceni(), cesta);
 
@@ -52,7 +61,8 @@ public class Simulace {
                 //System.out.println("Velbloud != null");
                 pozadavekList.remove(i);
                 velbloud.zacniNakladat(pozadavek.getPocetKosu(), cesta, pozadavek);
-            }else{
+            }
+            else{
                 //System.out.println("Velbloud == null");
             }
 

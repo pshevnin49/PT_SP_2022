@@ -12,9 +12,9 @@ public class ZpracovaniDat {
 
     public void zpracovani(List<String> data, Data baseDat){
 
-        int maxStredniRychlost = 0; // maximalni stredni rychlost
+        double maxStredniRychlost = 0; // maximalni stredni rychlost
         //int dobaNapitiRychlejsiho = 0;
-        int maxStredniVzdal = 0; // maximalni stredni dalka
+        double maxStredniVzdal = 0; // maximalni stredni dalka
 
         this.baseDat = baseDat;
         int pocetSkladu = Integer.parseInt(data.get(0));
@@ -22,8 +22,6 @@ public class ZpracovaniDat {
         int indexPoslSkladu = pocetSkladu * 5;
 
         for(int i = 1; i < indexPoslSkladu; i += 5){
-
-
             double x = Double.parseDouble(data.get(i));
             double y = Double.parseDouble(data.get(i + 1));
             int pocetKusu = Integer.parseInt(data.get(i + 2));
@@ -34,7 +32,6 @@ public class ZpracovaniDat {
             indexSkladu++;
             baseDat.inputSklad((Sklad) sklad);
             baseDat.inputZastavka(sklad);
-
         }
 
         int pocetOaz = Integer.parseInt(data.get(indexPoslSkladu + 1));
@@ -70,7 +67,6 @@ public class ZpracovaniDat {
             zastavka.vlozHranu(soused);
             soused.vlozHranu(zastavka);
 
-
         }
 
         int pocetDruhu = Integer.parseInt(data.get(indexPoslCesty + 1));
@@ -79,21 +75,21 @@ public class ZpracovaniDat {
         for(int i = indexPoslCesty + 2; i < indexPoslDruhu; i += 8){
 
             String nazev = data.get(i);
-            int minRychlost = Integer.parseInt(data.get(i + 1));
-            int maxRychlost = Integer.parseInt(data.get(i + 2));
-            int minVzdalenost = Integer.parseInt(data.get(i + 3));
-            int maxVzdalenost = Integer.parseInt(data.get(i + 4));
+            double minRychlost = Double.parseDouble(data.get(i + 1));
+            double maxRychlost = Double.parseDouble(data.get(i + 2));
+            double minVzdalenost = Double.parseDouble(data.get(i + 3));
+            double maxVzdalenost = Double.parseDouble(data.get(i + 4));
             int dobaPiti = Integer.parseInt(data.get(i + 5));
             int maxZatizeni = Integer.parseInt(data.get(i + 6));
             double pomerDruhu = Double.parseDouble(data.get(i + 7));
 
-            int stredniRychlost = (minRychlost + maxRychlost)/2;
-            if(stredniRychlost > maxStredniRychlost){
+            double stredniRychlost = (minRychlost + maxRychlost)/2;
+            if(Data.jeVetsi(stredniRychlost, maxStredniRychlost)){
                 maxStredniRychlost = stredniRychlost;
             }
 
-            int stredniVzdalenost = (minVzdalenost + maxVzdalenost)/2;
-            if(stredniVzdalenost > maxStredniVzdal){
+            double stredniVzdalenost = (minVzdalenost + maxVzdalenost)/2;
+            if(Data.jeVetsi(stredniVzdalenost, maxStredniVzdal)){
                 maxStredniVzdal = stredniVzdalenost;
             }
 
@@ -111,7 +107,7 @@ public class ZpracovaniDat {
 
         for(int i = indexPoslDruhu + 2; i < indexPoslPozadavku; i += 4){
 
-            int casPrichodu = Integer.parseInt(data.get(i));
+            double casPrichodu = Double.parseDouble(data.get(i));
             int indexOazy = Integer.parseInt(data.get(i + 1));
             int mnozstviKosu = Integer.parseInt(data.get(i + 2));
             int casCekani = Integer.parseInt(data.get(i + 3));

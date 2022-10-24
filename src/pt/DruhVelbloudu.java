@@ -4,18 +4,18 @@ import java.util.Random;
 
 public class DruhVelbloudu {
     private String nazev;
-    private int maxRychlost;
-    private int minRychlost;
+    private double maxRychlost;
+    private double minRychlost;
     private int rychlost;
-    private int maxVzdalenost;
-    private int minVzdalenost;
+    private double maxVzdalenost;
+    private double minVzdalenost;
     private int vzdalenost;
     private int dobaPiti;
     private int maxZatizeni;
     private double pomerDruhuVelbloudu;
     private Random rand = new Random();
 
-    public DruhVelbloudu(String nazev, int minRychlost, int maxRychlost, int maxVzdalenost, int minVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
+    public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double maxVzdalenost, double minVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
         this.nazev = nazev;
         this.maxRychlost = maxRychlost;
         this.minRychlost = minRychlost;
@@ -42,19 +42,19 @@ public class DruhVelbloudu {
         return nazev;
     }
 
-    public int getMaxRychlost() {
+    public double getMaxRychlost() {
         return maxRychlost;
     }
 
-    public int getMinRychlost() {
+    public double getMinRychlost() {
         return minRychlost;
     }
 
-    public int getMaxVzdalenost() {
+    public double getMaxVzdalenost() {
         return maxVzdalenost;
     }
 
-    public int getMinVzdalenost() {
+    public double getMinVzdalenost() {
         return minVzdalenost;
     }
 
@@ -62,12 +62,12 @@ public class DruhVelbloudu {
         System.out.println(nazev + " max rychlost:" + maxRychlost + " min rychlost:" + minRychlost + " max vzd.:" + maxVzdalenost + " min vzd.: " + minVzdalenost);
     }
 
-    public int randRych() {
+    public double randRych() {
         return maxRychlost;
         //return minRychlost + rand.nextInt(maxRychlost - minRychlost + 1);
     }
 
-    public int randVzdal() {
+    public double randVzdal() {
         return maxVzdalenost;
         //return minVzdalenost + rand.nextInt(maxVzdalenost - minVzdalenost + 1);
     }

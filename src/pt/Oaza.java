@@ -20,14 +20,13 @@ public class Oaza extends Bod {
            cestyDoOazy = algoritmus.getVsichniCesty(getId());
            spustenAlg = true;
         }
+
         for(int i = 0; i < cestyDoOazy.size(); i++){
-
             Sklad sklad = (Sklad) cestyDoOazy.get(i).getPrvniBod();
-
-            if(sklad.getPocetKosu() > pocetKosu){
+            if(sklad.getPocetKosu() >= pocetKosu){
                 cesta = cestyDoOazy.get(i);
+                return cesta;
             }
-
         }
         return cesta;
 
