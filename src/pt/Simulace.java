@@ -42,23 +42,21 @@ public class Simulace {
 
 
     }
-
     private void zpracovaniPoz(List<Pozadavek> pozadavekList, DijkstraAlgoritmus dijkstra) throws CloneNotSupportedException {
         pozadavekList.sort(comparing(Pozadavek::getCasDoruceni));
 
         for(int i = 0; i < pozadavekList.size(); i++){
             Pozadavek pozadavek = pozadavekList.get(i);
             Oaza oaza = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1);
-            StackCesta cesta = oaza.getNejlepsiCestu(pozadavek.getPocetKosu(), dijkstra);
+            StackCesta cesta = oaza.getNejlepsiCestu(pozadavek.getPocetKosu(), dijkstra);//posilat jeste cas
+
             if(cesta == null){
-                //System.out.println("cesta = null");
                 continue;
             }
             Sklad sklad = (Sklad) cesta.get().stanice;
             Velbloud velbloud = sklad.getVhodnyVelbl(pozadavek.getPocetKosu(), pozadavek.getCasDoruceni(), cesta);
 
             if(velbloud != null){
-                //System.out.println("Velbloud != null");
                 pozadavekList.remove(i);
                 velbloud.zacniNakladat(pozadavek.getPocetKosu(), cesta, pozadavek);
             }
@@ -68,10 +66,5 @@ public class Simulace {
 
         }
     }
-
-
-
-
-
 
 }

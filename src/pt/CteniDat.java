@@ -13,7 +13,7 @@ public class CteniDat {
     }
 
     /**
-     * Cte data a ignoruje vsichni komentare, vraci List Stringu s uzitecnama datama
+     * Cte data a ignoruje vsichni komentare, vraci List Stringu s uzitecnyma datama
      * @return cisla
      * @throws FileNotFoundException
      */

@@ -183,15 +183,17 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek){
+    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
-
         aktualniPocetKosu = pocetKosu;
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = cesta;
+
+        this.cesta = (StackCesta) cesta.clone();
+
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
     }

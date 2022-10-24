@@ -10,6 +10,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
     private double dalkaCesty;
     private List<Double> vsichniDelkyCesty;
     private Bod stanice;
+    private int cisloCesty;
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
@@ -122,6 +123,12 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
 
     public Bod getPrvniBod(){
         return top.stanice;
+    }
+    public void setCisloCesty(int cisloCesty){
+        this.cisloCesty = cisloCesty;
+    }
+    public int getCisloCesty(){
+        return getCisloCesty();
     }
     @Override
     protected Object clone() throws CloneNotSupportedException {
