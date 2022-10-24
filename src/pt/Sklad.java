@@ -116,11 +116,10 @@ public class Sklad extends Bod {
     }
 
     private Velbloud getNovyVelbloud(DruhVelbloudu druh){
+
         Velbloud velbloud = new Velbloud(baseDat.getIndexVelbloudu(),
                 druh, this, baseDat);
 
-
-        velbloud.vypis();
         baseDat.getVsichniVelbloudy().add(velbloud);
         baseDat.indexVelblouduInc();
 

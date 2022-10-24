@@ -18,5 +18,9 @@ public class Main {
 
         simulace.startSimulace();
 
+        for(int i = 0; i < baseDat.getVsichniVelbloudy().size(); i++){
+            baseDat.getVsichniVelbloudy().get(i).vypisPoSimulace();
+        }
+
     }
 }

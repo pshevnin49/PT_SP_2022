@@ -23,6 +23,9 @@ public class Velbloud {
     private Data baseDat;
     private double casSplneniAkce;
 
+    private int vsichniKose;
+    private int vsichniPoz;
+
     public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, Data baseDat) {
         this.id = id;
         this.rychlost = druhVelbloudu.randRych();
@@ -76,15 +79,11 @@ public class Velbloud {
     public double getAktualniCas(){
         return baseDat.getAktualniCas();
     }
-
     public double getCasPristiAkce(){
         return casSplneniAkce;
     }
     public Sklad getDomovskaStanice() {
         return domovskaStanice;
-    }
-    public StackCesta getCesta() {
-        return cesta;
     }
     public double getRychlost() {
         return rychlost;
@@ -224,6 +223,8 @@ public class Velbloud {
     }
 
     private void zacniVykladat(){
+        vsichniPoz += 1;
+        vsichniKose += aktualniPocetKosu;
         stav = StavVelbloudu.VYKLADA;
         aktualniPocetKosu = 0;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
@@ -239,6 +240,11 @@ public class Velbloud {
         return cas;
     }
 
+    public void vypisPoSimulace(){
+        System.out.println("Velbloud: " + id);
+        System.out.println("    Dorucene kose: " + vsichniKose);
+        System.out.println("    Dorucene pozadavky: " + vsichniPoz);
+    }
     public void vypis(){
         System.out.println("Velbloud: " + id + " rychlost: " + rychlost);
     }
