@@ -31,8 +31,21 @@ public class Velbloud {
         this.rychlost = druhVelbloudu.randRych();
         this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
-        this.cestaZpatky = new StackCesta();
+        this.cestaZpatky = new StackCesta(baseDat);
         this.druhVelbloudu = druhVelbloudu;
+        this.jeNaCeste = false;
+        this.baseDat = baseDat;
+        this.stav = StavVelbloudu.CEKA;
+        this.aktualniPocetKosu = 0;
+    }
+
+    public Velbloud(int id, Data baseDat, double rychlost, double vzdalenost) {
+        this.id = id;
+        this.rychlost = rychlost;
+        this.vzdalenostMax = vzdalenost;
+        this.domovskaStanice = null;
+        this.cestaZpatky = new StackCesta(baseDat);
+        this.druhVelbloudu = null;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
         this.stav = StavVelbloudu.CEKA;
@@ -103,7 +116,7 @@ public class Velbloud {
      */
     private void zacniCestu(){
         predchoziVzdalenost = 0;
-        cestaZpatky = new StackCesta();
+        cestaZpatky = new StackCesta(baseDat);
         vzdalenostBezPiti = 0;
 
         jeNaCeste = true;
@@ -122,8 +135,8 @@ public class Velbloud {
      * kdyz vratil domu, vraci true, v opacnem pripade - false
      */
     private boolean prijelDoStanici(){
-
         double aktualniCas = baseDat.getAktualniCas();
+
         if(cesta.get().next == null){
             if(!jeNaCesteZpatky){
 
@@ -183,7 +196,8 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek){
+    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
 
@@ -191,7 +205,8 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = cesta;
+        this.cesta = (StackCesta) cesta.clone();
+
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
     }

@@ -15,7 +15,7 @@ public class DruhVelbloudu {
     private double pomerDruhuVelbloudu;
     private Random rand = new Random();
 
-    public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double maxVzdalenost, double minVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
+    public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double minVzdalenost, double maxVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
         this.nazev = nazev;
         this.maxRychlost = maxRychlost;
         this.minRychlost = minRychlost;
@@ -63,12 +63,18 @@ public class DruhVelbloudu {
     }
 
     public double randRych() {
-        return maxRychlost;
-        //return minRychlost + rand.nextInt(maxRychlost - minRychlost + 1);
+
+        return minRychlost + (maxRychlost - minRychlost) * rand.nextDouble();
+
     }
 
     public double randVzdal() {
-        return maxVzdalenost;
-        //return minVzdalenost + rand.nextInt(maxVzdalenost - minVzdalenost + 1);
+
+        double stredniHodn = (minVzdalenost + maxVzdalenost)/2;
+        double odchylka = (maxVzdalenost - minVzdalenost)/4;
+
+        return odchylka * rand.nextGaussian() + stredniHodn;
+
+
     }
 }

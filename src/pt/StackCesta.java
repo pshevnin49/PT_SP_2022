@@ -5,11 +5,24 @@ import java.util.List;
 public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak, aby spoustel vypocty jenom jednou, pak vyuzival promenne
 
     private BodCesty top = null;
-    private boolean jeSpoctenaCesta = false;
-    private double maxUsecka;
-    private double dalkaCesty;
-    private List<Double> vsichniDelkyCesty;
     private Bod stanice;
+
+    private boolean jeSpoctenIndex = false;
+    private double maxUsecka = 0;
+    private double dalkaCesty = 0;
+    private int indexNejlepsiCesty = 0;
+
+    private boolean jeCasRychlVelbl = false;
+    private double casRychlVelbl = 0;
+
+    private boolean jeCasNejdelVelbl = false;
+    private double casNejdelVelbl = 0;
+
+    private Data baseDat;
+
+    public StackCesta(Data baseDat){
+        this.baseDat = baseDat;
+    }
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
@@ -24,19 +37,35 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
             top = novyBod;
         }
     }
-    BodCesty get(){
-        return top;
-    }
-    public double getCelaDalka(){
+
+    /**
+     * Metoda spocita dalku, cesty, max usecku, a generuje z techto dat
+     * "index nejlepsi cesty" tento index slouzi k razeni cest od nejlepsi k nejhorsi.
+     * formula tohoto indexu je: cela dalka + pocet usecek * delku max usecky;
+     */
+    public void spocitejIndexCesty(){
         double dalka = 0;
+        double pocetStanic = 0;
         BodCesty bodCesty = top;
 
-        while (bodCesty != null){
-            dalka += bodCesty.vzdalenost;
-            bodCesty = bodCesty.next;
+        if(jeSpoctenIndex){
+            while (bodCesty != null){
+                pocetStanic++;
+
+                dalka += bodCesty.vzdalenost;
+                bodCesty = bodCesty.next;
+
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxUsecka)){
+                    maxUsecka = bodCesty.vzdalenost;
+                }
+            }
+            dalkaCesty = dalka;
+            indexNejlepsiCesty = (int) (dalka + pocetStanic * maxUsecka);
+            jeSpoctenIndex = true;
         }
-        return dalka;
+
     }
+
     public void odstran(){
         if(top == null){
             return;
@@ -44,10 +73,6 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         else{
             top = top.next;
         }
-    }
-
-    public Bod getPosledniStanice(){
-        return stanice;
     }
 
     public void vypis(){
@@ -58,6 +83,82 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
             bodCesty = bodCesty.next;
         }
         System.out.println(getCelaDalka() + "O");
+    }
+
+    /**
+     * Spocita kolik casu potrebuje rychlejsi velbloud na tuto cestu pokud to zvladne
+     * z pohledu maximalni delky, pokud to nezvladne, cas bude se rovnat -1
+     */
+    public void casRychlVelbloud(){
+        BodCesty bodCesty = top;
+        double maxDalka = 0;
+        double cestaBezPiti = 0;
+        double celyCasCesty = 0;
+        Velbloud velbloud = baseDat.getRychlejsiVelbl();
+
+        if(!jeCasRychlVelbl){
+            while(bodCesty != null){
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                    maxDalka = bodCesty.vzdalenost;
+                }
+
+                if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
+                    cestaBezPiti = 0;
+                    celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
+                }
+
+                celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
+                cestaBezPiti += bodCesty.vzdalenost;
+                bodCesty = bodCesty.next;
+
+            }
+
+            jeCasRychlVelbl = true;
+
+            double realnyCasDoruceni = celyCasCesty + velbloud.getAktualniCas();
+            if(Data.jeVetsi(maxDalka, velbloud.getVzdalenostMax())){
+                realnyCasDoruceni = -1;
+            }
+            casRychlVelbl = realnyCasDoruceni;
+        }
+    }
+
+    /**
+     * Spocita kolik casu potrebuje nejdelsi velbloud na tuto cestu pokud to zvladne
+     * z pohledu maximalni delky, pokud to nezvladne, cas bude se rovnat -1
+     */
+    public void casNejdelVelbloud(){
+        BodCesty bodCesty = top;
+        double maxDalka = 0;
+        double cestaBezPiti = 0;
+        double celyCasCesty = 0;
+        Velbloud velbloud = baseDat.getNejdelsiVelbl();
+
+        if(!jeCasNejdelVelbl){
+            while(bodCesty != null){
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                    maxDalka = bodCesty.vzdalenost;
+                }
+
+                if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
+                    cestaBezPiti = 0;
+                    celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
+                }
+
+                celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
+                cestaBezPiti += bodCesty.vzdalenost;
+                bodCesty = bodCesty.next;
+
+            }
+
+            jeCasNejdelVelbl = true;
+
+            double realnyCasDoruceni = celyCasCesty + velbloud.getAktualniCas();
+            if(Data.jeVetsi(maxDalka, velbloud.getVzdalenostMax())){
+                realnyCasDoruceni = -1;
+            }
+            casNejdelVelbl = realnyCasDoruceni;
+        }
     }
 
     /**
@@ -76,34 +177,26 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         double celyCasCesty = 0;
         double celaDalkaCesty = 0;
 
-        //if(!jeSpoctenaCesta){
-            while(bodCesty != null){
-                if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
-                    maxDalka = bodCesty.vzdalenost;
-                }
 
-                if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
-                    cestaBezPiti = 0;
-                    celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
-                }
-
-                celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
-                celaDalkaCesty += bodCesty.vzdalenost;
-                cestaBezPiti += bodCesty.vzdalenost;
-                bodCesty = bodCesty.next;
-
+        while(bodCesty != null){
+            if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                maxDalka = bodCesty.vzdalenost;
             }
 
-            jeSpoctenaCesta = true;
-            maxUsecka = maxDalka;
-            dalkaCesty = celaDalkaCesty;
+            if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
+                cestaBezPiti = 0;
+                celyCasCesty += velbloud.getDruhVelbloudu().getDobaPiti();
+            }
 
+            celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
+            celaDalkaCesty += bodCesty.vzdalenost;
+            cestaBezPiti += bodCesty.vzdalenost;
+            bodCesty = bodCesty.next;
 
-//        }else{
-//            maxDalka = maxUsecka;
-//            celaDalkaCesty = dalkaCesty;
-//            celyCasCesty = celaDalkaCesty / velbloud.getRychlost();
-//        }
+        }
+
+        maxUsecka = maxDalka;
+        dalkaCesty = celaDalkaCesty;
 
         double realnyCasDoruceni = celyCasCesty + velbloud.getAktualniCas() + (2 * pocetKosu * velbloud.getDomovskaStanice().getCasNalozeni()); // cely cas
         if(Data.jeVetsi(casDoruceni, realnyCasDoruceni)){
@@ -117,7 +210,58 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         else{
             return 2;
         }
+    }
 
+    /**
+     * Vraci cas ktery potrebuje rychlejsi velbloud na danou cestu
+     * pokud tuto cestu nedokaze zvladnout, vraci -1
+     * @param pocetKosu
+     * @return
+     */
+    public double getCasRychlVelbl(int pocetKosu){
+        casRychlVelbloud();
+
+        Sklad sklad = (Sklad) top.stanice;
+        double casNalozeni = sklad.getCasNalozeni();
+
+        return casRychlVelbl + 2 * pocetKosu * casNalozeni;
+    }
+
+    /**
+     * Vraci cas ktery potrebuje nejdelsi velbloud na danou cestu
+     * pokud tuto cestu nedokaze zvladnout, vraci -1
+     * @param pocetKosu
+     * @return
+     */
+    public double getCasNejdelVelbl(int pocetKosu){
+        casNejdelVelbloud();
+
+        Sklad sklad = (Sklad) top.stanice;
+        double casNalozeni = sklad.getCasNalozeni();
+
+        return casNejdelVelbl + 2 * pocetKosu * casNalozeni;
+    }
+
+    public int getIndexNejlepsiCesty(){
+        spocitejIndexCesty();
+        return indexNejlepsiCesty;
+    }
+
+    public double getCelaDalka(){
+        spocitejIndexCesty();
+        return dalkaCesty;
+    }
+
+    public double getMaxUsecka(){
+        spocitejIndexCesty();
+        return maxUsecka;
+    }
+
+    public Bod getPosledniStanice(){
+        return stanice;
+    }
+    public BodCesty get(){
+        return top;
     }
 
     public Bod getPrvniBod(){

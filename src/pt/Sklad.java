@@ -17,7 +17,7 @@ public class Sklad extends Bod {
     private Data baseDat;
 
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
-        super(id, x, y);
+        super(id, x, y, baseDat);
         this.pocetKosu = pocetKosu;
         this.casObnoveni = casObnoveni;
         this.casNalozeni = casNalozeni;
@@ -28,6 +28,7 @@ public class Sklad extends Bod {
         this.rezervovaneKose = 0;
         this.baseDat = baseDat;
     }
+
     public void zvetseniCasu(double cas){
         double doubleCasObnoveni = (double) casObnoveni;
         casPoObnoveni += cas;
@@ -38,8 +39,12 @@ public class Sklad extends Bod {
             aktualniPocetKosu += pocetKosu;
             //System.out.println("Aktualni pocet kosu: " + aktualniPocetKosu);
         }
-
     }
+
+    public double getCasovyKrok(){
+        return casObnoveni - casPoObnoveni;
+    }
+
     public void setRezervovaneKose(int pocetKosu){
         rezervovaneKose = pocetKosu;
     }
@@ -47,6 +52,7 @@ public class Sklad extends Bod {
         rezervovaneKose -= pocetKosu;
         this.pocetKosu -= pocetKosu;
     }
+
     public void pridejVelblouda(Velbloud velbloud){
         domVelbloudy.add(velbloud);
     }
@@ -72,6 +78,7 @@ public class Sklad extends Bod {
      * @return
      */
     public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, StackCesta cesta){ //cas doruceni - cas prichodu poz + casCekani
+
         boolean bylRychlejsiVelbl = false;
         boolean bylNejdelsiVelbl = false;
         Velbloud velbloudPrazdny = null;
@@ -94,19 +101,21 @@ public class Sklad extends Bod {
             }
             else if(stihneLi == 1){
                 domVelbloudy.add(velbloud);
-                if(velbloud.getVzdalenostMax() >= baseDat.getMaxDalkaVelbloudu()){
+                if(velbloud.getVzdalenostMax() >= baseDat.getMaxStrDalkaVelbloudu()){
+
                     return velbloudPrazdny;
                 }
             }else{
                 domVelbloudy.add(velbloud);
-                if(velbloud.getRychlost() >= baseDat.getMaxRychlostVelbloudu()){
+                if(velbloud.getRychlost() >= baseDat.getMaxStrRychlostVelbloudu()){
+
                     return velbloudPrazdny;
                 }
             }
-            if(velbloud.getRychlost() >= baseDat.getMaxRychlostVelbloudu()){
+            if(velbloud.getRychlost() >= baseDat.getMaxStrRychlostVelbloudu()){
                 bylRychlejsiVelbl = true;
             }
-            if(velbloud.getVzdalenostMax() >= baseDat.getMaxDalkaVelbloudu()){
+            if(velbloud.getVzdalenostMax() >= baseDat.getMaxStrDalkaVelbloudu()){
                 bylRychlejsiVelbl = true;
             }
 
@@ -122,7 +131,6 @@ public class Sklad extends Bod {
 
         baseDat.getVsichniVelbloudy().add(velbloud);
         baseDat.indexVelblouduInc();
-
         return velbloud;
     }
 }

@@ -31,7 +31,7 @@
 2
 🐪 Definice velblouda (nazev, minimalni rychlost, maximalni rychlost, minimalni vzdalenost, maximalni vzdalenost, doba piti, maximalni zatizeni a procentualni pomer druhu velblouda)  🏜
 Pomaly 1 5 50 50 1 10 0.5
-Ziznivy 1 5 50 50 1 10 0.5
+Ziznivy 1 5 20 50 1 10 0.5
 🐪 Pocet pozadavku P: 🏜
 2
 🐪 Definice pozadavku (kazda oaza chce jeden kos, moc na to nespechaji) 🏜
