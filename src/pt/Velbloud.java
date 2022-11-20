@@ -31,7 +31,7 @@ public class Velbloud {
         this.rychlost = druhVelbloudu.randRych();
         this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
-        this.cestaZpatky = new StackCesta();
+        this.cestaZpatky = new StackCesta(baseDat);
         this.druhVelbloudu = druhVelbloudu;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
