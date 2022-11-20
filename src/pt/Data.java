@@ -12,12 +12,20 @@ public class Data {
 
     private List<Pozadavek> nesplnennePozadavky;
     private List<Pozadavek> splnenePozadavky;
+
     private double aktualniCas;
     private int indexVelbloudu;
 
-    private double maxRychlostVelbloudu;
+    private double maxStrRychlostVelbloudu;
     private int dobaNapiti;
-    private double maxDalkaVelbloudu;
+    private double maxStrDalkaVelbloudu;
+
+    private double maxDalka;
+    private double maxRychlost;
+
+    private Velbloud stredniVelbl;
+    private Velbloud rychlejsiVelbl;
+    private Velbloud nejdelsiVelbl;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
 
@@ -134,6 +142,21 @@ public class Data {
         return krok - aktualniCas;
     }
 
+    public double getMinKrokSkladu(){
+        double krok = MAX_VALUE;
+        double novyKrok;
+
+        for(Sklad sklad : vsichniSklady){
+            novyKrok = sklad.getCasovyKrok();
+
+            if(jeVetsi(krok, novyKrok)){
+                krok = novyKrok;
+            }
+        }
+
+        return krok;
+    }
+
     /**
      * Zvetsuje cas cele simulace o zadanou velikost
      * @param cas
@@ -194,17 +217,33 @@ public class Data {
         this.vsichniSklady.add(sklad);
     }
 
-    public void setMaxRychlostVelbloudu(double maxRychlost){
-        this.maxRychlostVelbloudu = maxRychlost;
+    public void setMaxDalka(double maxDalka) {
+        this.maxDalka = maxDalka;
     }
-    public void setMaxDalkaVelbloudu(double maxDalka){
-        this.maxDalkaVelbloudu = maxDalka;
+
+    public void setMaxRychlost(double maxRychlost) {
+        this.maxRychlost = maxRychlost;
     }
-    public double getMaxRychlostVelbloudu(){
-        return  maxRychlostVelbloudu;
+
+    public double getMaxDalka() {
+        return maxDalka;
     }
-    public double getMaxDalkaVelbloudu(){
-        return maxDalkaVelbloudu;
+
+    public double getMaxRychlost() {
+        return maxRychlost;
+    }
+
+    public void setMaxStrRychlostVelbloudu(double maxRychlost){
+        this.maxStrRychlostVelbloudu = maxRychlost;
+    }
+    public void setMaxStrDalkaVelbloudu(double maxDalka){
+        this.maxStrDalkaVelbloudu = maxDalka;
+    }
+    public double getMaxStrRychlostVelbloudu(){
+        return maxStrRychlostVelbloudu;
+    }
+    public double getMaxStrDalkaVelbloudu(){
+        return maxStrDalkaVelbloudu;
     }
     public List<Sklad> getVsichniSklady(){
         return vsichniSklady;
@@ -238,6 +277,30 @@ public class Data {
 
     public void indexVelblouduInc(){
         indexVelbloudu++;
+    }
+
+    public Velbloud getStredniVelbl() {
+        return stredniVelbl;
+    }
+
+    public void setStredniVelbl(Velbloud stredniVelbl) {
+        this.stredniVelbl = stredniVelbl;
+    }
+
+    public Velbloud getRychlejsiVelbl() {
+        return rychlejsiVelbl;
+    }
+
+    public void setRychlejsiVelbl(Velbloud rychlejsiVelbl) {
+        this.rychlejsiVelbl = rychlejsiVelbl;
+    }
+
+    public Velbloud getNejdelsiVelbl() {
+        return nejdelsiVelbl;
+    }
+
+    public void setNejdelsiVelbl(Velbloud nejdelsiVelbl) {
+        this.nejdelsiVelbl = nejdelsiVelbl;
     }
 
     /**

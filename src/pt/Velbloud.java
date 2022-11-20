@@ -39,6 +39,19 @@ public class Velbloud {
         this.aktualniPocetKosu = 0;
     }
 
+    public Velbloud(int id, Data baseDat, double rychlost, double vzdalenost) {
+        this.id = id;
+        this.rychlost = rychlost;
+        this.vzdalenostMax = vzdalenost;
+        this.domovskaStanice = null;
+        this.cestaZpatky = new StackCesta(baseDat);
+        this.druhVelbloudu = null;
+        this.jeNaCeste = false;
+        this.baseDat = baseDat;
+        this.stav = StavVelbloudu.CEKA;
+        this.aktualniPocetKosu = 0;
+    }
+
     /**
      * Hlavni ridici metoda velbloudu. Kazdy krok kontroluje ma li byt splnena akce kterou aktualne dela velbloud
      * Pokud velbloud este nevratil domu vraci false, pokud vratil, vraci true;
@@ -103,7 +116,7 @@ public class Velbloud {
      */
     private void zacniCestu(){
         predchoziVzdalenost = 0;
-        cestaZpatky = new StackCesta();
+        cestaZpatky = new StackCesta(baseDat);
         vzdalenostBezPiti = 0;
 
         jeNaCeste = true;
@@ -122,8 +135,8 @@ public class Velbloud {
      * kdyz vratil domu, vraci true, v opacnem pripade - false
      */
     private boolean prijelDoStanici(){
-
         double aktualniCas = baseDat.getAktualniCas();
+
         if(cesta.get().next == null){
             if(!jeNaCesteZpatky){
 
@@ -187,11 +200,11 @@ public class Velbloud {
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
+
         aktualniPocetKosu = pocetKosu;
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-
         this.cesta = (StackCesta) cesta.clone();
 
         stav = StavVelbloudu.NAKLADA;

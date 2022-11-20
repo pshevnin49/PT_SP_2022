@@ -24,7 +24,6 @@ public class Pozadavek {
     public int getIdOazy() {
         return idOazy;
     }
-
     public int getId(){
         return id;
     }

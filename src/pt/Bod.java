@@ -12,20 +12,22 @@ public abstract class Bod {
     protected StackCesta kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
     protected List<Hrana> hrany;
     private double distance;
+    private Data baseDat;
 
-    public Bod(int id, double x, double y){
+    public Bod(int id, double x, double y, Data baseDat){
         this.id = id;
         this.x = x;
         this.y = y;
         this.jeZpracovany = false;
+        this.baseDat = baseDat;
         this.distance = Data.MAX_VALUE;
         this.hrany = new ArrayList<>();
-        this.kratsiCesta = new StackCesta();
+        this.kratsiCesta = new StackCesta(baseDat);
         kratsiCesta.pridej(this, 0);
     }
 
     public void obnoveniCesty(){
-        kratsiCesta = new StackCesta();
+        kratsiCesta = new StackCesta(baseDat);
         kratsiCesta.pridej(this, 0);
     }
 
@@ -47,6 +49,7 @@ public abstract class Bod {
     public void setJeZpracovany(boolean jeZpracovany){
         this.jeZpracovany = jeZpracovany;
     }
+
     public int getId(){
         return id;
     }
@@ -56,6 +59,7 @@ public abstract class Bod {
     public double getY() {
         return y;
     }
+
     public List<Hrana> getHrany(){
         return hrany;
     }

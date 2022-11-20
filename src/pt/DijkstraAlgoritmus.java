@@ -27,7 +27,7 @@ public class DijkstraAlgoritmus {
         baseDat.pripravZastavky();
         Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
         oaza.setDistance(0);
-        StackCesta cestaKOaze = new StackCesta();
+        StackCesta cestaKOaze = new StackCesta(baseDat);
         cestaKOaze.pridej(oaza, 0);
 
         while(oaza != null){
