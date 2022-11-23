@@ -1,3 +1,0 @@
-154 🐪 Kazdy komentar zacina znakem velblouda
-(U+1F42A) a konci znakem pouste (U+1F3DC), jakekoliv bile znaky ignorujte 🏜
-🐪 Tyto cisla ignorujte: 10000000 9805216 🏜 1

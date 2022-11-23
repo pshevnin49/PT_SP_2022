@@ -13,7 +13,7 @@ public class Oaza extends Bod {
         cestyDoOazy = new ArrayList<>();
     }
 
-    public StackCesta getNejlepsiCestu(int pocetKosu, DijkstraAlgoritmus algoritmus, Data baseDat) throws CloneNotSupportedException {
+    public StackCesta getNejlepsiCestu(int pocetKosu, DijkstraAlgoritmus algoritmus) throws CloneNotSupportedException {
 
         StackCesta cesta;
 
@@ -24,7 +24,7 @@ public class Oaza extends Bod {
 
         int pocetCest = cestyDoOazy.size();
 
-         for(int i = 0; i < pocetCest; i++){//Odstranit vsichni cesty, ktere neda splnit podle max vzdalenosti velbloudu. Pak napsat metodu, ktera vraci delku listu cest
+         for(int i = 0; i < pocetCest; i++){
             Sklad sklad = (Sklad) cestyDoOazy.get(i).getPrvniBod();
             if(sklad.getPocetKosu() >= pocetKosu){
                 cesta = cestyDoOazy.get(i);
@@ -38,7 +38,19 @@ public class Oaza extends Bod {
         return null;
     }
 
-    public List<StackCesta> getVsichniCesty(){
+    /**
+     * Kontroluje zda byl spousten dijkstra algoritmus pro tuto oazu,
+     * pokud byl, vraci vsichni cesty, pokud nebyl, spousti algorithm a vraci cesty.
+     * @param algoritmus
+     * @return list cest od vswech skladu do oazy
+     */
+    public List<StackCesta> getVsichniCesty(DijkstraAlgoritmus algoritmus) throws CloneNotSupportedException {
+
+        if(!spustenAlg){
+            cestyDoOazy = algoritmus.getVsichniCesty(getId());
+            spustenAlg = true;
+        }
+
         return cestyDoOazy;
     }
 

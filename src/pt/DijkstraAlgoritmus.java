@@ -41,8 +41,11 @@ public class DijkstraAlgoritmus {
             listCest.add(novaCesta);
         }
 
-        listCest.sort(comparing(StackCesta::getCelaDalka));
+        listCest.sort(comparing(StackCesta::getIndexCesty));
 
+        for(int i = 0; i < listCest.size(); i++){
+            listCest.get(i).vypis();
+        }
         return listCest;
     }
 

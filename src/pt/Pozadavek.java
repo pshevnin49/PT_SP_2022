@@ -5,6 +5,7 @@ public class Pozadavek {
     private double casPrichodu;
     private int idOazy;
     private int pocetKosu;
+    private int prevezeneKose;
     private int id;
     private double casOcekavani;
     private double casDoruceni;
@@ -16,6 +17,7 @@ public class Pozadavek {
         this.pocetKosu = pocetKosu;
         this.casOcekavani = casOcekavani;
         this.casDoruceni = casPrichodu + casOcekavani;
+        prevezeneKose = 0;
     }
 
     public double getCasPrichodu() {

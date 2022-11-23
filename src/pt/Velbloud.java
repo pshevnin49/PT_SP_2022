@@ -9,7 +9,7 @@ public class Velbloud {
     private boolean jeNaCeste;
     private boolean jeNaCesteZpatky;
 
-    private DruhVelbloudu druhVelbloudu;
+    private DruhVelbloudu druhVelbloudu = null;
     private StavVelbloudu stav;
 
     private int id;
@@ -26,6 +26,8 @@ public class Velbloud {
     private int vsichniKose;
     private int vsichniPoz;
 
+    private int dobaPiti;
+
     public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, Data baseDat) {
         this.id = id;
         this.rychlost = druhVelbloudu.randRych();
@@ -37,9 +39,10 @@ public class Velbloud {
         this.baseDat = baseDat;
         this.stav = StavVelbloudu.CEKA;
         this.aktualniPocetKosu = 0;
+        this.dobaPiti = druhVelbloudu.getDobaPiti();
     }
 
-    public Velbloud(int id, Data baseDat, double rychlost, double vzdalenost) {
+    public Velbloud(int id, Data baseDat, double rychlost, double vzdalenost, double dobaPiti) {
         this.id = id;
         this.rychlost = rychlost;
         this.vzdalenostMax = vzdalenost;
@@ -50,6 +53,7 @@ public class Velbloud {
         this.baseDat = baseDat;
         this.stav = StavVelbloudu.CEKA;
         this.aktualniPocetKosu = 0;
+        this.dobaPiti = (int) dobaPiti;
     }
 
     /**
@@ -237,6 +241,10 @@ public class Velbloud {
         stav = StavVelbloudu.PIJE;
     }
 
+    public int getDobaPiti(){
+        return dobaPiti;
+    }
+
     private void zacniVykladat(){
         vsichniPoz += 1;
         vsichniKose += aktualniPocetKosu;
@@ -260,6 +268,7 @@ public class Velbloud {
         System.out.println("    Dorucene kose: " + vsichniKose);
         System.out.println("    Dorucene pozadavky: " + vsichniPoz);
     }
+
     public void vypis(){
         System.out.println("Velbloud: " + id + " rychlost: " + rychlost);
     }
