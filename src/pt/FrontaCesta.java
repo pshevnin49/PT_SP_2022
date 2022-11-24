@@ -1,9 +1,11 @@
 package pt;
 
-public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak, aby spoustel vypocty jenom jednou, pak vyuzival promenne
+import java.util.Stack;
 
-    private BodCesty top = null;
-    private Bod stanice;
+public class FrontaCesta implements Cloneable{
+
+    private BodCesty prvni;
+    private BodCesty posledni;
 
     private boolean jeSpoctenIndex = false;
     private double maxUsecka = 0;
@@ -17,22 +19,22 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
 
     private Data baseDat;
 
-    public StackCesta(Data baseDat){
+    public FrontaCesta(Data baseDat){
         this.baseDat = baseDat;
     }
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
-        BodCesty novyBod = new BodCesty(novaStanice, vzdalenost, top);
+        BodCesty novyBod = new BodCesty(novaStanice, vzdalenost);
 
-        if(top == null){
-            top = novyBod;
-            stanice = novyBod.stanice;
+        if(prvni == null){
+            prvni = novyBod;
         }
         else{
-            novyBod.next = top;
-            top = novyBod;
+            posledni.setNext(novyBod);
         }
+        posledni = novyBod;
+
     }
 
     /**
@@ -43,7 +45,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
     public void spocitejIndexCesty(){
         double dalka = 0;
         double pocetStanic = 0;
-        BodCesty bodCesty = top;
+        BodCesty bodCesty = prvni;
 
         if(jeSpoctenIndex){
             while (bodCesty != null){
@@ -74,9 +76,14 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         }
     }
 
-
+    /**
+     * Metoda spocita cas pro vsichni "standardni" velbloudy jako rychlejsi, stredni, a nejdelsi.
+     * Pokud velbloud zvlada tuto cestu, ulozi cas potrebny tomuto velbloudovi pro zvladnuti cesty,
+     * pokud ne - zapise -1
+     */
     public void casVelbloudu(){
-        BodCesty bodCesty = top;
+        BodCesty bodCesty = prvni;
+
         double maxDalka = 0;
 
         double bezPitiStr = 0;
@@ -146,18 +153,17 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         }
     }
 
-
     /**
      * Prijima velblouda, pocet kusu, a spocita stihne li velbloud projit danou cestu v cas
      * @param velbloud
      * @param casDoruceni - cas prichodu pozadavku + doba cekani
-     * @param pocetKosu
+     * @param pocetKosu - pocet kosu v danem doruceni
      * @return vraci 0, pokud velbloud stihne cestu, vraci 1 pokud velbloud
      * ma mensi vzdalenost nez nejdelsi hrana cesty
      * vraci 2, pokud velbloud nestihne cestu casove
      */
     public int stihneCestuVelbloud(Velbloud velbloud, double casDoruceni, int pocetKosu){
-        BodCesty bodCesty = top;
+        BodCesty bodCesty = prvni;
         double maxDalka = 0;
         double cestaBezPiti = 0;
         double celyCasCesty = 0;
@@ -199,6 +205,41 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
     }
 
     /**
+     * Metoda otoci frontu cesty pro cestu zpatky
+     * @return cesta zpatky
+     */
+    public FrontaCesta getCestaZpatky(){
+        Stack<BodCesty> cesta = new Stack<>();
+        FrontaCesta cestaZpatky = new FrontaCesta(baseDat);
+        double predchoziDalka = 0;
+        BodCesty predchoziBod = null;
+
+        BodCesty aktualniBod = prvni;
+
+        while(aktualniBod != null){
+
+            BodCesty novyBod = new BodCesty(aktualniBod.stanice);
+            novyBod.vzdalenost = predchoziDalka;
+            predchoziDalka = aktualniBod.vzdalenost;
+            novyBod.next = predchoziBod;
+
+            cesta.push(novyBod);
+            predchoziBod = novyBod;
+            aktualniBod = prvni.next;
+
+        }
+
+        while(!cesta.isEmpty()){
+
+            BodCesty bodCesty = cesta.pop();
+            cestaZpatky.pridej(bodCesty.stanice, bodCesty.vzdalenost);
+
+        }
+
+        return cestaZpatky;
+    }
+
+    /**
      * Vraci cas ktery potrebuje rychlejsi velbloud na danou cestu
      * pokud tuto cestu nedokaze zvladnout, vraci -1
      * @param pocetKosu
@@ -208,7 +249,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
 
         casVelbloudu();
 
-        Sklad sklad = (Sklad) top.stanice;
+        Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
         if(casRychlVelbl == -1){
@@ -217,6 +258,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
 
         return casRychlVelbl + 2 * pocetKosu * casNalozeni;
     }
+
 
     /**
      * Vraci cas ktery potrebuje nejdelsi velbloud na danou cestu
@@ -227,7 +269,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
     public double getCasNejdelVelbl(int pocetKosu){
         casVelbloudu();
 
-        Sklad sklad = (Sklad) top.stanice;
+        Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
         System.out.println("StackCesta CasNejdel Velbl " + casNejdelVelbl);
@@ -241,7 +283,7 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
     public double getCasStrVelbl(int pocetKosu){
         casVelbloudu();
 
-        Sklad sklad = (Sklad) top.stanice;
+        Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
         if(casStrVelbl == -1){
@@ -284,17 +326,8 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         return maxUsecka;
     }
 
-    public void odstran(){
-        if(top == null){
-            return;
-        }
-        else{
-            top = top.next;
-        }
-    }
-
     public void vypis(){
-        BodCesty bodCesty = top;
+        BodCesty bodCesty = prvni;
 
         while(bodCesty != null){
             System.out.print("from: " + bodCesty.stanice.getId()  + " -> " + bodCesty.vzdalenost + " -> ");
@@ -303,15 +336,24 @@ public class StackCesta implements Cloneable{ // treba se udelat stack cesta tak
         System.out.println(getCelaDalka() + "O");
     }
 
-    public BodCesty get(){
-        return top;
+    BodCesty get(){
+        return prvni;
+    }
+
+    void odstranPrvni(){
+        if(prvni != null){
+            prvni = prvni.next;
+        }
     }
 
     public Bod getPrvniBod(){
-        return top.stanice;
+        return prvni.stanice;
     }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+
+
 }

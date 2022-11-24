@@ -5,37 +5,12 @@ import java.util.List;
 
 public class Oaza extends Bod {
 
-    private boolean spustenAlg = false;
+    private boolean zapsaneCesty = false;
     private List<StackCesta> cestyDoOazy;
 
     public Oaza(int id, double x, double y, Data baseDat){
         super(id, x, y, baseDat);
         cestyDoOazy = new ArrayList<>();
-    }
-
-    public StackCesta getNejlepsiCestu(int pocetKosu, DijkstraAlgoritmus algoritmus) throws CloneNotSupportedException {
-
-        StackCesta cesta;
-
-        if(!spustenAlg){
-           cestyDoOazy = algoritmus.getVsichniCesty(getId());
-           spustenAlg = true;
-        }
-
-        int pocetCest = cestyDoOazy.size();
-
-         for(int i = 0; i < pocetCest; i++){
-            Sklad sklad = (Sklad) cestyDoOazy.get(i).getPrvniBod();
-            if(sklad.getPocetKosu() >= pocetKosu){
-                cesta = cestyDoOazy.get(i);
-                if(cesta.get().next == null){
-                    return null;
-                }
-                return cesta;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -46,9 +21,9 @@ public class Oaza extends Bod {
      */
     public List<StackCesta> getVsichniCesty(DijkstraAlgoritmus algoritmus) throws CloneNotSupportedException {
 
-        if(!spustenAlg){
+        if(!zapsaneCesty){
             cestyDoOazy = algoritmus.getVsichniCesty(getId());
-            spustenAlg = true;
+            zapsaneCesty = true;
         }
 
         return cestyDoOazy;

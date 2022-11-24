@@ -36,14 +36,6 @@ public class DijkstraAlgoritmus {
         StackCesta cestaKOaze = new StackCesta(baseDat);
         cestaKOaze.pridej(oaza, 0);
 
-
-
-//        while(oaza != null){
-//            zpracujSousedi(oaza);
-//            oaza.setJeZpracovany(true);
-//            oaza = baseDat.getNezpracovanouStanice();
-//        }
-
         while(!nezpracovane.isEmpty()){
             zpracujSousedi(nezpracovane.get(0));
             nezpracovane.get(0).setJeZpracovany(true);
@@ -56,7 +48,6 @@ public class DijkstraAlgoritmus {
         }
 
         listCest.sort(comparing(StackCesta::getIndexCesty));
-
 
         return listCest;
     }
@@ -74,7 +65,6 @@ public class DijkstraAlgoritmus {
             Hrana hrana = hrany.get(i);
             double vzdalenost = hrana.getVzdalenost() + stanice.getDistance();
             Bod novaStanice = hrana.getStanice();
-
             if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
                 StackCesta cesta = (StackCesta) stanice.getCestaKeStanici().clone();

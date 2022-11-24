@@ -1,7 +1,9 @@
 package pt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Sklad extends Bod {
 
@@ -15,6 +17,7 @@ public class Sklad extends Bod {
     private double casPoObnoveni;
     private List<Velbloud> domVelbloudy;
     private Data baseDat;
+    Map<Integer, FrontaCesta> cestyDoOaz;
 
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
         super(id, x, y, baseDat);
@@ -37,7 +40,7 @@ public class Sklad extends Bod {
         if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
             casPoObnoveni = 0;
             aktualniPocetKosu += pocetKosu;
-            //System.out.println("Aktualni pocet kosu: " + aktualniPocetKosu);
+
         }
     }
 
@@ -132,5 +135,9 @@ public class Sklad extends Bod {
         baseDat.getVsichniVelbloudy().add(velbloud);
         baseDat.indexVelblouduInc();
         return velbloud;
+    }
+
+    public void setCestyDoOaz(Map<Integer, FrontaCesta> cestyDoOaz){
+        this.cestyDoOaz = cestyDoOaz;
     }
 }

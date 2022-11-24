@@ -3,6 +3,7 @@ package pt;
 import java.util.*;
 
 public class Data {
+
     private List<Bod> graf;
     private List<Velbloud> vsichniVelbloudy;
     private List<Sklad> vsichniSklady;
@@ -12,6 +13,8 @@ public class Data {
 
     private List<Pozadavek> nesplnennePozadavky;
     private List<Pozadavek> splnenePozadavky;
+
+    private boolean jeSpustenAlgoritmus = false;
 
     private double aktualniCas;
     private int indexVelbloudu;
@@ -93,22 +96,6 @@ public class Data {
         this.druhyVelbloudu.add(druh);
     }
 
-    /**
-     * Vraci stanice, ktera jeste nebyla zpracovana to jest (jeji sousedi nemaji spoctenou vzdalenost
-     * a promnenna jeZpracovana == False) ale uz ma vlastni vzdalenost od zacatku cesty
-     * @return Stanice nezprStanice
-     */
-    public Bod getNezpracovanouStanice(){
-        Bod stanice = null;
-
-        for(int i = 0; i < graf.size(); i++){
-            if(!graf.get(i).jeZpracovany && jeVetsi(Data.MAX_VALUE, graf.get(i).getDistance()) && jeVetsi(graf.get(i).getDistance(), 0)){
-                stanice = graf.get(i);
-                return stanice;
-            }
-        }
-        return stanice;
-    }
 
     public void inputPozadavka(Pozadavek pozadavek){
         this.nesplnennePozadavky.add(pozadavek);

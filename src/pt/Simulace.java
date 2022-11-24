@@ -62,7 +62,7 @@ public class Simulace {
 
             Pozadavek pozadavek = pozadavekList.get(i);
 
-            System.out.println(pozadavek.getIdOazy() + " id oazy");
+            //System.out.println(pozadavek.getIdOazy() + " id oazy");
             List<StackCesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty(dijkstra);
 
             if(kontrolaPoz(pozadavek)){
@@ -71,13 +71,13 @@ public class Simulace {
 
                 if(baseDat.getAktualniCas() - pozadavek.getCasDoruceni() > 0){
                     System.out.println("Error 1");
-                    System.out.println(pozadavek.getCasDoruceni() + " cas doruceni");
+                    //System.out.println(pozadavek.getCasDoruceni() + " cas doruceni");
                     nesplnitelnyPoz(pozadavek);
                     break;
                 }
 
                 if(prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) != -1 && prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) > pozadavek.getCasDoruceni() - baseDat.getAktualniCas()){ // Kontrola prvni (nejlepsi) cesty, aby byla casove splnitelna
-                    System.out.println(prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) + " cas rychlejsiho velbloudu");
+                    //System.out.println(prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) + " cas rychlejsiho velbloudu");
                     System.out.println("Error 2");
                     nesplnitelnyPoz(pozadavek);
                     break;
@@ -182,7 +182,7 @@ public class Simulace {
 
         for(int i = 0; i < cesty.size(); i++){
 
-            System.out.println(cesty.get(i).getCasNejdelVelbl(pozadavek.getPocetKosu()) + " cas cesty");
+            //System.out.println(cesty.get(i).getCasNejdelVelbl(pozadavek.getPocetKosu()) + " cas cesty");
 
             if(cesty.get(i).getCasNejdelVelbl(pozadavek.getPocetKosu()) != -1){
                 return true;
