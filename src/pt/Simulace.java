@@ -45,6 +45,7 @@ public class Simulace {
             if(minKrokCas == Data.MAX_VALUE && aktPozList.size() > 0){
                 minKrokCas = baseDat.getMinKrokSkladu();
             }
+
         }
     }
 

@@ -20,6 +20,12 @@ public class Pozadavek {
         prevezeneKose = 0;
     }
 
+    public int getNeprevezeneKose(){
+        return pocetKosu - prevezeneKose;
+    }
+    public void zvetsiPrevezeneKose(int pocet){
+        prevezeneKose += pocet;
+    }
     public double getCasPrichodu() {
         return casPrichodu;
     }

@@ -8,6 +8,7 @@ import static java.util.Comparator.comparing;
 public class DijkstraAlgoritmus {
 
     private Data baseDat;
+    private List<Bod> nezpracovane;
 
     public DijkstraAlgoritmus(Data baseDat){
         this.baseDat = baseDat;
@@ -23,17 +24,30 @@ public class DijkstraAlgoritmus {
      */
     public List<StackCesta> getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
 
+        nezpracovane = new ArrayList<>();
+
         List<StackCesta> listCest = new ArrayList<>();
         baseDat.pripravZastavky();
+
         Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
+        nezpracovane.add(oaza);
+
         oaza.setDistance(0);
         StackCesta cestaKOaze = new StackCesta(baseDat);
         cestaKOaze.pridej(oaza, 0);
 
-        while(oaza != null){
-            zpracujSousedi(oaza);
-            oaza.setJeZpracovany(true);
-            oaza = baseDat.getNezpracovanouStanice();
+
+
+//        while(oaza != null){
+//            zpracujSousedi(oaza);
+//            oaza.setJeZpracovany(true);
+//            oaza = baseDat.getNezpracovanouStanice();
+//        }
+
+        while(!nezpracovane.isEmpty()){
+            zpracujSousedi(nezpracovane.get(0));
+            nezpracovane.get(0).setJeZpracovany(true);
+            nezpracovane.remove(0);
         }
 
         for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
@@ -43,9 +57,7 @@ public class DijkstraAlgoritmus {
 
         listCest.sort(comparing(StackCesta::getIndexCesty));
 
-        for(int i = 0; i < listCest.size(); i++){
-            listCest.get(i).vypis();
-        }
+
         return listCest;
     }
 
@@ -71,6 +83,11 @@ public class DijkstraAlgoritmus {
                 novaStanice.setDistance(vzdalenost);
                 novaStanice.setCestaKeStanici(cesta);
             }
+
+            if(!hrana.getStanice().jeZpracovany()){
+                nezpracovane.add(hrana.getStanice());
+            }
+
 
         }
     }
