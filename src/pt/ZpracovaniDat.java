@@ -52,6 +52,10 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
+            if(indexSousedu == indexZastavky){
+                continue;
+            }
+
             Bod zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
             Bod soused = baseDat.getGraf().get(indexSousedu - 1);
 

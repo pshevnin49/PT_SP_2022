@@ -80,7 +80,7 @@ public class Sklad extends Bod {
      * @param cesta
      * @return
      */
-    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, StackCesta cesta){ //cas doruceni - cas prichodu poz + casCekani
+    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, FrontaCesta cesta){ //cas doruceni - cas prichodu poz + casCekani
 
         boolean bylRychlejsiVelbl = false;
         boolean bylNejdelsiVelbl = false;

@@ -15,41 +15,43 @@ public class DijkstraAlgoritmus {
     }
 
     /**
+     * Metoda prochazi vsichni sklady, a
+     */
+    public void spustAlgoritmus() throws CloneNotSupportedException {
+
+        for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
+            //System.out.println("Sklad cislo: " + i);
+            spoctiCestyOdSkladu(baseDat.getVsichniSklady().get(i));
+        }
+    }
+
+    /**
      * Metoda prochazi cely graf pomoci Dijkstruveho algoritmu, a hleda vsichni
      * nejkratsi cesty do oazy daneho indexu. Pak vraci list nejkratsich cest od
      * vsech skladu do teto oazy
-     * @param indexOazy
+     * @param sklad
      * @return listCest (serazeny od nejkratsi do nejdelsi)
      * @throws CloneNotSupportedException
      */
-    public List<StackCesta> getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
+    private void spoctiCestyOdSkladu(Bod sklad) throws CloneNotSupportedException {
 
         nezpracovane = new ArrayList<>();
-
-        List<StackCesta> listCest = new ArrayList<>();
         baseDat.pripravZastavky();
+        sklad.setDistance(0);
 
-        Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
-        nezpracovane.add(oaza);
 
-        oaza.setDistance(0);
-        StackCesta cestaKOaze = new StackCesta(baseDat);
-        cestaKOaze.pridej(oaza, 0);
+        nezpracovane.add(sklad);
 
         while(!nezpracovane.isEmpty()){
-            zpracujSousedi(nezpracovane.get(0));
             nezpracovane.get(0).setJeZpracovany(true);
+            zpracujSousedi(nezpracovane.get(0));
             nezpracovane.remove(0);
+            nezpracovane.sort(comparing(Bod::getDistance));
         }
 
-        for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
-            StackCesta novaCesta = baseDat.getVsichniSklady().get(i).getCestaKeStanici();
-            listCest.add(novaCesta);
+        for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
+            baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
         }
-
-        listCest.sort(comparing(StackCesta::getIndexCesty));
-
-        return listCest;
     }
 
     /**
@@ -60,24 +62,26 @@ public class DijkstraAlgoritmus {
     private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
         List<Hrana> hrany = stanice.getHrany();
 
+        //System.out.println("Zpracovava stanice cislo: " + stanice.getId());
+
         for(int i = 0; i < hrany.size(); i++){
 
             Hrana hrana = hrany.get(i);
             double vzdalenost = hrana.getVzdalenost() + stanice.getDistance();
             Bod novaStanice = hrana.getStanice();
-            if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
-
-                StackCesta cesta = (StackCesta) stanice.getCestaKeStanici().clone();
-                cesta.pridej(novaStanice, hrana.getVzdalenost());
-
-                novaStanice.setDistance(vzdalenost);
-                novaStanice.setCestaKeStanici(cesta);
-            }
 
             if(!hrana.getStanice().jeZpracovany()){
+                if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
+
+                    FrontaCesta cesta = (FrontaCesta) stanice.getCestaKeStanici().clone();
+                    cesta.pridej(novaStanice, hrana.getVzdalenost());
+
+                    novaStanice.setDistance(vzdalenost);
+                    novaStanice.setCestaKeStanici(cesta);
+                }
+
                 nezpracovane.add(hrana.getStanice());
             }
-
 
         }
     }

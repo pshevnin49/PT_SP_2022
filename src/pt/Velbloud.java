@@ -1,10 +1,12 @@
 package pt;
 
+import java.util.Stack;
+
 public class Velbloud {
 
     private Sklad domovskaStanice;
-    private StackCesta cesta;
-    private StackCesta cestaZpatky;
+    private FrontaCesta cesta;
+    private Stack<BodCesty> cestaZpatky;
 
     private boolean jeNaCeste;
     private boolean jeNaCesteZpatky;
@@ -33,7 +35,7 @@ public class Velbloud {
         this.rychlost = druhVelbloudu.randRych();
         this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
-        this.cestaZpatky = new StackCesta(baseDat);
+        this.cestaZpatky = new Stack();
         this.druhVelbloudu = druhVelbloudu;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
@@ -47,7 +49,7 @@ public class Velbloud {
         this.rychlost = rychlost;
         this.vzdalenostMax = vzdalenost;
         this.domovskaStanice = null;
-        this.cestaZpatky = new StackCesta(baseDat);
+        this.cestaZpatky = new Stack<>();
         this.druhVelbloudu = null;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
@@ -120,7 +122,7 @@ public class Velbloud {
      */
     private void zacniCestu(){
         predchoziVzdalenost = 0;
-        cestaZpatky = new StackCesta(baseDat);
+        cestaZpatky = new Stack<>();
         vzdalenostBezPiti = 0;
 
         jeNaCeste = true;
@@ -128,7 +130,7 @@ public class Velbloud {
     }
 
     private void zacniCestuZpatky(){
-        cesta = cestaZpatky;
+        cesta = getFrontuZpatky();
         vzdalenostBezPiti = 0;
         jeNaCesteZpatky = true;
         posuvDoDalsiSt();
@@ -200,7 +202,7 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, StackCesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+    public void zacniNakladat(int pocetKosu, FrontaCesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
@@ -209,7 +211,7 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = (StackCesta) cesta.clone();
+        this.cesta = (FrontaCesta) cesta.clone();
 
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
@@ -254,7 +256,9 @@ public class Velbloud {
     }
 
     public void pridejBodCestyZpatky(){// pridava bod do cesty zpatky pridava
-        cestaZpatky.pridej(cesta.get().stanice, predchoziVzdalenost);
+
+        BodCesty novyBod = new BodCesty(cesta.get().stanice, predchoziVzdalenost);
+        cestaZpatky.push(novyBod);
     }
 
     private double getCasCesty(double dalka){
@@ -267,6 +271,23 @@ public class Velbloud {
         System.out.println("Velbloud: " + id);
         System.out.println("    Dorucene kose: " + vsichniKose);
         System.out.println("    Dorucene pozadavky: " + vsichniPoz);
+    }
+
+    /**
+     * Prijima stack kam za behu programu zapisuje cesta zpatky pro velbloud
+     * a prevadi do formatu fronty, ktery potrebuje velbloud
+     * @return fronta z cestou zpatky
+     */
+    private FrontaCesta getFrontuZpatky(){
+        FrontaCesta frontaZpatky = new FrontaCesta(baseDat);
+
+        while(!cestaZpatky.isEmpty()){
+            BodCesty bodCesty = cestaZpatky.pop();
+            frontaZpatky.pridej(bodCesty.stanice, bodCesty.vzdalenost);
+        }
+
+        return frontaZpatky;
+
     }
 
     public void vypis(){

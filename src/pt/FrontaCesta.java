@@ -340,7 +340,7 @@ public class FrontaCesta implements Cloneable{
         return prvni;
     }
 
-    void odstranPrvni(){
+    void odstran(){
         if(prvni != null){
             prvni = prvni.next;
         }

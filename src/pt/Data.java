@@ -72,6 +72,7 @@ public class Data {
         return null;
     }
 
+
     /**
      * Metoda hleda vsichni aktualni (casove) pozadavky, odstranuje z listu nesplnenePozadavky,
      * a vraci list techto aktualnich pozadavek
@@ -167,6 +168,8 @@ public class Data {
         }
         aktualniCas += cas;
     }
+
+
 
     /**
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
