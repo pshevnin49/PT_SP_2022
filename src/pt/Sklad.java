@@ -39,7 +39,6 @@ public class Sklad extends Bod {
         if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
             casPoObnoveni = 0;
             aktualniPocetKosu += pocetKosu;
-
         }
     }
 
@@ -47,19 +46,15 @@ public class Sklad extends Bod {
         return casObnoveni;
     }
 
-    public void setRezervovaneKose(int pocetKosu){
-        rezervovaneKose = pocetKosu;
-    }
     public void odstranKose(int pocetKosu){
-        rezervovaneKose -= pocetKosu;
-        this.pocetKosu -= pocetKosu;
+        this.aktualniPocetKosu -= pocetKosu;
     }
 
     public void pridejVelblouda(Velbloud velbloud){
         domVelbloudy.add(velbloud);
     }
     public int getPocetKosu() {
-        return pocetKosu - rezervovaneKose;
+        return aktualniPocetKosu;
     }
     public int getCasObnoveni() {
         return casObnoveni;

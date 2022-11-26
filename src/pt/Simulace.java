@@ -75,6 +75,11 @@ public class Simulace {
             List<Cesta> cesty = oaza.getCestyDoOazy();
             cesty.sort(comparing(Cesta::getIndexCesty));
 
+            for(int j = 0; j < cesty.size(); j++){
+                System.out.println(cesty.get(j).getIndexCesty() + " - index");
+                cesty.get(j).vypis();
+            }
+
             if(kontrolaPoz(pozadavek)){
                 int iDCesty = getIDVhodneCesty(pozadavek); // id nejlepsi aktualne dostupne cesty (na sklade je potrebny pocet kosu)
                 Cesta prvniCesta = cesty.get(0);
@@ -181,7 +186,7 @@ public class Simulace {
     }
 
     /**
-     * Metoda kontroluje vsichni cesty jedneho pozadavku zda lze tuto cestu projit nejdelsim velbloudem
+     * Metoda kontroluje vsichni cesty jednoho pozadavku zda lze tuto cestu projit nejdelsim velbloudem
      * @param pozadavek
      * @return true, pokud existuje cesta, kterou lze projit nejdelsim velbloudem false, pokud ne
      */
