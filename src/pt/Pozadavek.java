@@ -4,8 +4,10 @@ public class Pozadavek {
 
     private double casPrichodu;
     private int idOazy;
+
     private int pocetKosu;
     private int prevezeneKose;
+
     private int id;
     private double casOcekavani;
     private double casDoruceni;
@@ -26,6 +28,7 @@ public class Pozadavek {
     public void zvetsiPrevezeneKose(int pocet){
         prevezeneKose += pocet;
     }
+
     public double getCasPrichodu() {
         return casPrichodu;
     }

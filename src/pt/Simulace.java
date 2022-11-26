@@ -75,10 +75,10 @@ public class Simulace {
             List<Cesta> cesty = oaza.getCestyDoOazy();
             cesty.sort(comparing(Cesta::getIndexCesty));
 
-            for(int j = 0; j < cesty.size(); j++){
-                System.out.println(cesty.get(j).getIndexCesty() + " - index");
-                cesty.get(j).vypis();
-            }
+//            for(int j = 0; j < cesty.size(); j++){
+//                System.out.println(cesty.get(j).getIndexCesty() + " - index");
+//                cesty.get(j).vypis();
+//            }
 
             if(kontrolaPoz(pozadavek)){
                 int iDCesty = getIDVhodneCesty(pozadavek); // id nejlepsi aktualne dostupne cesty (na sklade je potrebny pocet kosu)
@@ -148,10 +148,23 @@ public class Simulace {
 
     private boolean spusteniVelblouda(Pozadavek pozadavek, Cesta cesta) throws CloneNotSupportedException {
         Sklad sklad = (Sklad) cesta.get().stanice;
-        Velbloud velbloud = sklad.getVhodnyVelbl(pozadavek.getPocetKosu(), pozadavek.getCasDoruceni(), cesta);
+        Velbloud velbloud = sklad.getVhodnyVelbl(1, pozadavek.getCasDoruceni(), cesta);
 
         if(velbloud != null){
-            velbloud.zacniNakladat(pozadavek.getPocetKosu(), cesta, pozadavek);
+
+            while(pozadavek.getNeprevezeneKose() > 0){
+                int pocetKosu;
+
+                if(velbloud.getDruhVelbloudu().getMaxZatizeni() < pozadavek.getNeprevezeneKose()){
+                    pocetKosu = velbloud.getDruhVelbloudu().getMaxZatizeni();
+                }else{
+                    pocetKosu = pozadavek.getNeprevezeneKose();
+                }
+
+                velbloud.zacniNakladat(pocetKosu, cesta, pozadavek);
+                pozadavek.zvetsiPrevezeneKose(pocetKosu);
+                velbloud = sklad.getVhodnyVelbl(1, pozadavek.getCasDoruceni(), cesta);
+            }
             return true;
         }
         else{

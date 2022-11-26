@@ -52,18 +52,21 @@ public class Cesta implements Cloneable{
         posledni = novyBod;
     }
 
-    public void nahradPosledni(BodCesty novyBod){
-        if(prvni == null){
-            prvni = novyBod;
-
-        }else if(predposledni != null){
-            predposledni.next = novyBod;
-        }
-        else{
-            prvni.next = novyBod;
-        }
-        posledni = novyBod;
-    }
+//    public void nahradPosledni(BodCesty novyBod){
+//        if(prvni == null){
+//            prvni = novyBod;
+//            posledni = novyBod;
+//
+//        }else if(predposledni != null){
+//            predposledni.next = novyBod;
+//            posledni = novyBod;
+//        }
+//        else{
+//            prvni.next = novyBod;
+//            posledni = novyBod;
+//        }
+//
+//    }
 
     /**
      * Metoda spocita dalku, cesty, max usecku, a generuje z techto dat
@@ -295,6 +298,7 @@ public class Cesta implements Cloneable{
      * @return
      */
     public double getCasNejdelVelbl(int pocetKosu){
+
         casVelbloudu();
 
         Sklad sklad = (Sklad) prvni.stanice;
