@@ -5,7 +5,7 @@ import java.util.Stack;
 public class Velbloud {
 
     private Sklad domovskaStanice;
-    private Cesta cesta;
+    private CestaList cesta;
     private Stack<BodCesty> cestaZpatky;
 
     private boolean jeNaCeste;
@@ -147,13 +147,17 @@ public class Velbloud {
             if(!jeNaCesteZpatky){
 
                 double casVylozeni = aktualniCas + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
+                zacniVykladat();
 
+                if(Data.jeVetsi(casVylozeni, aktualniPozadavek.getCasPrichodu() + aktualniPozadavek.getCasOcekavani())){
+                    Data.bezi = false;
+                }
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         Math.round(aktualniCas), id, cesta.get().stanice.getId(), aktualniPocetKosu, Math.round(casVylozeni),
                         Math.round((aktualniPozadavek.getCasPrichodu() + aktualniPozadavek.getCasOcekavani()) - casVylozeni)
                 );
                 pridejBodCestyZpatky();
-                zacniVykladat();
+
             }
             else{
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", Math.round(aktualniCas), id, domovskaStanice.getId());
@@ -202,7 +206,7 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, Cesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+    public void zacniNakladat(int pocetKosu, CestaList cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
@@ -212,7 +216,7 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = (Cesta) cesta.clone();
+        this.cesta = (CestaList) cesta.clone();
 
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
@@ -252,6 +256,10 @@ public class Velbloud {
         vsichniPoz += 1;
         vsichniKose += aktualniPocetKosu;
         stav = StavVelbloudu.VYKLADA;
+        aktualniPozadavek.vylozeneKoseIncr(aktualniPocetKosu);
+        if(aktualniPozadavek.getPocetKosu() >= aktualniPozadavek.getPocetKosu()){
+            aktualniPozadavek.setCasFactDoruceni(baseDat.getAktualniCas());
+        }
         aktualniPocetKosu = 0;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
     }
@@ -279,8 +287,8 @@ public class Velbloud {
      * a prevadi do formatu fronty, ktery potrebuje velbloud
      * @return fronta z cestou zpatky
      */
-    private Cesta getFrontuZpatky(){
-        Cesta frontaZpatky = new Cesta(baseDat);
+    private CestaList getFrontuZpatky(){
+        CestaList frontaZpatky = new CestaList(baseDat);
 
         while(!cestaZpatky.isEmpty()){
             BodCesty bodCesty = cestaZpatky.pop();

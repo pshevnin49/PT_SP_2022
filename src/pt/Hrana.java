@@ -1,10 +1,11 @@
 package pt;
 
-public class Hrana {
+public class Hrana implements Cloneable{
 
     private double vzdalenost;
     private Bod stanice;
-    public Hrana(Bod stanice, double vzdalenost){
+
+    public Hrana(Bod stanice, double vzdalenost) {
 
         this.stanice = stanice;
         this.vzdalenost = vzdalenost;
@@ -15,6 +16,15 @@ public class Hrana {
     }
     public Bod getStanice(){
         return stanice;
+    }
+
+    public void setVzdalenost(double vzdalenost) {
+        this.vzdalenost = vzdalenost;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public void vypis(){
