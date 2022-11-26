@@ -5,44 +5,35 @@ import java.util.List;
 
 public class Oaza extends Bod {
 
-    private boolean spustenAlg = false;
-    private List<StackCesta> cestyDoOazy;
+    private boolean zapsaneCesty = false;
+    private List<Cesta> cestyDoOazy;
 
     public Oaza(int id, double x, double y, Data baseDat){
         super(id, x, y, baseDat);
         cestyDoOazy = new ArrayList<>();
     }
 
-    public StackCesta getNejlepsiCestu(int pocetKosu, DijkstraAlgoritmus algoritmus, Data baseDat) throws CloneNotSupportedException {
+    public List<Cesta> getVsichniCesty() throws CloneNotSupportedException {
+        return cestyDoOazy;
+    }
+    public void zapisCestuDoOazy() throws CloneNotSupportedException {
+        Cesta novaCesta = (Cesta) getCestaKeStanici().clone();
+        cestyDoOazy.add(novaCesta);
+    }
 
-        StackCesta cesta = null;
-
-        if(!spustenAlg){
-           cestyDoOazy = algoritmus.getVsichniCesty(getId());
-           spustenAlg = true;
-        }
-
-        int pocetCest = cestyDoOazy.size();
-
-         for(int i = 0; i < pocetCest; i++){//Odstranit vsichni cesty, ktere neda splnit podle max vzdalenosti velbloudu. Pak napsat metodu, ktera vraci delku listu cest
-            Sklad sklad = (Sklad) cestyDoOazy.get(i).getPrvniBod();
-            if(sklad.getPocetKosu() >= pocetKosu){
-                cesta = cestyDoOazy.get(i);
-                return cesta;
-            }
-        }
-        return cesta;
-
-    public List<StackCesta> getVsichniCesty(){
+    public List<Cesta> getCestyDoOazy(){
         return cestyDoOazy;
     }
 
+    public void addCestuDoOazy(Cesta cesta){
+        cestyDoOazy.add(cesta);
+    }
+
     public void vypisVsihniCesty(){
+        System.out.println("Oaza cislo: " + id);
         for(int i = 0; i < cestyDoOazy.size(); i++){
             cestyDoOazy.get(i).vypis();
         }
-    public int getPocetCest(){
-        return cestyDoOazy.size();
     }
 
 }

@@ -2,6 +2,7 @@ package pt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Sklad extends Bod {
 
@@ -15,6 +16,7 @@ public class Sklad extends Bod {
     private double casPoObnoveni;
     private List<Velbloud> domVelbloudy;
     private Data baseDat;
+    Map<Integer, Cesta> cestyDoOaz;
 
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
         super(id, x, y, baseDat);
@@ -37,12 +39,12 @@ public class Sklad extends Bod {
         if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
             casPoObnoveni = 0;
             aktualniPocetKosu += pocetKosu;
-            //System.out.println("Aktualni pocet kosu: " + aktualniPocetKosu);
+
         }
     }
 
     public double getCasovyKrok(){
-        return casObnoveni - casPoObnoveni;
+        return casObnoveni;
     }
 
     public void setRezervovaneKose(int pocetKosu){
@@ -77,7 +79,7 @@ public class Sklad extends Bod {
      * @param cesta
      * @return
      */
-    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, StackCesta cesta){ //cas doruceni - cas prichodu poz + casCekani
+    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, Cesta cesta){ //cas doruceni - cas prichodu poz + casCekani
 
         boolean bylRychlejsiVelbl = false;
         boolean bylNejdelsiVelbl = false;
@@ -132,5 +134,9 @@ public class Sklad extends Bod {
         baseDat.getVsichniVelbloudy().add(velbloud);
         baseDat.indexVelblouduInc();
         return velbloud;
+    }
+
+    public void setCestyDoOaz(Map<Integer, Cesta> cestyDoOaz){
+        this.cestyDoOaz = cestyDoOaz;
     }
 }

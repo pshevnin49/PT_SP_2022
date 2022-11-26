@@ -53,6 +53,10 @@ public class ZpracovaniDat {
             int indexZastavky = Integer.parseInt(data.get(i));
             int indexSousedu = Integer.parseInt(data.get(i + 1));
 
+            if(indexSousedu == indexZastavky){
+                continue;
+            }
+
             Bod zastavka = baseDat.getGraf().get(indexZastavky - 1); // -1 proto, ze v listu vsech zastavek pocet jde od 0
             Bod soused = baseDat.getGraf().get(indexSousedu - 1);
 
@@ -73,6 +77,8 @@ public class ZpracovaniDat {
         double maxVelblVzdal = 0;
         double rychlNejdelsVelbl = 0;
 
+        double stredniDobaPiti = 0;
+
         for(int i = indexPoslCesty + 2; i < indexPoslDruhu; i += 8){
 
             String nazev = data.get(i);
@@ -81,6 +87,7 @@ public class ZpracovaniDat {
             double minVzdalenost = Double.parseDouble(data.get(i + 3));
             double maxVzdalenost = Double.parseDouble(data.get(i + 4));
             int dobaPiti = Integer.parseInt(data.get(i + 5));
+
             int maxZatizeni = Integer.parseInt(data.get(i + 6));
             double pomerDruhu = Double.parseDouble(data.get(i + 7));
 
@@ -97,20 +104,25 @@ public class ZpracovaniDat {
                 rychlNejdelsVelbl = strRychlost;
             }
 
-            strVelblRychlost += strRychlost * pomerDruhu;
+            strVelblRychlost += strRychlost;
             strVelblVzdal += strVzdalenost * pomerDruhu;
+
+            stredniDobaPiti += dobaPiti;
 
             DruhVelbloudu druhVelbloudu = new DruhVelbloudu(nazev, minRychlost, maxRychlost, minVzdalenost, maxVzdalenost, dobaPiti, maxZatizeni, pomerDruhu);
             baseDat.inputDruhVelbloudu(druhVelbloudu);
         }
 
-        Velbloud stredniVelbloud = new Velbloud(0, baseDat, strVelblRychlost, strVelblVzdal);
+        strVelblRychlost /= baseDat.getDruhyVelbloudu().size();
+        stredniDobaPiti /= baseDat.getDruhyVelbloudu().size();
+
+        Velbloud stredniVelbloud = new Velbloud(0, baseDat, strVelblRychlost, strVelblVzdal, stredniDobaPiti);
         baseDat.setStredniVelbl(stredniVelbloud);
 
-        Velbloud rychlejsiVelbl = new Velbloud(0, baseDat, maxVelblRychlost, vzdNejrychlVelbl);
+        Velbloud rychlejsiVelbl = new Velbloud(0, baseDat, maxVelblRychlost, vzdNejrychlVelbl, stredniDobaPiti);
         baseDat.setRychlejsiVelbl(rychlejsiVelbl);
 
-        Velbloud nejdelsiVelbl = new Velbloud(0, baseDat, maxVelblVzdal, rychlNejdelsVelbl);
+        Velbloud nejdelsiVelbl = new Velbloud(0, baseDat, rychlNejdelsVelbl, maxVelblVzdal, stredniDobaPiti);
         baseDat.setNejdelsiVelbl(nejdelsiVelbl);
 
         int idPozadavku = 1;

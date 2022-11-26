@@ -8,42 +8,49 @@ import static java.util.Comparator.comparing;
 public class DijkstraAlgoritmus {
 
     private Data baseDat;
+    private List<Bod> nezpracovane;
 
     public DijkstraAlgoritmus(Data baseDat){
         this.baseDat = baseDat;
     }
 
     /**
+     * Metoda prochazi vsichni sklady, a
+     */
+    public void spustAlgoritmus() throws CloneNotSupportedException {
+
+        for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
+            System.out.println("Sklad cislo: " + i);
+            spoctiCestyOdSkladu(baseDat.getVsichniSklady().get(i));
+        }
+    }
+
+    /**
      * Metoda prochazi cely graf pomoci Dijkstruveho algoritmu, a hleda vsichni
      * nejkratsi cesty do oazy daneho indexu. Pak vraci list nejkratsich cest od
      * vsech skladu do teto oazy
-     * @param indexOazy
+     * @param sklad
      * @return listCest (serazeny od nejkratsi do nejdelsi)
      * @throws CloneNotSupportedException
      */
-    public List<StackCesta> getVsichniCesty(int indexOazy) throws CloneNotSupportedException {
+    private void spoctiCestyOdSkladu(Bod sklad) throws CloneNotSupportedException {
 
-        List<StackCesta> listCest = new ArrayList<>();
+        nezpracovane = new ArrayList<>();
         baseDat.pripravZastavky();
-        Bod oaza = baseDat.getVsichniOazy().get(indexOazy - 1);
-        oaza.setDistance(0);
-        StackCesta cestaKOaze = new StackCesta(baseDat);
-        cestaKOaze.pridej(oaza, 0);
+        sklad.setDistance(0);
 
-        while(oaza != null){
-            zpracujSousedi(oaza);
-            oaza.setJeZpracovany(true);
-            oaza = baseDat.getNezpracovanouStanice();
+        nezpracovane.add(sklad);
+
+        while(!nezpracovane.isEmpty()){
+            nezpracovane.get(0).setJeZpracovany(true);
+            zpracujSousedi(nezpracovane.get(0));
+            nezpracovane.remove(0);
+            //nezpracovane.sort(comparing(Bod::getDistance));
         }
 
-        for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
-            StackCesta novaCesta = baseDat.getVsichniSklady().get(i).getCestaKeStanici();
-            listCest.add(novaCesta);
+        for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
+            baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
         }
-
-        listCest.sort(comparing(StackCesta::getCelaDalka));
-
-        return listCest;
     }
 
     /**
@@ -52,7 +59,10 @@ public class DijkstraAlgoritmus {
      * @param stanice
      */
     private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
+
         List<Hrana> hrany = stanice.getHrany();
+
+        //System.out.println("Zpracovava stanice cislo: " + stanice.getId());
 
         for(int i = 0; i < hrany.size(); i++){
 
@@ -60,13 +70,28 @@ public class DijkstraAlgoritmus {
             double vzdalenost = hrana.getVzdalenost() + stanice.getDistance();
             Bod novaStanice = hrana.getStanice();
 
-            if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
+            if(!hrana.getStanice().jeZpracovany()){
+                if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
-                StackCesta cesta = (StackCesta) stanice.getCestaKeStanici().clone();
-                cesta.pridej(novaStanice, hrana.getVzdalenost());
+                    Cesta cesta = (Cesta) stanice.getCestaKeStanici().clone();
+//                    Bod clonePrvni = cesta.getPrvniBod();
+//                    double cloneDalka = cesta.get().vzdalenost;
 
-                novaStanice.setDistance(vzdalenost);
-                novaStanice.setCestaKeStanici(cesta);
+//                    if(clonePrvni != null){
+//                        cesta.nahradPrvni(clonePrvni, cloneDalka);
+//                    }
+
+                    cesta.pridej(novaStanice, hrana.getVzdalenost());
+
+                    novaStanice.setDistance(vzdalenost);
+                    novaStanice.setCestaKeStanici(cesta);
+                }
+                if(!hrana.getStanice().getZpracovava()){
+                    nezpracovane.add(hrana.getStanice());
+                    hrana.getStanice().setZpracovava(true);
+
+                }
+
             }
 
         }

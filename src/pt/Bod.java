@@ -8,9 +8,12 @@ public abstract class Bod {
     protected double x;
     protected double y;
     protected boolean jeZpracovany; // pro algoritmus hledani kratsi cesty(stanice je zpracovana kdyz jsou spoctene cesty ke vsem jeji dousedim)
+    private boolean zpracovava;
 
-    protected StackCesta kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
+    protected Cesta kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
     protected List<Hrana> hrany;
+
+
     private double distance;
     private Data baseDat;
 
@@ -19,35 +22,50 @@ public abstract class Bod {
         this.x = x;
         this.y = y;
         this.jeZpracovany = false;
+        this.zpracovava = false;
         this.baseDat = baseDat;
         this.distance = Data.MAX_VALUE;
         this.hrany = new ArrayList<>();
-        this.kratsiCesta = new StackCesta(baseDat);
-        kratsiCesta.pridej(this, 0);
+        this.kratsiCesta = new Cesta(baseDat);
+
+
     }
 
     public void obnoveniCesty(){
-        kratsiCesta = new StackCesta(baseDat);
+        kratsiCesta = new Cesta(baseDat);
         kratsiCesta.pridej(this, 0);
+        jeZpracovany = false;
+        zpracovava = false;
+
     }
 
     public boolean jeZpracovany() {
         return jeZpracovany;
     }
+    public boolean getZpracovava(){
+        return zpracovava;
+    }
+
+
+
     public double getDistance() {
         return distance;
     }
     public void setDistance(double distance) {
         this.distance = distance;
     }
-    public StackCesta getCestaKeStanici(){
+
+    public Cesta getCestaKeStanici(){
         return kratsiCesta;
     }
-    public void setCestaKeStanici(StackCesta cestaKeStanici){
+    public void setCestaKeStanici(Cesta cestaKeStanici){
         this.kratsiCesta = cestaKeStanici;
     }
     public void setJeZpracovany(boolean jeZpracovany){
         this.jeZpracovany = jeZpracovany;
+    }
+    public void setZpracovava(boolean zpracovava){
+        this.zpracovava = zpracovava;
     }
 
     public int getId(){
@@ -68,6 +86,7 @@ public abstract class Bod {
         Hrana hrana = new Hrana(soused, spocitejVzdalenost(soused));
         hrany.add(hrana);
     }
+
     void vypis(){
         System.out.println(id + ". x:" + x + " y:" + y);
         System.out.println("Sousedi: ");
