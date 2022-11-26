@@ -17,7 +17,9 @@ public class Cesta implements Cloneable{
     private double casNejdelVelbl = 0;
     private double casStrVelbl = 0;
 
-    private Data baseDat;
+    private BodCesty predposledni = null;
+
+    private final Data baseDat;
 
     public Cesta(Data baseDat){
         this.baseDat = baseDat;
@@ -25,31 +27,38 @@ public class Cesta implements Cloneable{
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
-        BodCesty novyBod = new BodCesty(novaStanice, vzdalenost);
+        BodCesty novyBod = new BodCesty(novaStanice, 0);
 
+//        if(predposledni != null){
+//            predposledni.vzdalenost = vzdalenost;
+//        }
         if(prvni == null){
             prvni = novyBod;
+            posledni = novyBod;
         }
         else{
             posledni.next = novyBod;
+            predposledni = posledni;
+            posledni = novyBod;
+            predposledni.vzdalenost = vzdalenost;
         }
-        posledni = novyBod;
 
     }
 
-//    public void nahradPrvni(Bod stanice, double vzdalenost){
-//        BodCesty novyBod = new BodCesty(stanice,vzdalenost);
-//
-//        if(prvni == null){
-//            prvni = novyBod;
-//            posledni = novyBod;
-//        }
-//        else{
-//            novyBod.next = prvni.next;
-//            prvni = novyBod;
-//        }
-//
-//    }
+    public void pridejBodCesty(BodCesty novyBod){
+
+        if(prvni == null){
+            prvni = novyBod;
+            posledni = novyBod;
+        }
+        else{
+            posledni.next = novyBod;
+            posledni = novyBod;
+        }
+
+    }
+
+
 
     /**
      * Metoda spocita dalku, cesty, max usecku, a generuje z techto dat
@@ -324,6 +333,10 @@ public class Cesta implements Cloneable{
         return false;
     }
 
+    public BodCesty getPosledni(){
+        return posledni;
+    }
+
     public int getIndexCesty(){
         spocitejIndexCesty();
         return indexNejlepsiCesty;
@@ -359,6 +372,14 @@ public class Cesta implements Cloneable{
         }
     }
 
+    public BodCesty getPredposledni() {
+        return predposledni;
+    }
+
+    public void setPredposledni(BodCesty predposledni) {
+        this.predposledni = predposledni;
+    }
+
     public Bod getPrvniBod(){
         return prvni.stanice;
     }
@@ -366,17 +387,15 @@ public class Cesta implements Cloneable{
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Cesta clone = new Cesta(baseDat);
+
         BodCesty bod = prvni;
 
         while(bod != null){
-            clone.pridej(bod.stanice, bod.vzdalenost);
+            clone.pridejBodCesty((BodCesty) bod.clone());
             bod = bod.getNext();
         }
 
         return clone;
 
-        //return super.clone();
     }
-
-
 }
