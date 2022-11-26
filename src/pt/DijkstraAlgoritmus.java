@@ -45,7 +45,7 @@ public class DijkstraAlgoritmus {
             nezpracovane.get(0).setJeZpracovany(true);
             zpracujSousedi(nezpracovane.get(0));
             nezpracovane.remove(0);
-            //nezpracovane.sort(comparing(Bod::getDistance));
+            nezpracovane.sort(comparing(Bod::getDistance));
         }
 
         for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
@@ -74,24 +74,18 @@ public class DijkstraAlgoritmus {
                 if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
                     Cesta cesta = (Cesta) stanice.getCestaKeStanici().clone();
-//                    Bod clonePrvni = cesta.getPrvniBod();
-//                    double cloneDalka = cesta.get().vzdalenost;
-
-//                    if(clonePrvni != null){
-//                        cesta.nahradPrvni(clonePrvni, cloneDalka);
-//                    }
-
-                    cesta.pridej(novaStanice, hrana.getVzdalenost());
 
                     novaStanice.setDistance(vzdalenost);
                     novaStanice.setCestaKeStanici(cesta);
+
+                    cesta.pridej(novaStanice, hrana.getVzdalenost());
+
+
                 }
                 if(!hrana.getStanice().getZpracovava()){
                     nezpracovane.add(hrana.getStanice());
                     hrana.getStanice().setZpracovava(true);
-
                 }
-
             }
 
         }

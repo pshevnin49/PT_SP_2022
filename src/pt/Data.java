@@ -169,8 +169,6 @@ public class Data {
         aktualniCas += cas;
     }
 
-
-
     /**
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
      */

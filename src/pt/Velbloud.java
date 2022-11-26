@@ -207,6 +207,7 @@ public class Velbloud {
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
 
+        System.out.println("Velbloud c: " + id + " Max zatizeni: " + druhVelbloudu.getMaxZatizeni() );
         aktualniPocetKosu = pocetKosu;
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
