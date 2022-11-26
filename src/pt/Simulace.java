@@ -72,12 +72,12 @@ public class Simulace {
             //List<StackCesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty(dijkstra);
             Oaza oaza = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1);
 
-            List<FrontaCesta> cesty = oaza.getCestyDoOazy();
-            cesty.sort(comparing(FrontaCesta::getIndexCesty));
+            List<Cesta> cesty = oaza.getCestyDoOazy();
+            cesty.sort(comparing(Cesta::getIndexCesty));
 
             if(kontrolaPoz(pozadavek)){
                 int iDCesty = getIDVhodneCesty(pozadavek); // id nejlepsi aktualne dostupne cesty (na sklade je potrebny pocet kosu)
-                FrontaCesta prvniCesta = cesty.get(0);
+                Cesta prvniCesta = cesty.get(0);
 
                 if(baseDat.getAktualniCas() - pozadavek.getCasDoruceni() > 0){
                     System.out.println("Error 1");
@@ -95,7 +95,7 @@ public class Simulace {
 
                 if(iDCesty != -1){
 
-                    FrontaCesta cesta = cesty.get(iDCesty);
+                    Cesta cesta = cesty.get(iDCesty);
 
 
                    if(iDCesty == 0){
@@ -141,7 +141,7 @@ public class Simulace {
         }
     }
 
-    private boolean spusteniVelblouda(Pozadavek pozadavek, FrontaCesta cesta) throws CloneNotSupportedException {
+    private boolean spusteniVelblouda(Pozadavek pozadavek, Cesta cesta) throws CloneNotSupportedException {
         Sklad sklad = (Sklad) cesta.get().stanice;
         Velbloud velbloud = sklad.getVhodnyVelbl(pozadavek.getPocetKosu(), pozadavek.getCasDoruceni(), cesta);
 
@@ -170,7 +170,7 @@ public class Simulace {
      * @return index vchodne cesty
      */
     private int getIDVhodneCesty(Pozadavek pozadavek) throws CloneNotSupportedException {
-        List<FrontaCesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
+        List<Cesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
         for(int i = 0; i < cesty.size(); i++){
             Sklad sklad = (Sklad) cesty.get(i).get().stanice;
             if(sklad.getPocetKosu() >= pozadavek.getPocetKosu()){
@@ -187,7 +187,7 @@ public class Simulace {
      */
     private boolean kontrolaPoz(Pozadavek pozadavek) throws CloneNotSupportedException {
 
-        List<FrontaCesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
+        List<Cesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
 
         for(int i = 0; i < cesty.size(); i++){
 

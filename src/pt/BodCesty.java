@@ -5,7 +5,7 @@ public class BodCesty implements Cloneable{
     public Bod stanice;
     public double vzdalenost;
     public boolean musiNapit;
-    public BodCesty next;
+    public BodCesty next = null;
 
     public BodCesty(Bod zastavka){
         this.stanice = zastavka;
@@ -22,7 +22,6 @@ public class BodCesty implements Cloneable{
         this.vzdalenost = vzdalenost;
         this.musiNapit = false;
         this.next = next;
-
     }
 
 

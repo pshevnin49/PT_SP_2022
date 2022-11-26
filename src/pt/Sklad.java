@@ -1,7 +1,6 @@
 package pt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public class Sklad extends Bod {
     private double casPoObnoveni;
     private List<Velbloud> domVelbloudy;
     private Data baseDat;
-    Map<Integer, FrontaCesta> cestyDoOaz;
+    Map<Integer, Cesta> cestyDoOaz;
 
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
         super(id, x, y, baseDat);
@@ -45,7 +44,7 @@ public class Sklad extends Bod {
     }
 
     public double getCasovyKrok(){
-        return casObnoveni - casPoObnoveni;
+        return casObnoveni;
     }
 
     public void setRezervovaneKose(int pocetKosu){
@@ -80,7 +79,7 @@ public class Sklad extends Bod {
      * @param cesta
      * @return
      */
-    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, FrontaCesta cesta){ //cas doruceni - cas prichodu poz + casCekani
+    public Velbloud getVhodnyVelbl(int pocetKosu, double casDoruceni, Cesta cesta){ //cas doruceni - cas prichodu poz + casCekani
 
         boolean bylRychlejsiVelbl = false;
         boolean bylNejdelsiVelbl = false;
@@ -137,7 +136,7 @@ public class Sklad extends Bod {
         return velbloud;
     }
 
-    public void setCestyDoOaz(Map<Integer, FrontaCesta> cestyDoOaz){
+    public void setCestyDoOaz(Map<Integer, Cesta> cestyDoOaz){
         this.cestyDoOaz = cestyDoOaz;
     }
 }

@@ -20,7 +20,7 @@ public class DijkstraAlgoritmus {
     public void spustAlgoritmus() throws CloneNotSupportedException {
 
         for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
-            //System.out.println("Sklad cislo: " + i);
+            System.out.println("Sklad cislo: " + i);
             spoctiCestyOdSkladu(baseDat.getVsichniSklady().get(i));
         }
     }
@@ -39,14 +39,13 @@ public class DijkstraAlgoritmus {
         baseDat.pripravZastavky();
         sklad.setDistance(0);
 
-
         nezpracovane.add(sklad);
 
         while(!nezpracovane.isEmpty()){
             nezpracovane.get(0).setJeZpracovany(true);
             zpracujSousedi(nezpracovane.get(0));
             nezpracovane.remove(0);
-            nezpracovane.sort(comparing(Bod::getDistance));
+            //nezpracovane.sort(comparing(Bod::getDistance));
         }
 
         for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
@@ -60,6 +59,7 @@ public class DijkstraAlgoritmus {
      * @param stanice
      */
     private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
+
         List<Hrana> hrany = stanice.getHrany();
 
         //System.out.println("Zpracovava stanice cislo: " + stanice.getId());
@@ -73,14 +73,25 @@ public class DijkstraAlgoritmus {
             if(!hrana.getStanice().jeZpracovany()){
                 if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
-                    FrontaCesta cesta = (FrontaCesta) stanice.getCestaKeStanici().clone();
+                    Cesta cesta = (Cesta) stanice.getCestaKeStanici().clone();
+//                    Bod clonePrvni = cesta.getPrvniBod();
+//                    double cloneDalka = cesta.get().vzdalenost;
+
+//                    if(clonePrvni != null){
+//                        cesta.nahradPrvni(clonePrvni, cloneDalka);
+//                    }
+
                     cesta.pridej(novaStanice, hrana.getVzdalenost());
 
                     novaStanice.setDistance(vzdalenost);
                     novaStanice.setCestaKeStanici(cesta);
                 }
+                if(!hrana.getStanice().getZpracovava()){
+                    nezpracovane.add(hrana.getStanice());
+                    hrana.getStanice().setZpracovava(true);
 
-                nezpracovane.add(hrana.getStanice());
+                }
+
             }
 
         }

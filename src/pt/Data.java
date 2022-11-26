@@ -300,7 +300,7 @@ public class Data {
      * @return
      */
     public static boolean jeVetsi(double x1, double x2){
-        double eps = 0.0000000001;
+        double eps = 0.00000000001;
         return (x1 - x2) > eps;
     }
 

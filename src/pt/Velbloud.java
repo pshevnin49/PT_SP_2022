@@ -5,7 +5,7 @@ import java.util.Stack;
 public class Velbloud {
 
     private Sklad domovskaStanice;
-    private FrontaCesta cesta;
+    private Cesta cesta;
     private Stack<BodCesty> cestaZpatky;
 
     private boolean jeNaCeste;
@@ -202,7 +202,7 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, FrontaCesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+    public void zacniNakladat(int pocetKosu, Cesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
@@ -211,7 +211,7 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = (FrontaCesta) cesta.clone();
+        this.cesta = (Cesta) cesta.clone();
 
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
@@ -278,8 +278,8 @@ public class Velbloud {
      * a prevadi do formatu fronty, ktery potrebuje velbloud
      * @return fronta z cestou zpatky
      */
-    private FrontaCesta getFrontuZpatky(){
-        FrontaCesta frontaZpatky = new FrontaCesta(baseDat);
+    private Cesta getFrontuZpatky(){
+        Cesta frontaZpatky = new Cesta(baseDat);
 
         while(!cestaZpatky.isEmpty()){
             BodCesty bodCesty = cestaZpatky.pop();

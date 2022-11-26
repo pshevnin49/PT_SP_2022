@@ -2,10 +2,10 @@ package pt;
 
 import java.util.Stack;
 
-public class FrontaCesta implements Cloneable{
+public class Cesta implements Cloneable{
 
-    private BodCesty prvni;
-    private BodCesty posledni;
+    private BodCesty prvni = null;
+    private BodCesty posledni = null;
 
     private boolean jeSpoctenIndex = false;
     private double maxUsecka = 0;
@@ -19,7 +19,7 @@ public class FrontaCesta implements Cloneable{
 
     private Data baseDat;
 
-    public FrontaCesta(Data baseDat){
+    public Cesta(Data baseDat){
         this.baseDat = baseDat;
     }
 
@@ -31,11 +31,25 @@ public class FrontaCesta implements Cloneable{
             prvni = novyBod;
         }
         else{
-            posledni.setNext(novyBod);
+            posledni.next = novyBod;
         }
         posledni = novyBod;
 
     }
+
+//    public void nahradPrvni(Bod stanice, double vzdalenost){
+//        BodCesty novyBod = new BodCesty(stanice,vzdalenost);
+//
+//        if(prvni == null){
+//            prvni = novyBod;
+//            posledni = novyBod;
+//        }
+//        else{
+//            novyBod.next = prvni.next;
+//            prvni = novyBod;
+//        }
+//
+//    }
 
     /**
      * Metoda spocita dalku, cesty, max usecku, a generuje z techto dat
@@ -208,9 +222,9 @@ public class FrontaCesta implements Cloneable{
      * Metoda otoci frontu cesty pro cestu zpatky
      * @return cesta zpatky
      */
-    public FrontaCesta getCestaZpatky(){
+    public Cesta getCestaZpatky(){
         Stack<BodCesty> cesta = new Stack<>();
-        FrontaCesta cestaZpatky = new FrontaCesta(baseDat);
+        Cesta cestaZpatky = new Cesta(baseDat);
         double predchoziDalka = 0;
         BodCesty predchoziBod = null;
 
@@ -272,7 +286,6 @@ public class FrontaCesta implements Cloneable{
         Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
-        System.out.println("StackCesta CasNejdel Velbl " + casNejdelVelbl);
         if(casNejdelVelbl == -1){
             return -1;
         }
@@ -352,7 +365,17 @@ public class FrontaCesta implements Cloneable{
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        Cesta clone = new Cesta(baseDat);
+        BodCesty bod = prvni;
+
+        while(bod != null){
+            clone.pridej(bod.stanice, bod.vzdalenost);
+            bod = bod.getNext();
+        }
+
+        return clone;
+
+        //return super.clone();
     }
 
 
