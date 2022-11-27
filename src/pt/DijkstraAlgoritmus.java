@@ -10,6 +10,9 @@ public class DijkstraAlgoritmus {
     private Data baseDat;
     private List<Bod> nezpracovane;
 
+    private Bod minStanice = null;
+    private double minDalka = 0;
+
     public DijkstraAlgoritmus(Data baseDat){
         this.baseDat = baseDat;
     }
@@ -42,14 +45,27 @@ public class DijkstraAlgoritmus {
         nezpracovane.add(sklad);
 
         while(!nezpracovane.isEmpty()){
-            nezpracovane.get(0).setJeZpracovany(true);
-            zpracujSousedi(nezpracovane.get(0));
-            nezpracovane.remove(0);
-            nezpracovane.sort(comparing(Bod::getDistance));
+
+            int index = 0;
+            if(minStanice != null){
+                index = nezpracovane.indexOf(minStanice);
+            }
+
+            nezpracovane.get(index).setJeZpracovany(true);
+            zpracujSousedi(nezpracovane.get(index));
+            nezpracovane.remove(index);
+
+            //nezpracovane.sort(comparing(Bod::getDistance));
         }
 
-        for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
-            baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
+        if(baseDat.getVsichniOazy().size() <= baseDat.getVsichniSklady().size()){
+
+
+
+        }else{
+            for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
+                baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
+            }
         }
     }
 
@@ -61,6 +77,8 @@ public class DijkstraAlgoritmus {
     private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
 
         List<Hrana> hrany = stanice.getHrany();
+        minStanice = null;
+        minDalka = 0;
 
         //System.out.println("Zpracovava stanice cislo: " + stanice.getId());
 
@@ -73,16 +91,19 @@ public class DijkstraAlgoritmus {
             if(!hrana.getStanice().jeZpracovany()){
                 if(Data.jeVetsi(hrana.getStanice().getDistance(), vzdalenost)){
 
-                    Cesta cesta = (Cesta) stanice.getCestaKeStanici().clone();
+                    CestaList cesta = (CestaList) stanice.getCestaKeStanici().clone();
 
                     novaStanice.setDistance(vzdalenost);
                     novaStanice.setCestaKeStanici(cesta);
 
                     cesta.pridej(novaStanice, hrana.getVzdalenost());
 
-
                 }
                 if(!hrana.getStanice().getZpracovava()){
+                    if(Data.jeMensi(hrana.getStanice().getDistance(), minDalka)){
+                        minDalka = hrana.getStanice().getDistance();
+                        minStanice = hrana.getStanice();
+                    }
                     nezpracovane.add(hrana.getStanice());
                     hrana.getStanice().setZpracovava(true);
                 }

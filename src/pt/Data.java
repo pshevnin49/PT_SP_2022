@@ -31,6 +31,8 @@ public class Data {
     private Velbloud nejdelsiVelbl;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
+    public static final double EPS = 0.00000000001;
+
 
     public Data(){
         this.graf = new ArrayList<>();
@@ -299,7 +301,18 @@ public class Data {
      */
     public static boolean jeVetsi(double x1, double x2){
         double eps = 0.00000000001;
-        return (x1 - x2) > eps;
+        return (x1 - x2) > EPS;
     }
+
+    /**
+     * Vraci true pokud x1 je mensi nez x2
+     * @param x1
+     * @param x2
+     * @return
+     */
+    public static boolean jeMensi(double x1, double x2){
+        return (x1 - x2) < EPS;
+    }
+
 
 }

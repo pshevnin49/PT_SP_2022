@@ -1,15 +1,17 @@
 package pt;
 
+import java.util.List;
 import java.util.Stack;
 
 public class Velbloud {
 
     private Sklad domovskaStanice;
-    private Cesta cesta;
-    private Stack<BodCesty> cestaZpatky;
+    private CestaList cesta;
 
     private boolean jeNaCeste;
     private boolean jeNaCesteZpatky;
+
+    private CestaList cestaZpatky;
 
     private DruhVelbloudu druhVelbloudu = null;
     private StavVelbloudu stav;
@@ -35,7 +37,6 @@ public class Velbloud {
         this.rychlost = druhVelbloudu.randRych();
         this.vzdalenostMax = druhVelbloudu.randVzdal();
         this.domovskaStanice = domovskaStanice;
-        this.cestaZpatky = new Stack();
         this.druhVelbloudu = druhVelbloudu;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
@@ -49,7 +50,6 @@ public class Velbloud {
         this.rychlost = rychlost;
         this.vzdalenostMax = vzdalenost;
         this.domovskaStanice = null;
-        this.cestaZpatky = new Stack<>();
         this.druhVelbloudu = null;
         this.jeNaCeste = false;
         this.baseDat = baseDat;
@@ -122,7 +122,6 @@ public class Velbloud {
      */
     private void zacniCestu(){
         predchoziVzdalenost = 0;
-        cestaZpatky = new Stack<>();
         vzdalenostBezPiti = 0;
 
         jeNaCeste = true;
@@ -130,7 +129,7 @@ public class Velbloud {
     }
 
     private void zacniCestuZpatky(){
-        cesta = getFrontuZpatky();
+        cesta = cestaZpatky;
         vzdalenostBezPiti = 0;
         jeNaCesteZpatky = true;
         posuvDoDalsiSt();
@@ -143,16 +142,16 @@ public class Velbloud {
     private boolean prijelDoStanici(){
         double aktualniCas = baseDat.getAktualniCas();
 
-        if(cesta.get().next == null){
+        if(cesta.getList().size() == 1){
             if(!jeNaCesteZpatky){
 
                 double casVylozeni = aktualniCas + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
 
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
-                        Math.round(aktualniCas), id, cesta.get().stanice.getId(), aktualniPocetKosu, Math.round(casVylozeni),
+                        Math.round(aktualniCas), id, cesta.get().getStanice().getId(), aktualniPocetKosu, Math.round(casVylozeni),
                         Math.round((aktualniPozadavek.getCasPrichodu() + aktualniPozadavek.getCasOcekavani()) - casVylozeni)
                 );
-                pridejBodCestyZpatky();
+                //pridejBodCestyZpatky();
                 zacniVykladat();
             }
             else{
@@ -164,22 +163,22 @@ public class Velbloud {
         else{
 
             String druhStanice;
-            if(cesta.get().stanice.getClass() == Sklad.class){//jakeho druhu je stanice
+            if(cesta.get().getStanice().getClass() == Sklad.class){//jakeho druhu je stanice
                 druhStanice = "Sklad";
             }else{
                 druhStanice = "Oaza";
             }
 
-            if(Data.jeVetsi(getCasCesty(cesta.get().vzdalenost), (vzdalenostMax - vzdalenostBezPiti))){
+            if(Data.jeVetsi(getCasCesty(cesta.get().getVzdalenost()), (vzdalenostMax - vzdalenostBezPiti))){
 
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n", Math.round(aktualniCas), id, druhStanice,
-                        cesta.get().stanice.getId());
+                        cesta.get().getStanice().getId());
                 posuvDoDalsiSt();
             }
             else{
 
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n", Math.round(aktualniCas), id, druhStanice,
-                        cesta.get().stanice.getId(), druhVelbloudu.getNazev(), Math.round(aktualniCas + druhVelbloudu.getDobaPiti()) );
+                        cesta.get().getStanice().getId(), druhVelbloudu.getNazev(), Math.round(aktualniCas + druhVelbloudu.getDobaPiti()) );
                 zacniPiti();
             }
         }
@@ -202,7 +201,7 @@ public class Velbloud {
      * @param pocetKosu
      * @param cesta
      */
-    public void zacniNakladat(int pocetKosu, Cesta cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
+    public void zacniNakladat(int pocetKosu, CestaList cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
 
         System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
                 id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
@@ -212,25 +211,22 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
         baseDat.velbloudNaCeste(this);
         domovskaStanice.odstranKose(pocetKosu);
-        this.cesta = (Cesta) cesta.clone();
-
+        this.cesta = (CestaList) cesta.clone();
+        cestaZpatky = getCestuZpatky();
         stav = StavVelbloudu.NAKLADA;
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
     }
 
     /**
-     * Odstranuje ze stacku posledni stanice a posouva velblouda do pristi stanice.
+     * Odstranuje z listu posledni stanice a posouva velblouda do pristi stanice.
      */
     private void posuvDoDalsiSt(){
         stav = StavVelbloudu.POSOUVA;
-        BodCesty bodCesty = cesta.get();
-        casSplneniAkce = baseDat.getAktualniCas() + getCasCesty(bodCesty.vzdalenost);
+        Hrana bodCesty = cesta.get();
+        casSplneniAkce = baseDat.getAktualniCas() + getCasCesty(bodCesty.getVzdalenost());
 
-        if(!jeNaCesteZpatky){
-            pridejBodCestyZpatky();
-        }
-        vzdalenostBezPiti += cesta.get().vzdalenost;
-        predchoziVzdalenost = cesta.get().vzdalenost;
+        vzdalenostBezPiti += cesta.get().getVzdalenost();
+        predchoziVzdalenost = cesta.get().getVzdalenost();
         cesta.odstran();
 
     }
@@ -256,11 +252,11 @@ public class Velbloud {
         casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
     }
 
-    public void pridejBodCestyZpatky(){// pridava bod do cesty zpatky pridava
-
-        BodCesty novyBod = new BodCesty(cesta.get().stanice, predchoziVzdalenost);
-        cestaZpatky.push(novyBod);
-    }
+//    public void pridejBodCestyZpatky(){// pridava bod do cesty zpatky pridava
+//
+//        BodCesty novyBod = new BodCesty(cesta.get().stanice, predchoziVzdalenost);
+//        cestaZpatky.push(novyBod);
+//    }
 
     private double getCasCesty(double dalka){
         double cas;
@@ -279,15 +275,21 @@ public class Velbloud {
      * a prevadi do formatu fronty, ktery potrebuje velbloud
      * @return fronta z cestou zpatky
      */
-    private Cesta getFrontuZpatky(){
-        Cesta frontaZpatky = new Cesta(baseDat);
+    private CestaList getCestuZpatky(){
 
-        while(!cestaZpatky.isEmpty()){
-            BodCesty bodCesty = cestaZpatky.pop();
-            frontaZpatky.pridej(bodCesty.stanice, bodCesty.vzdalenost);
+        CestaList cestaZpatky = new CestaList(baseDat);
+        int indexZpatky = 0;
+
+        for(int i = (cesta.getList().size() - 1); i >= 0; i--){
+            Hrana bod = new Hrana(cesta.getList().get(i).getStanice(), 0);
+            if(i - 1 >= 0){
+                bod.setVzdalenost(cesta.getList().get(i - 1).getVzdalenost());
+            }
+            cestaZpatky.getList().add(indexZpatky, bod);
+            indexZpatky++;
         }
 
-        return frontaZpatky;
+        return cestaZpatky;
 
     }
 

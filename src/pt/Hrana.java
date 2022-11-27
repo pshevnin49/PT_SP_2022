@@ -1,6 +1,6 @@
 package pt;
 
-public class Hrana {
+public class Hrana implements Cloneable{
 
     private double vzdalenost;
     private Bod stanice;
@@ -21,4 +21,12 @@ public class Hrana {
         System.out.println("    Soused: " + stanice.getId() + " dalka: " + vzdalenost);
     }
 
+    public void setVzdalenost(double vzdalenost) {
+        this.vzdalenost = vzdalenost;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
