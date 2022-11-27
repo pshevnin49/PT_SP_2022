@@ -13,6 +13,7 @@ public class Hrana implements Cloneable{
     public double getVzdalenost(){
         return vzdalenost;
     }
+
     public Bod getStanice(){
         return stanice;
     }

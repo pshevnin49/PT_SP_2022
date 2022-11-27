@@ -1,13 +1,15 @@
 package pt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
 
 public class Simulace {
 
-    DijkstraAlgoritmus dijkstra;
+
+    private DijkstraAlgoritmus dijkstra;
     private Data baseDat;
     private boolean bezi = true;
 
@@ -21,10 +23,6 @@ public class Simulace {
 
         dijkstra = new DijkstraAlgoritmus(baseDat);
         dijkstra.spustAlgoritmus();
-
-        for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
-            baseDat.getVsichniOazy().get(i).vypisVsihniCesty();
-        }
 
         while(minKrokCas != Data.MAX_VALUE && bezi){
 
@@ -67,18 +65,10 @@ public class Simulace {
         for(int i = 0; i < pozadavekList.size(); i++){
 
             Pozadavek pozadavek = pozadavekList.get(i);
-
-            //System.out.println(pozadavek.getIdOazy() + " id oazy");
-            //List<StackCesta> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty(dijkstra);
             Oaza oaza = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1);
 
             List<CestaList> cesty = oaza.getCestyDoOazy();
             cesty.sort(comparing(CestaList::getIndexCesty));
-
-//            for(int j = 0; j < cesty.size(); j++){
-//                System.out.println(cesty.get(j).getIndexCesty() + " - index");
-//                cesty.get(j).vypis();
-//            }
 
             if(kontrolaPoz(pozadavek)){
                 int iDCesty = getIDVhodneCesty(pozadavek); // id nejlepsi aktualne dostupne cesty (na sklade je potrebny pocet kosu)
@@ -86,24 +76,19 @@ public class Simulace {
 
                 if(baseDat.getAktualniCas() - pozadavek.getCasDoruceni() > 0){
                     System.out.println("Error 1");
-                    //System.out.println(pozadavek.getCasDoruceni() + " cas doruceni");
                     nesplnitelnyPoz(pozadavek);
                     break;
                 }
 
                 if(prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) != -1 && prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) > pozadavek.getCasDoruceni() - baseDat.getAktualniCas()){ // Kontrola prvni (nejlepsi) cesty, aby byla casove splnitelna
-                    //System.out.println(prvniCesta.getCasRychlVelbl(pozadavek.getPocetKosu()) + " cas rychlejsiho velbloudu");
                     System.out.println("Error 2");
                     nesplnitelnyPoz(pozadavek);
                     break;
                 }
 
                 if(iDCesty != -1){
-
                     CestaList cesta = cesty.get(iDCesty);
-
-
-                   if(iDCesty == 0){
+                    if(iDCesty == 0){
 
                        if(spusteniVelblouda(pozadavek, cesta)){
                            pozadavekList.remove(i);
@@ -167,9 +152,7 @@ public class Simulace {
             }
             return true;
         }
-        else{
-            System.out.println("Velbloud = null");
-        }
+
         return false;
     }
 
@@ -189,12 +172,15 @@ public class Simulace {
      */
     private int getIDVhodneCesty(Pozadavek pozadavek) throws CloneNotSupportedException {
         List<CestaList> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
-        for(int i = 0; i < cesty.size(); i++){
-            Sklad sklad = (Sklad) cesty.get(i).get().getStanice();
-            if(sklad.getPocetKosu() >= pozadavek.getPocetKosu()){
-                return i;
+
+
+            for(int i = 0; i < cesty.size(); i++){
+                Sklad sklad = (Sklad) cesty.get(i).get().getStanice();
+                if(sklad.getPocetKosu() >= pozadavek.getPocetKosu()){
+                    return i;
+                }
             }
-        }
+
         return -1;
     }
 
@@ -207,13 +193,14 @@ public class Simulace {
 
         List<CestaList> cesty = baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).getVsichniCesty();
 
-        for(int i = 0; i < cesty.size(); i++){
+            for(int i = 0; i < cesty.size(); i++){
 
-            if(cesty.get(i).getCasNejdelVelbl(pozadavek.getPocetKosu()) != -1){
-                return true;
+                if(cesty.get(i).getCasNejdelVelbl(pozadavek.getPocetKosu()) != -1){
+                    return true;
+                }
             }
-        }
-        return false;
+
+            return false;
     }
 
 }

@@ -3,8 +3,6 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Comparator.comparing;
-
 public class DijkstraAlgoritmus {
 
     private Data baseDat;
@@ -16,15 +14,15 @@ public class DijkstraAlgoritmus {
     public DijkstraAlgoritmus(Data baseDat){
         this.baseDat = baseDat;
     }
+    int idOazy = 0;
 
     /**
      * Metoda prochazi vsichni sklady, a
      */
     public void spustAlgoritmus() throws CloneNotSupportedException {
-
         for(int i = 0; i < baseDat.getVsichniSklady().size(); i++){
-            System.out.println("Sklad cislo: " + i);
             spoctiCestyOdSkladu(baseDat.getVsichniSklady().get(i));
+            idOazy++;
         }
     }
 
@@ -36,7 +34,7 @@ public class DijkstraAlgoritmus {
      * @return listCest (serazeny od nejkratsi do nejdelsi)
      * @throws CloneNotSupportedException
      */
-    private void spoctiCestyOdSkladu(Bod sklad) throws CloneNotSupportedException {
+    public void spoctiCestyOdSkladu(Bod sklad) throws CloneNotSupportedException {
 
         nezpracovane = new ArrayList<>();
         baseDat.pripravZastavky();
@@ -50,22 +48,13 @@ public class DijkstraAlgoritmus {
             if(minStanice != null){
                 index = nezpracovane.indexOf(minStanice);
             }
-
             nezpracovane.get(index).setJeZpracovany(true);
-            zpracujSousedi(nezpracovane.get(index));
+            zpracujBod(nezpracovane.get(index));
             nezpracovane.remove(index);
-
-            //nezpracovane.sort(comparing(Bod::getDistance));
         }
 
-        if(baseDat.getVsichniOazy().size() <= baseDat.getVsichniSklady().size()){
-
-
-
-        }else{
-            for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
-                baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
-            }
+        for(int i = 0; i < baseDat.getVsichniOazy().size(); i++){
+            baseDat.getVsichniOazy().get(i).zapisCestuDoOazy();
         }
     }
 
@@ -74,13 +63,11 @@ public class DijkstraAlgoritmus {
      * pokud nalezena vzdalenost bude mensi nez aktualni vzdalenost, prepise tuto vzdalenost
      * @param stanice
      */
-    private void zpracujSousedi(Bod stanice) throws CloneNotSupportedException {
+    private void zpracujBod(Bod stanice) throws CloneNotSupportedException {
 
         List<Hrana> hrany = stanice.getHrany();
         minStanice = null;
         minDalka = 0;
-
-        //System.out.println("Zpracovava stanice cislo: " + stanice.getId());
 
         for(int i = 0; i < hrany.size(); i++){
 
@@ -108,7 +95,6 @@ public class DijkstraAlgoritmus {
                     hrana.getStanice().setZpracovava(true);
                 }
             }
-
         }
     }
 }

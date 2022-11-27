@@ -42,22 +42,6 @@ public class DruhVelbloudu {
         return nazev;
     }
 
-    public double getMaxRychlost() {
-        return maxRychlost;
-    }
-
-    public double getMinRychlost() {
-        return minRychlost;
-    }
-
-    public double getMaxVzdalenost() {
-        return maxVzdalenost;
-    }
-
-    public double getMinVzdalenost() {
-        return minVzdalenost;
-    }
-
     public void vypis(){
         System.out.println(nazev + " max rychlost:" + maxRychlost + " min rychlost:" + minRychlost + " max vzd.:" + maxVzdalenost + " min vzd.: " + minVzdalenost);
     }
