@@ -8,7 +8,7 @@ public class Main {
     public static void main(String [] args) throws FileNotFoundException, CloneNotSupportedException {
 
         long start = System.currentTimeMillis();
-        CteniDat cteniDat = new CteniDat("sparse_bit_medium.txt");
+        CteniDat cteniDat = new CteniDat("sparse_bit_small.txt");
         Data baseDat = new Data();
         List<String> data = cteniDat.cteni();
 

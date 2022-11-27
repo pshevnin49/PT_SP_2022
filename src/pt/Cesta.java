@@ -1,10 +1,11 @@
 package pt;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
-public class CestaList implements Cloneable{
+public class Cesta implements Cloneable{
+
+    private BodCesty prvni = null;
+    private BodCesty posledni = null;
 
     private boolean jeSpoctenIndex = false;
     private double maxUsecka = 0;
@@ -16,24 +17,56 @@ public class CestaList implements Cloneable{
     private double casNejdelVelbl = 0;
     private double casStrVelbl = 0;
 
+    private BodCesty predposledni = null;
+
     private final Data baseDat;
 
-    private List<Hrana> cesta;
-
-    public CestaList(Data baseDat){
+    public Cesta(Data baseDat){
         this.baseDat = baseDat;
-        this.cesta = new ArrayList<>();
     }
 
     public void pridej(Bod novaStanice, double vzdalenost){
 
-       if(cesta.size() > 0){
-           cesta.get(cesta.size() - 1).setVzdalenost(vzdalenost);
-       }
-       Hrana hrana = new Hrana(novaStanice, 0);
-       cesta.add(hrana);
+        BodCesty novyBod = new BodCesty(novaStanice, 0);
+
+        if(prvni == null){
+            prvni = novyBod;
+            posledni = novyBod;
+        }
+        else{
+            posledni.next = novyBod;
+            predposledni = posledni;
+            posledni = novyBod;
+            predposledni.vzdalenost = vzdalenost;
+        }
+
     }
 
+    public void pridejBodCesty(BodCesty novyBod){
+        if(prvni == null){
+            prvni = novyBod;
+        }
+        else{
+            posledni.next = novyBod;
+        }
+        posledni = novyBod;
+    }
+
+//    public void nahradPosledni(BodCesty novyBod){
+//        if(prvni == null){
+//            prvni = novyBod;
+//            posledni = novyBod;
+//
+//        }else if(predposledni != null){
+//            predposledni.next = novyBod;
+//            posledni = novyBod;
+//        }
+//        else{
+//            prvni.next = novyBod;
+//            posledni = novyBod;
+//        }
+//
+//    }
 
     /**
      * Metoda spocita dalku, cesty, max usecku, a generuje z techto dat
@@ -43,18 +76,18 @@ public class CestaList implements Cloneable{
     public void spocitejIndexCesty(){
         double dalka = 0;
         double pocetStanic = 0;
-
+        BodCesty bodCesty = prvni;
 
         if(!jeSpoctenIndex){
-            for (Hrana bodCesty : cesta){
+            while (bodCesty != null){
                 pocetStanic++;
 
-                dalka += bodCesty.getVzdalenost();
+                dalka += bodCesty.vzdalenost;
 
-                if(Data.jeVetsi(bodCesty.getVzdalenost(), maxUsecka)){
-                    maxUsecka = bodCesty.getVzdalenost();
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxUsecka)){
+                    maxUsecka = bodCesty.vzdalenost;
                 }
-
+                bodCesty = bodCesty.next;
             }
             dalkaCesty = dalka;
 
@@ -80,6 +113,7 @@ public class CestaList implements Cloneable{
      * pokud ne - zapise -1
      */
     public void casVelbloudu(){
+        BodCesty bodCesty = prvni;
 
         double maxDalka = 0;
 
@@ -96,38 +130,41 @@ public class CestaList implements Cloneable{
         Velbloud velblNejdel = baseDat.getNejdelsiVelbl();
 
         if(!spoctenCasVelbl){
-            for (Hrana bodCesty : cesta){
-                if(Data.jeVetsi(bodCesty.getVzdalenost(), maxDalka)){
-                    maxDalka = bodCesty.getVzdalenost();
+            while(bodCesty != null){
+                if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                    maxDalka = bodCesty.vzdalenost;
                 }
 
-                if(Data.jeVetsi(velblStr.getVzdalenostMax(), bezPitiStr + bodCesty.getVzdalenost())){
+                if(Data.jeVetsi(velblStr.getVzdalenostMax(), bezPitiStr + bodCesty.vzdalenost)){
                     bezPitiStr = 0;
                     casCestyStr += velblStr.getDobaPiti();
                 }
 
-                casCestyStr += bodCesty.getVzdalenost() / velblStr.getRychlost();
-                bezPitiStr += bodCesty.getVzdalenost();
+                casCestyStr += bodCesty.vzdalenost / velblStr.getRychlost();
+                bezPitiStr += bodCesty.vzdalenost;
 
-                if(Data.jeVetsi(velblNejdel.getVzdalenostMax(), bezPitiNejdel + bodCesty.getVzdalenost())){
+                if(Data.jeVetsi(velblNejdel.getVzdalenostMax(), bezPitiNejdel + bodCesty.vzdalenost)){
                     bezPitiNejdel = 0;
                     casCestyNejdel += velblNejdel.getDobaPiti();
                 }
 
-                casCestyNejdel += bodCesty.getVzdalenost() / velblNejdel.getRychlost();
-                bezPitiNejdel += bodCesty.getVzdalenost();
+                casCestyNejdel += bodCesty.vzdalenost / velblNejdel.getRychlost();
+                bezPitiNejdel += bodCesty.vzdalenost;
 
-                if(Data.jeVetsi(velblRychl.getVzdalenostMax(), bezPitiRychl + bodCesty.getVzdalenost())){
+                if(Data.jeVetsi(velblRychl.getVzdalenostMax(), bezPitiRychl + bodCesty.vzdalenost)){
                     bezPitiRychl = 0;
                     casCestyRychl += velblRychl.getDobaPiti();
                 }
 
-                casCestyRychl += bodCesty.getVzdalenost() / velblRychl.getRychlost();
-                bezPitiRychl += bodCesty.getVzdalenost();
+                casCestyRychl += bodCesty.vzdalenost / velblRychl.getRychlost();
+                bezPitiRychl += bodCesty.vzdalenost;
+
+                bodCesty = bodCesty.next;
 
             }
 
             spoctenCasVelbl = true;
+
             if(Data.jeVetsi(maxDalka, velblRychl.getVzdalenostMax())){
                 casCestyRychl = -1;
             }
@@ -157,27 +194,27 @@ public class CestaList implements Cloneable{
      * vraci 2, pokud velbloud nestihne cestu casove
      */
     public int stihneCestuVelbloud(Velbloud velbloud, double casDoruceni, int pocetKosu){
-
+        BodCesty bodCesty = prvni;
         double maxDalka = 0;
         double cestaBezPiti = 0;
         double celyCasCesty = 0;
         double celaDalkaCesty = 0;
 
 
-        for (Hrana bodCesty : cesta){
-            if(Data.jeVetsi(bodCesty.getVzdalenost(), maxDalka)){
-                maxDalka = bodCesty.getVzdalenost();
+        while(bodCesty != null){
+            if(Data.jeVetsi(bodCesty.vzdalenost, maxDalka)){
+                maxDalka = bodCesty.vzdalenost;
             }
 
-            if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.getVzdalenost())){
+            if(Data.jeVetsi(velbloud.getVzdalenostMax(), cestaBezPiti + bodCesty.vzdalenost)){
                 cestaBezPiti = 0;
                 celyCasCesty += velbloud.getDobaPiti();
             }
 
-            celyCasCesty += bodCesty.getVzdalenost() / velbloud.getRychlost();
-            celaDalkaCesty += bodCesty.getVzdalenost();
-            cestaBezPiti += bodCesty.getVzdalenost();
-
+            celyCasCesty += bodCesty.vzdalenost / velbloud.getRychlost();
+            celaDalkaCesty += bodCesty.vzdalenost;
+            cestaBezPiti += bodCesty.vzdalenost;
+            bodCesty = bodCesty.next;
 
         }
 
@@ -198,6 +235,40 @@ public class CestaList implements Cloneable{
         }
     }
 
+    /**
+     * Metoda otoci frontu cesty pro cestu zpatky
+     * @return cesta zpatky
+     */
+    public Cesta getCestaZpatky(){
+        Stack<BodCesty> cesta = new Stack<>();
+        Cesta cestaZpatky = new Cesta(baseDat);
+        double predchoziDalka = 0;
+        BodCesty predchoziBod = null;
+
+        BodCesty aktualniBod = prvni;
+
+        while(aktualniBod != null){
+
+            BodCesty novyBod = new BodCesty(aktualniBod.stanice);
+            novyBod.vzdalenost = predchoziDalka;
+            predchoziDalka = aktualniBod.vzdalenost;
+            novyBod.next = predchoziBod;
+
+            cesta.push(novyBod);
+            predchoziBod = novyBod;
+            aktualniBod = prvni.next;
+
+        }
+
+        while(!cesta.isEmpty()){
+
+            BodCesty bodCesty = cesta.pop();
+            cestaZpatky.pridej(bodCesty.stanice, bodCesty.vzdalenost);
+
+        }
+
+        return cestaZpatky;
+    }
 
     /**
      * Vraci cas ktery potrebuje rychlejsi velbloud na danou cestu
@@ -209,7 +280,7 @@ public class CestaList implements Cloneable{
 
         casVelbloudu();
 
-        Sklad sklad = (Sklad) cesta.get(0).getStanice();
+        Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
         if(casRychlVelbl == -1){
@@ -230,7 +301,7 @@ public class CestaList implements Cloneable{
 
         casVelbloudu();
 
-        Sklad sklad = (Sklad) cesta.get(0).getStanice();
+        Sklad sklad = (Sklad) prvni.stanice;
 
         double casNalozeni = sklad.getCasNalozeni();
 
@@ -244,7 +315,7 @@ public class CestaList implements Cloneable{
     public double getCasStrVelbl(int pocetKosu){
         casVelbloudu();
 
-        Sklad sklad = (Sklad) cesta.get(0).getStanice();
+        Sklad sklad = (Sklad) prvni.stanice;
         double casNalozeni = sklad.getCasNalozeni();
 
         if(casStrVelbl == -1){
@@ -272,6 +343,10 @@ public class CestaList implements Cloneable{
         return false;
     }
 
+    public BodCesty getPosledni(){
+        return posledni;
+    }
+
     public double getIndexCesty(){
         spocitejIndexCesty();
         return indexNejlepsiCesty;
@@ -288,41 +363,54 @@ public class CestaList implements Cloneable{
     }
 
     public void vypis(){
+        BodCesty bodCesty = prvni;
 
-
-        for (Hrana bodCesty : cesta){
-            System.out.print("from: " + bodCesty.getStanice().getId()  + " -> " + bodCesty.getVzdalenost() + " -> ");
-
+        while(bodCesty != null){
+            System.out.print("from: " + bodCesty.stanice.getId()  + " -> " + bodCesty.vzdalenost + " -> ");
+            bodCesty = bodCesty.next;
         }
         System.out.println(getCelaDalka() + "O");
     }
 
-    Hrana get(){
-        return cesta.get(0);
+    BodCesty get(){
+        return prvni;
     }
 
     void odstran(){
-        if(cesta.size() > 0){
-            cesta.remove(0);
+        if(prvni != null){
+            prvni = prvni.next;
         }
     }
 
+    public BodCesty getPredposledni() {
+        return predposledni;
+    }
 
+    public void setPredposledni(BodCesty predposledni) {
+        this.predposledni = predposledni;
+    }
+
+    public Bod getPrvniBod(){
+        return prvni.stanice;
+    }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
+        Cesta clone = new Cesta(baseDat);
 
-        List<Hrana> clone = new ArrayList<>(cesta);
+        BodCesty bod = prvni;
 
-        if(cesta.size() > 0){
-            Hrana clonePosledni = (Hrana) cesta.get(cesta.size() - 1).clone();
-            clone.add(cesta.size() - 1, clonePosledni);
+        while(bod != null){
+            clone.pridejBodCesty((BodCesty) bod.clone());
+            bod = bod.getNext();
         }
 
-
+//        if(posledni != null){
+//            BodCesty novyPosl = (BodCesty) posledni.clone();
+//            clone.nahradPosledni(novyPosl);
+//        }
 
         return clone;
+
     }
-
 }
-

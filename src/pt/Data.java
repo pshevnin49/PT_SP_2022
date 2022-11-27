@@ -16,8 +16,6 @@ public class Data {
 
     private boolean jeSpustenAlgoritmus = false;
 
-    public static boolean bezi = true;
-
     private double aktualniCas;
     private int indexVelbloudu;
 
@@ -33,7 +31,6 @@ public class Data {
     private Velbloud nejdelsiVelbl;
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
-    public static final double EPS = 0.00000000001;
 
     public Data(){
         this.graf = new ArrayList<>();
@@ -158,6 +155,7 @@ public class Data {
         for(int i = 0; i < vsichniSklady.size(); i++){
             vsichniSklady.get(i).zvetseniCasu(cas);
         }
+       // System.out.println("Pocet skladu: " + vsichniSklady.size());
 
         for(Velbloud velbloud : velbloudyNaCeste){
             if(velbloud.kontrolaCasu()){
@@ -300,17 +298,8 @@ public class Data {
      * @return
      */
     public static boolean jeVetsi(double x1, double x2){
-        return (x1 - x2) > EPS;
-    }
-
-    /**
-     * Vraci true pokud x1 je mensi nez x2
-     * @param x1
-     * @param x2
-     * @return
-     */
-    public static boolean jeMensi(double x1, double x2){
-        return (x1 - x2) < EPS;
+        double eps = 0.00000000001;
+        return (x1 - x2) > eps;
     }
 
 }

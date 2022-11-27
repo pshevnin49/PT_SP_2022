@@ -6,26 +6,26 @@ import java.util.List;
 public class Oaza extends Bod {
 
     private boolean zapsaneCesty = false;
-    private List<CestaList> cestyDoOazy;
+    private List<Cesta> cestyDoOazy;
 
     public Oaza(int id, double x, double y, Data baseDat){
         super(id, x, y, baseDat);
         cestyDoOazy = new ArrayList<>();
     }
 
-    public List<CestaList> getVsichniCesty() throws CloneNotSupportedException {
+    public List<Cesta> getVsichniCesty() throws CloneNotSupportedException {
         return cestyDoOazy;
     }
     public void zapisCestuDoOazy() throws CloneNotSupportedException {
-        CestaList novaCesta = (CestaList) getCestaKeStanici().clone();
+        Cesta novaCesta = (Cesta) getCestaKeStanici().clone();
         cestyDoOazy.add(novaCesta);
     }
 
-    public List<CestaList> getCestyDoOazy(){
+    public List<Cesta> getCestyDoOazy(){
         return cestyDoOazy;
     }
 
-    public void addCestuDoOazy(CestaList cesta){
+    public void addCestuDoOazy(Cesta cesta){
         cestyDoOazy.add(cesta);
     }
 

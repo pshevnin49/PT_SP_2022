@@ -11,8 +11,6 @@ public class Pozadavek {
     private int id;
     private double casOcekavani;
     private double casDoruceni;
-    private double casFactDoruceni;
-    private int vylozeneKose;
 
     public Pozadavek(int id, double casPrichodu, int idOazy, int pocetKosu, double casOcekavani) {
         this.id = id;
@@ -22,17 +20,6 @@ public class Pozadavek {
         this.casOcekavani = casOcekavani;
         this.casDoruceni = casPrichodu + casOcekavani;
         prevezeneKose = 0;
-    }
-
-    public void setCasFactDoruceni(double casFactDoruceni){
-        this.casFactDoruceni = casFactDoruceni;
-    }
-
-    public int getVylozeneKose(){
-        return vylozeneKose;
-    }
-    public void vylozeneKoseIncr(int vylozeneKose){
-        this.vylozeneKose += vylozeneKose;
     }
 
     public int getNeprevezeneKose(){
