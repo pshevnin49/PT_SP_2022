@@ -13,7 +13,6 @@ public abstract class Bod {
     protected CestaList kratsiCesta;//nejkratsi cesta do dane stanici pri prochazeni Dejkstra alg.
     protected List<Hrana> hrany;
 
-
     private double distance;
     private Data baseDat;
 
@@ -35,12 +34,12 @@ public abstract class Bod {
         kratsiCesta.pridej(this, 0);
         jeZpracovany = false;
         zpracovava = false;
-
     }
 
     public boolean jeZpracovany() {
         return jeZpracovany;
     }
+
     public boolean getZpracovava(){
         return zpracovava;
     }
@@ -61,6 +60,7 @@ public abstract class Bod {
     public void setJeZpracovany(boolean jeZpracovany){
         this.jeZpracovany = jeZpracovany;
     }
+
     public void setZpracovava(boolean zpracovava){
         this.zpracovava = zpracovava;
     }

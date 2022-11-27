@@ -98,21 +98,19 @@ public class Sklad extends Bod {
             }
             else if(stihneLi == 1){
                 domVelbloudy.add(velbloud);
-                if(velbloud.getVzdalenostMax() >= baseDat.getMaxStrDalkaVelbloudu()){
-
+                if(velbloud.getVzdalenostMax() >= baseDat.getNejdelsiVelbl().getVzdalenostMax()){
                     return velbloudPrazdny;
                 }
             }else{
                 domVelbloudy.add(velbloud);
-                if(velbloud.getRychlost() >= baseDat.getMaxStrRychlostVelbloudu()){
-
+                if(velbloud.getRychlost() >= baseDat.getRychlejsiVelbl().getRychlost()){
                     return velbloudPrazdny;
                 }
             }
-            if(velbloud.getRychlost() >= baseDat.getMaxStrRychlostVelbloudu()){
+            if(velbloud.getRychlost() >= baseDat.getRychlejsiVelbl().getRychlost()){
                 bylRychlejsiVelbl = true;
             }
-            if(velbloud.getVzdalenostMax() >= baseDat.getMaxStrDalkaVelbloudu()){
+            if(velbloud.getVzdalenostMax() >= baseDat.getNejdelsiVelbl().getVzdalenostMax()){
                 bylRychlejsiVelbl = true;
             }
 

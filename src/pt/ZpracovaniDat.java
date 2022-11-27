@@ -46,7 +46,6 @@ public class ZpracovaniDat {
 
         int pocetCest = Integer.parseInt(data.get(indexPoslOazy + 1));
         int indexPoslCesty = indexPoslOazy + (pocetCest * 2) + 1;
-        System.out.println(pocetCest + " pocet cest");
 
         for(int i = indexPoslOazy + 2; i < indexPoslCesty; i += 2){
 

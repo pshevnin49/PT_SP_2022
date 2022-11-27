@@ -35,6 +35,7 @@ public class CestaList{
         if(cesta.size() > 0){
             cesta.get(cesta.size() - 1).setVzdalenost(vzdalenost);
         }
+
         Hrana hrana = new Hrana(novaStanice, 0);
         cesta.add(hrana);
     }
@@ -48,7 +49,6 @@ public class CestaList{
     public void spocitejIndexCesty(){
         double dalka = 0;
         double pocetStanic = 0;
-
 
         if(!jeSpoctenIndex){
             for (Hrana bodCesty : cesta){
@@ -162,14 +162,13 @@ public class CestaList{
      * vraci 2, pokud velbloud nestihne cestu casove
      */
     public int stihneCestuVelbloud(Velbloud velbloud, double casDoruceni, int pocetKosu){
-
         double maxDalka = 0;
         double cestaBezPiti = 0;
         double celyCasCesty = 0;
         double celaDalkaCesty = 0;
 
-
         for (Hrana bodCesty : cesta){
+
             if(Data.jeVetsi(bodCesty.getVzdalenost(), maxDalka)){
                 maxDalka = bodCesty.getVzdalenost();
             }
@@ -182,7 +181,6 @@ public class CestaList{
             celyCasCesty += bodCesty.getVzdalenost() / velbloud.getRychlost();
             celaDalkaCesty += bodCesty.getVzdalenost();
             cestaBezPiti += bodCesty.getVzdalenost();
-
 
         }
 
@@ -203,7 +201,6 @@ public class CestaList{
         }
     }
 
-
     /**
      * Vraci cas ktery potrebuje rychlejsi velbloud na danou cestu
      * pokud tuto cestu nedokaze zvladnout, vraci -1
@@ -213,14 +210,12 @@ public class CestaList{
     public double getCasRychlVelbl(int pocetKosu){
 
         casVelbloudu();
-
         Sklad sklad = (Sklad) cesta.get(0).getStanice();
         double casNalozeni = sklad.getCasNalozeni();
 
         if(casRychlVelbl == -1){
             return -1;
         }
-
         return casRychlVelbl + 2 * pocetKosu * casNalozeni;
     }
 
@@ -234,7 +229,6 @@ public class CestaList{
     public double getCasNejdelVelbl(int pocetKosu){
 
         casVelbloudu();
-
         Sklad sklad = (Sklad) cesta.get(0).getStanice();
 
         double casNalozeni = sklad.getCasNalozeni();

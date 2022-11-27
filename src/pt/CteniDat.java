@@ -28,7 +28,6 @@ public class CteniDat {
         while(scn.hasNext()){
             String datovyPrvek = "";
             String slovo = scn.next();
-            //System.out.println(slovo);
 
             for(int i = 0; i < slovo.length(); i++){
                 Character prvniChar = slovo.charAt(i);
@@ -64,5 +63,4 @@ public class CteniDat {
         scn.close();
         return cisla;
     }
-
 }
