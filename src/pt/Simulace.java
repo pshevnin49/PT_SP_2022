@@ -1,13 +1,11 @@
 package pt;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
 
 public class Simulace {
-
 
     private DijkstraAlgoritmus dijkstra;
     private Data baseDat;
@@ -137,17 +135,17 @@ public class Simulace {
 
         if(velbloud != null){
 
-            while(pozadavek.getNeprevezeneKose() > 0){
+            while(pozadavek.getNenalozeneKose() > 0){
                 int pocetKosu;
 
-                if(velbloud.getDruhVelbloudu().getMaxZatizeni() < pozadavek.getNeprevezeneKose()){
+                if(velbloud.getDruhVelbloudu().getMaxZatizeni() < pozadavek.getNenalozeneKose()){
                     pocetKosu = velbloud.getDruhVelbloudu().getMaxZatizeni();
                 }else{
-                    pocetKosu = pozadavek.getNeprevezeneKose();
+                    pocetKosu = pozadavek.getNenalozeneKose();
                 }
 
                 velbloud.zacniNakladat(pocetKosu, cesta, pozadavek);
-                pozadavek.zvetsiPrevezeneKose(pocetKosu);
+                pozadavek.zvetsiNalozeneKose(pocetKosu);
                 velbloud = sklad.getVhodnyVelbl(1, pozadavek.getCasDoruceni(), cesta);
             }
             return true;
@@ -161,6 +159,8 @@ public class Simulace {
     private void nesplnitelnyPoz(Pozadavek pozadavek){
         System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n", Math.round(baseDat.getAktualniCas()),
                 pozadavek.getIdOazy());
+
+        baseDat.setErrLog(String.format("Doslo k chybe v case: %.2f, oaza c: %d \n", baseDat.getAktualniCas(), pozadavek.getIdOazy()));
         bezi = false;
     }
 

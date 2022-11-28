@@ -14,6 +14,8 @@ public class Data {
     private List<Pozadavek> nesplnennePozadavky;
     private List<Pozadavek> splnenePozadavky;
 
+    private String errLog = null;
+
     private boolean jeSpustenAlgoritmus = false;
 
     private double aktualniCas;
@@ -181,6 +183,15 @@ public class Data {
             graf.get(i).obnoveniCesty();
         }
     }
+
+    public double getCelkovaVzdalenost(){
+        double vzdalenost = 0;
+        for(int i = 0; i < vsichniVelbloudy.size(); i++){
+            vzdalenost += vsichniVelbloudy.get(i).getCelkovaVzd();
+        }
+        return vzdalenost;
+    }
+
     public void velbloudNaCeste(Velbloud velbloud){
         velbloudyNaCeste.add(velbloud);
     }
@@ -221,6 +232,14 @@ public class Data {
 
     public double getMaxRychlost() {
         return maxRychlost;
+    }
+
+    public String getErrLog(){
+        return errLog;
+    }
+
+    public void setErrLog(String log){
+        errLog = log;
     }
 
     public void setMaxStrRychlostVelbloudu(double maxRychlost){

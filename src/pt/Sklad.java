@@ -16,7 +16,7 @@ public class Sklad extends Bod {
     private double casPoObnoveni;
     private List<Velbloud> domVelbloudy;
     private Data baseDat;
-
+    private List<String> logList;
 
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
         super(id, x, y, baseDat);
@@ -29,6 +29,7 @@ public class Sklad extends Bod {
         this.actualniCas = 0;
         this.rezervovaneKose = 0;
         this.baseDat = baseDat;
+        this.logList = new ArrayList<>();
     }
 
     public void zvetseniCasu(double cas){
@@ -37,6 +38,8 @@ public class Sklad extends Bod {
         actualniCas += cas;
 
         if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
+            String log = String.format("    Doplneni skladu, cas: %.2f; pocet kosu pred: %d; pocet kosu po: %d\n", baseDat.getAktualniCas(), aktualniPocetKosu, aktualniPocetKosu + pocetKosu);
+            logList.add(log);
             casPoObnoveni = 0;
             aktualniPocetKosu += pocetKosu;
         }
@@ -91,6 +94,7 @@ public class Sklad extends Bod {
         }
         while(!bylNejdelsiVelbl || !bylRychlejsiVelbl){
             Velbloud velbloud = getNovyVelbloud(baseDat.getNahodnyDruhVelbloudu());
+            velbloud.getDruhVelbloudu().pocetVelblIncr();
             int stihneLi = cesta.stihneCestuVelbloud(velbloud, casDoruceni, pocetKosu);
 
             if(stihneLi == 0){
@@ -129,5 +133,13 @@ public class Sklad extends Bod {
         return velbloud;
     }
 
+    public String getLog(){
+        String log = String.format("Sklad c: %d\n", id);
+
+        for(int i = 0; i < logList.size(); i++){
+            log += logList.get(i);
+        }
+        return log;
+    }
 
 }
