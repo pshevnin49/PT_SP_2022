@@ -4,25 +4,21 @@ import java.util.*;
 
 public class Data {
 
-    private List<Bod> graf;
-    private List<Velbloud> vsichniVelbloudy;
-    private List<Sklad> vsichniSklady;
-    private List<Oaza> vsichniOazy;
-    private List<DruhVelbloudu> druhyVelbloudu;
-    private Set<Velbloud> velbloudyNaCeste;
+    private final List<Bod> DATA;
+    private final List<Velbloud> VSICHNI_VELBL;
+    private final List<Sklad> VSICHNI_SKLADY;
+    private final List<Oaza> VSICHNI_OAZY;
+    private final List<DruhVelbloudu> DRUHU_VELBL;
+    private final Set<Velbloud> VELBL_NA_CESTE;
 
-    private List<Pozadavek> nesplnennePozadavky;
-    private List<Pozadavek> splnenePozadavky;
+    private final List<Pozadavek> nesplnennePozadavky;
 
     private String errLog = null;
-
-    private boolean jeSpustenAlgoritmus = false;
-
     private double aktualniCas;
     private int indexVelbloudu;
 
     private double maxStrRychlostVelbloudu;
-    private int dobaNapiti;
+
     private double maxStrDalkaVelbloudu;
 
     private double maxDalka;
@@ -37,13 +33,13 @@ public class Data {
 
 
     public Data(){
-        this.graf = new ArrayList<>();
-        this.druhyVelbloudu = new ArrayList<>();
+        this.DATA = new ArrayList<>();
+        this.DRUHU_VELBL = new ArrayList<>();
         this.nesplnennePozadavky = new ArrayList<>();
-        vsichniVelbloudy = new ArrayList<>();
-        vsichniSklady = new ArrayList<>();
-        vsichniOazy = new ArrayList<>();
-        velbloudyNaCeste = new HashSet<>();
+        VSICHNI_VELBL = new ArrayList<>();
+        VSICHNI_SKLADY = new ArrayList<>();
+        VSICHNI_OAZY = new ArrayList<>();
+        VELBL_NA_CESTE = new HashSet<>();
         this.aktualniCas = 0;
         this.indexVelbloudu = 1;
     }
@@ -62,11 +58,11 @@ public class Data {
         int dolniHranice = 0;
         int horniHranice = 0;
 
-        for(int i = 0; i < druhyVelbloudu.size(); i++){
-            horniHranice += (int) (druhyVelbloudu.get(i).getPomerDruhuVelbloudu() * 100);
+        for(int i = 0; i < DRUHU_VELBL.size(); i++){
+            horniHranice += (int) (DRUHU_VELBL.get(i).getPomerDruhuVelbloudu() * 100);
 
             if(randCislo < horniHranice && randCislo >= dolniHranice){
-                druhVelbloudu = druhyVelbloudu.get(i);
+                druhVelbloudu = DRUHU_VELBL.get(i);
                 return druhVelbloudu;
             }
 
@@ -98,7 +94,7 @@ public class Data {
         return aktualniPozadavky;
     }
     public void inputDruhVelbloudu(DruhVelbloudu druh){
-        this.druhyVelbloudu.add(druh);
+        this.DRUHU_VELBL.add(druh);
     }
 
 
@@ -115,7 +111,7 @@ public class Data {
         double krok = MAX_VALUE;
         double novyKrok;
 
-        for(Velbloud velbloud : velbloudyNaCeste){
+        for(Velbloud velbloud : VELBL_NA_CESTE){
             novyKrok = velbloud.getCasPristiAkce();
 
             if(jeVetsi(krok, novyKrok)){
@@ -138,7 +134,7 @@ public class Data {
         double krok = MAX_VALUE;
         double novyKrok;
 
-        for(Sklad sklad : vsichniSklady){
+        for(Sklad sklad : VSICHNI_SKLADY){
             novyKrok = sklad.getCasovyKrok();
 
             if(jeVetsi(krok, novyKrok)){
@@ -156,12 +152,11 @@ public class Data {
     public void zvetseniCasuSimulace(double cas){
 
         List<Velbloud> velblKOdstr = new ArrayList<>();
-        for(int i = 0; i < vsichniSklady.size(); i++){
-            vsichniSklady.get(i).zvetseniCasu(cas);
+        for(int i = 0; i < VSICHNI_SKLADY.size(); i++){
+            VSICHNI_SKLADY.get(i).zvetseniCasu(cas);
         }
-       // System.out.println("Pocet skladu: " + vsichniSklady.size());
 
-        for(Velbloud velbloud : velbloudyNaCeste){
+        for(Velbloud velbloud : VELBL_NA_CESTE){
             if(velbloud.kontrolaCasu()){
                 velblKOdstr.add(velbloud);
             }
@@ -177,27 +172,27 @@ public class Data {
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
      */
     public void pripravZastavky(){
-        for(int i = 0; i < graf.size(); i++){
-            graf.get(i).setDistance(Data.MAX_VALUE);
-            graf.get(i).setJeZpracovany(false);
-            graf.get(i).obnoveniCesty();
+        for(int i = 0; i < DATA.size(); i++){
+            DATA.get(i).setDistance(Data.MAX_VALUE);
+            DATA.get(i).setJeZpracovany(false);
+            DATA.get(i).obnoveniCesty();
         }
     }
 
     public double getCelkovaVzdalenost(){
         double vzdalenost = 0;
-        for(int i = 0; i < vsichniVelbloudy.size(); i++){
-            vzdalenost += vsichniVelbloudy.get(i).getCelkovaVzd();
+        for(int i = 0; i < VSICHNI_VELBL.size(); i++){
+            vzdalenost += VSICHNI_VELBL.get(i).getCelkovaVzd();
         }
         return vzdalenost;
     }
 
     public void velbloudNaCeste(Velbloud velbloud){
-        velbloudyNaCeste.add(velbloud);
+        VELBL_NA_CESTE.add(velbloud);
     }
 
     public void velbloudZkoncilCestu(Velbloud velbloud){
-        velbloudyNaCeste.remove(velbloud);
+        VELBL_NA_CESTE.remove(velbloud);
     }
 
     /**
@@ -207,15 +202,15 @@ public class Data {
      * @param zastavka
      */
     public void inputZastavka(Bod zastavka){
-        this.graf.add(zastavka);
+        this.DATA.add(zastavka);
     }
 
     public void inputOaza(Oaza oaza){
-        this.vsichniOazy.add(oaza);
+        this.VSICHNI_OAZY.add(oaza);
     }
 
     public void inputSklad(Sklad sklad){
-        this.vsichniSklady.add(sklad);
+        this.VSICHNI_SKLADY.add(sklad);
     }
 
     public void setMaxDalka(double maxDalka) {
@@ -254,27 +249,28 @@ public class Data {
     public double getMaxStrDalkaVelbloudu(){
         return maxStrDalkaVelbloudu;
     }
+
     public List<Sklad> getVsichniSklady(){
-        return vsichniSklady;
+        return VSICHNI_SKLADY;
     }
 
     public List<Velbloud> getVsichniVelbloudy(){
-        return vsichniVelbloudy;
+        return VSICHNI_VELBL;
     }
 
     public List<Oaza> getVsichniOazy(){
-        return vsichniOazy;
+        return VSICHNI_OAZY;
     }
 
     public List<DruhVelbloudu> getDruhyVelbloudu() {
-        return druhyVelbloudu;
+        return DRUHU_VELBL;
     }
 
     public List<Pozadavek> getPozadavky() {
         return nesplnennePozadavky;
     }
     public List<Bod> getGraf(){
-        return graf;
+        return DATA;
     }
 
     public double getAktualniCas(){
@@ -319,7 +315,6 @@ public class Data {
      * @return
      */
     public static boolean jeVetsi(double x1, double x2){
-        double eps = 0.00000000001;
         return (x1 - x2) > EPS;
     }
 

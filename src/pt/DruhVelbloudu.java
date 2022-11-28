@@ -3,65 +3,65 @@ package pt;
 import java.util.Random;
 
 public class DruhVelbloudu {
-    private String nazev;
-    private double maxRychlost;
-    private double minRychlost;
-    private int rychlost;
-    private double maxVzdalenost;
-    private double minVzdalenost;
-    private int vzdalenost;
-    private int dobaPiti;
-    private int maxZatizeni;
-    private double pomerDruhuVelbloudu;
-    private Random rand = new Random();
-    private int pocetVelbloudu = 0;
+
+    private final String NAZEV;
+    private final double MAX_RYCHLOST;
+    private final double MIN_RYCHLOST;
+    private final double MAX_VZDALENOST;
+    private final double MIN_VZDALENOST;
+    private final int DOBA_PITI;
+    private final int MAX_ZATIZENI;
+    private final double POMER_DRUHU_VELBL;
+    private final Random RAND;
+    private int POCET_VELBL = 0;
 
     public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double minVzdalenost, double maxVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
-        this.nazev = nazev;
-        this.maxRychlost = maxRychlost;
-        this.minRychlost = minRychlost;
-        this.maxVzdalenost = maxVzdalenost;
-        this.minVzdalenost = minVzdalenost;
-        this.dobaPiti = dobaPiti;
-        this.maxZatizeni = maxZatizeni;
-        this.pomerDruhuVelbloudu = pomerDruhuVelbloudu;
+        this.NAZEV = nazev;
+        this.MAX_RYCHLOST = maxRychlost;
+        this.MIN_RYCHLOST = minRychlost;
+        this.MAX_VZDALENOST = maxVzdalenost;
+        this.MIN_VZDALENOST = minVzdalenost;
+        this.DOBA_PITI = dobaPiti;
+        this.MAX_ZATIZENI = maxZatizeni;
+        this.POMER_DRUHU_VELBL = pomerDruhuVelbloudu;
+        RAND = new Random();
     }
 
     public int getDobaPiti() {
-        return dobaPiti;
+        return DOBA_PITI;
     }
 
     public int getMaxZatizeni() {
-        return maxZatizeni;
+        return MAX_ZATIZENI;
     }
 
     public double getPomerDruhuVelbloudu() {
-        return pomerDruhuVelbloudu;
+        return POMER_DRUHU_VELBL;
     }
 
     public String getNazev() {
-        return nazev;
+        return NAZEV;
     }
 
     public int getPocetVelbloudu(){
-        return pocetVelbloudu;
+        return POCET_VELBL;
     }
 
     public void vypis(){
-        System.out.println(nazev + " max rychlost:" + maxRychlost + " min rychlost:" + minRychlost + " max vzd.:" + maxVzdalenost + " min vzd.: " + minVzdalenost);
+        System.out.println(NAZEV + " max rychlost:" + MAX_RYCHLOST + " min rychlost:" + MIN_RYCHLOST + " max vzd.:" + MAX_VZDALENOST + " min vzd.: " + MIN_VZDALENOST);
     }
 
     public double randRych() {
-        return minRychlost + (maxRychlost - minRychlost) * rand.nextDouble();
+        return MIN_RYCHLOST + (MAX_RYCHLOST - MIN_RYCHLOST) * RAND.nextDouble();
     }
 
     public void pocetVelblIncr(){
-        pocetVelbloudu++;
+        POCET_VELBL++;
     }
 
     public double randVzdal() {
-        double stredniHodn = (minVzdalenost + maxVzdalenost)/2;
-        double odchylka = (maxVzdalenost - minVzdalenost)/4;
-        return odchylka * rand.nextGaussian() + stredniHodn;
+        double stredniHodn = (MIN_VZDALENOST + MAX_VZDALENOST)/2;
+        double odchylka = (MAX_VZDALENOST - MIN_VZDALENOST)/4;
+        return odchylka * RAND.nextGaussian() + stredniHodn;
     }
 }

@@ -2,31 +2,32 @@ package pt;
 
 public class Pozadavek {
 
-    private double casPrichodu;
-    private int idOazy;
-    private int pocetKosu;
-    private int nalozeneKose;
+    private final double CAS_PRICHODU;
+    private final int ID_OAZY;
+    private final int POCET_KOSU;
+    private final int ID;
+    private final double CAS_OCEKAVANI;
+    private final double CAS_DORUCENI;
+
     private int vylozeneKose;
-    private int id;
     private double casFactickehoDoruceni;
-    private double casOcekavani;
-    private double casDoruceni;
+    private int nalozeneKose;
+
     private Velbloud velbloud;
 
-
     public Pozadavek(int id, double casPrichodu, int idOazy, int pocetKosu, double casOcekavani) {
-        this.id = id;
-        this.casPrichodu = casPrichodu;
-        this.idOazy = idOazy;
-        this.pocetKosu = pocetKosu;
-        this.casOcekavani = casOcekavani;
-        this.casDoruceni = casPrichodu + casOcekavani;
+        this.ID = id;
+        this.CAS_PRICHODU = casPrichodu;
+        this.ID_OAZY = idOazy;
+        this.POCET_KOSU = pocetKosu;
+        this.CAS_OCEKAVANI = casOcekavani;
+        this.CAS_DORUCENI = casPrichodu + casOcekavani;
         this.vylozeneKose = 0;
         this.nalozeneKose = 0;
     }
 
     public int getNenalozeneKose(){
-        return pocetKosu - nalozeneKose;
+        return POCET_KOSU - nalozeneKose;
     }
     public void zvetsiNalozeneKose(int pocet){
         nalozeneKose += pocet;
@@ -35,35 +36,26 @@ public class Pozadavek {
         vylozeneKose += pocet;
     }
     public int getNevylozeneKose(){
-        return pocetKosu - vylozeneKose;
+        return POCET_KOSU - vylozeneKose;
     }
-
 
     public double getCasPrichodu() {
-        return casPrichodu;
+        return CAS_PRICHODU;
     }
     public int getIdOazy() {
-        return idOazy;
+        return ID_OAZY;
     }
     public int getId(){
-        return id;
+        return ID;
     }
     public int getPocetKosu() {
-        return pocetKosu;
+        return POCET_KOSU;
     }
     public double getCasOcekavani() {
-        return casOcekavani;
+        return CAS_OCEKAVANI;
     }
     public double getCasDoruceni(){
-        return casDoruceni;
-    }
-
-    public double getCasFactickehoDoruceni() {
-        return casFactickehoDoruceni;
-    }
-
-    public Velbloud getVelbloud() {
-        return velbloud;
+        return CAS_DORUCENI;
     }
 
     public void setVelbloud(Velbloud velbloud) {
@@ -75,13 +67,9 @@ public class Pozadavek {
         this.casFactickehoDoruceni = casFactickehoDoruceni;
     }
 
-    public void vypis(){
-        System.out.println("Cas prichodu: " + casPrichodu + ". id oazy:" + idOazy + " pocet kosu:" + pocetKosu + " cas ocekavani:" + casOcekavani);
-    }
-
     public String getLog(){
-        String log = String.format("    Pozadavek id: %d; nejpozdejsi cas doruceni: %.2f; pocet kosu: %d; cas faktickeho doruceni %.2f; id skladu: %d; id velbloudu %d \n", id, casDoruceni
-                , pocetKosu, casFactickehoDoruceni, velbloud.getDomovskaStanice().getId(), velbloud.getId());
+        String log = String.format("    Pozadavek id: %d; nejpozdejsi cas doruceni: %.2f; pocet kosu: %d; cas faktickeho doruceni %.2f; id skladu: %d; id velbloudu %d \n", ID, CAS_DORUCENI
+                , POCET_KOSU, casFactickehoDoruceni, velbloud.getDomovskaStanice().getId(), velbloud.getId());
         return log;
     }
 }
