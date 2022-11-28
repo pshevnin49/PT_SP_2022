@@ -12,6 +12,8 @@ public class Simulace {
 
     private final Data BASE_DAT;
     private boolean bezi = true;
+    List<Pozadavek> aktPozList = new ArrayList<>();
+    double minKrokCas;
 
     /**
      * Konstruktor tridy simulace
@@ -19,6 +21,48 @@ public class Simulace {
      */
     public Simulace(Data baseDat){
         this.BASE_DAT = baseDat;
+    }
+
+    private void krokSimulace() throws CloneNotSupportedException {
+        List<Pozadavek> novePozadavky = BASE_DAT.getAktualniPozadavky();
+
+        aktPozList.addAll(novePozadavky);
+
+        if(novePozadavky != null){
+            aktPozList.sort(comparing(Pozadavek::getCasDoruceni));
+        }
+
+        for(int i = 0; i < novePozadavky.size(); i++ ){
+            Pozadavek pozadavek = novePozadavky.get(i);
+            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d\n", Math.round(BASE_DAT.getAktualniCas()),
+                    pozadavek.getId(), pozadavek.getIdOazy(), pozadavek.getPocetKosu(), Math.round(pozadavek.getCasDoruceni()));
+        }
+
+        if(aktPozList.size() > 0){
+            zprVsechPoz(aktPozList);
+        }
+
+        BASE_DAT.zvetseniCasuSimulace(minKrokCas);
+        minKrokCas = BASE_DAT.getMinKrokCasu();
+        if(minKrokCas == Data.MAX_VALUE && aktPozList.size() > 0){
+            minKrokCas = BASE_DAT.getMinKrokSkladu();
+        }
+    }
+
+    /**
+     * Krokovani simulace po jednom kroku
+     * @throws CloneNotSupportedException
+     */
+    public boolean debugRezim() throws CloneNotSupportedException {
+        minKrokCas = BASE_DAT.getMinKrokCasu();
+
+        if(minKrokCas != Data.MAX_VALUE && bezi){
+            krokSimulace();
+        }
+        if(aktPozList.size() > 0 || !BASE_DAT.getVelbloudyNaCeste().isEmpty()){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -30,35 +74,10 @@ public class Simulace {
      * @throws CloneNotSupportedException
      */
     public void startSimulace() throws CloneNotSupportedException {
-        double minKrokCas = BASE_DAT.getMinKrokCasu();
-        List<Pozadavek> aktPozList = new ArrayList<>();
+        minKrokCas = BASE_DAT.getMinKrokCasu();
 
         while(minKrokCas != Data.MAX_VALUE && bezi){
-
-            List<Pozadavek> novePozadavky = BASE_DAT.getAktualniPozadavky();
-
-            aktPozList.addAll(novePozadavky);
-
-            if(novePozadavky != null){
-                aktPozList.sort(comparing(Pozadavek::getCasDoruceni));
-            }
-
-            for(int i = 0; i < novePozadavky.size(); i++ ){
-                Pozadavek pozadavek = novePozadavky.get(i);
-                System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d\n", Math.round(BASE_DAT.getAktualniCas()),
-                        pozadavek.getId(), pozadavek.getIdOazy(), pozadavek.getPocetKosu(), Math.round(pozadavek.getCasDoruceni()));
-            }
-
-            if(aktPozList.size() > 0){
-                zprVsechPoz(aktPozList);
-            }
-
-            BASE_DAT.zvetseniCasuSimulace(minKrokCas);
-            minKrokCas = BASE_DAT.getMinKrokCasu();
-            if(minKrokCas == Data.MAX_VALUE && aktPozList.size() > 0){
-                minKrokCas = BASE_DAT.getMinKrokSkladu();
-            }
-
+            krokSimulace();
         }
     }
 
