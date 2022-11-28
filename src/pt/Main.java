@@ -9,14 +9,14 @@ import java.util.Scanner;
  */
 public class Main {
 
-    public static void main(String [] args) throws IOException, CloneNotSupportedException {
+    public static void main(String [] args) {
         vypisMenu();
     }
 
     /**
      * Menu pro obsluhu celeho programu
      */
-    private static void vypisMenu() throws CloneNotSupportedException {
+    private static void vypisMenu(){
         Scanner scn = new Scanner(System.in);
         System.out.println("\t******Main Menu*******");
 
@@ -49,6 +49,7 @@ public class Main {
 
                 if(pocetSkladu <= 0|| pocetOaz <= 0 || pocetCest <= 0 || pocetDruhu <= 0 || pocetPozadavek <= 0){
                     System.out.println("Spatny format dat pro generace, ukonceni programu.");
+                    scn.close();
                     return;
                 }
                 generovaniDat(name, pocetSkladu, pocetOaz, pocetCest, pocetDruhu, pocetPozadavek);
@@ -71,6 +72,7 @@ public class Main {
 
                 if(pocetSkladu <= 0|| pocetOaz <= 0 || pocetCest <= 0 || pocetDruhu <= 0 || pocetPozadavek <= 0){
                     System.out.println("Spatny format dat pro generace, ukonceni programu.");
+                    scn.close();
                     return;
                 }
                 generovaniDat(jmenoSouboru, pocetSkladu, pocetOaz, pocetCest, pocetDruhu, pocetPozadavek);
@@ -79,7 +81,6 @@ public class Main {
             else if(vstup == 3){
                 System.out.println("Zadejte jmeno souboru koncici na .txt:");
                 String jmenoSouboru = scn.next();
-
                 spusteniSimulace(jmenoSouboru);
             }
             else if(vstup == 4){
@@ -88,8 +89,7 @@ public class Main {
                 Simulace simulace;
 
                 simulace = spusteniDebug(jmenoSouboru);
-
-                boolean bezi = true;
+                boolean bezi;
                 do {
                     System.out.println("Zmazknete 1 aby posunout simulace o jeden krok");
                     System.out.println("Zmazknete libovlone cislo aby nechat dobehnout");
@@ -99,7 +99,7 @@ public class Main {
 
                     if(vstup == 1){
                         bezi = simulace.debugRezim();
-                        System.out.println(bezi);
+
                     }
                     else{
                         simulace.startSimulace();
@@ -150,11 +150,8 @@ public class Main {
         simulace.startSimulace();
 
         SouborStatistiky statistiky = new SouborStatistiky(baseDat);
-        try {
-            statistiky.genSoubrStatistik();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        statistiky.genSoubrStatistik();
+
     }
 
     private static void generovaniDat(String jmenoSouboru, int pocetSkladu, int pocetOaz, int pocetCest, int pocDruhu, int pocPoz) throws IOException {

@@ -35,7 +35,9 @@ public class CteniDat {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }finally {
-            scn.close();
+            if(scn != null){
+                scn.close();
+            }
             read.close();
         }
 
