@@ -4,6 +4,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Trida urcena ke generaci souboru se statistikou, kterou podarilo sebrat
+ * za behu programu
+ */
 public class SouborStatistiky {
 
     private final Data BASE_DAT;
@@ -13,6 +17,11 @@ public class SouborStatistiky {
         this.BASE_DAT = baseDat;
     }
 
+    /**
+     * Generuje soubor a pomoci metody zapisStatistiku vklada do neho
+     * statistiku
+     * @throws IOException
+     */
     public void genSoubrStatistik() throws IOException {
 
         FileWriter fileWriter = new FileWriter(FILE_NAME);
@@ -33,6 +42,10 @@ public class SouborStatistiky {
         }
     }
 
+    /**
+     * Zapisuje statistiku do souboru
+     * @param file
+     */
     private void zapisStatistiku(BufferedWriter file){
         String vzdalenost = String.format("Celkova vzdalenost: %.2f\n", BASE_DAT.getCelkovaVzdalenost());
 

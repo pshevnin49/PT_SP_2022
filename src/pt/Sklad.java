@@ -3,11 +3,15 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Trida reprezentuje sklad je dedena od abstraktni tridy bod
+ */
 public class Sklad extends Bod {
 
-    private final int PCET_KOSU;
+    private final int POCET_KOSU;
     private final int CAS_OBNOVENI;
     private final int CAS_NALOZENI;
+    /** Domovske velbloudi, velbloudi ktere aktualne jsou na tomto sklade*/
     private final List<Velbloud> DOM_VELBLOUDY;
     private final Data BASE_DAT;
     private final List<String> logList;
@@ -15,9 +19,19 @@ public class Sklad extends Bod {
     private int aktualniPocetKosu;
     private double casPoObnoveni;
 
+    /**
+     * Konstruktor tridy sklad
+     * @param id
+     * @param x
+     * @param y
+     * @param pocetKosu
+     * @param casObnoveni
+     * @param casNalozeni
+     * @param baseDat
+     */
     public Sklad(int id, double x, double y, int pocetKosu, int casObnoveni, int casNalozeni, Data baseDat){
         super(id, x, y, baseDat);
-        this.PCET_KOSU = pocetKosu;
+        this.POCET_KOSU = pocetKosu;
         this.CAS_OBNOVENI = casObnoveni;
         this.CAS_NALOZENI = casNalozeni;
         this.DOM_VELBLOUDY = new ArrayList<>();
@@ -32,10 +46,13 @@ public class Sklad extends Bod {
         casPoObnoveni += cas;
 
         if(Data.jeVetsi(casPoObnoveni, doubleCasObnoveni)){
-            String log = String.format("    Doplneni skladu, cas: %.2f; pocet kosu pred: %d; pocet kosu po: %d\n", BASE_DAT.getAktualniCas(), aktualniPocetKosu, aktualniPocetKosu + PCET_KOSU);
+
+            int increment = (int) (casPoObnoveni / doubleCasObnoveni);
+            String log = String.format("    Doplneni skladu, cas: %.2f; pocet kosu pred: %d; pocet kosu po: %d\n", BASE_DAT.getAktualniCas(), aktualniPocetKosu, aktualniPocetKosu + POCET_KOSU * increment);
             logList.add(log);
             casPoObnoveni = 0;
-            aktualniPocetKosu += PCET_KOSU;
+
+            aktualniPocetKosu += POCET_KOSU * increment;
         }
     }
 
@@ -62,10 +79,7 @@ public class Sklad extends Bod {
 
     /**
      * Metoda prochazi vsichni velbloudy, ktere nachazi na sklade, kdyz zadny z nich cestu
-     * nestihne, zacina generovat nove. Metoda zna stredni rychlost rychlejsiho druhu velblouda,
-     * a zna stredni cestu trvalejsiho druhu velblouda. Pokud rychlejsi velbloud nesiha cestu casove, nebo
-     * trvalejsi velbloud ma kratsi max vzdalenost, nez nejdelsi usecka cesty, metoda vrati null, protoze pravdepodobnost nalezeni
-     * vhodneho velblouda -> 0
+     * nestihne, zacina generovat nove pomoci metody generujNovyVelbloud.
      * @param pocetKosu
      * @param casDoruceni
      * @param cesta
@@ -86,6 +100,16 @@ public class Sklad extends Bod {
 
     }
 
+    /**
+     * Metoda generuje noveho velbloud, ktery urcite dokaze zvladnout cestu v cas.
+     * Metoda generuji velbloudi dokud nepochopi, ze vsichni nejlepsi velbloudi uz byli vygenerovane,
+     * a vhodny velbloud jeste nalezen nebyl. Vyuziva k tomu prumnerne velbloudy jako nejdelsiVelbloud a rychlejsiVelbloud
+     * velbloudi, ktere byli vygenerovane ale nejsou vhodne vkladaji do listu domovske velbloudy
+     * @param pocetKosu
+     * @param casDoruceni
+     * @param cesta
+     * @return
+     */
     private Velbloud generujNovyVelbloud(int pocetKosu, double casDoruceni, CestaList cesta){
         boolean bylRychlejsiVelbl = false;
         boolean bylNejdelsiVelbl = false;
@@ -121,6 +145,11 @@ public class Sklad extends Bod {
         return velbloudPrazdny;
     }
 
+    /**
+     * Vraci nahodneho
+     * @param druh
+     * @return
+     */
     private Velbloud getNovyVelbloud(DruhVelbloudu druh){
 
         Velbloud velbloud = new Velbloud(BASE_DAT.getIndexVelbloudu(),

@@ -2,11 +2,18 @@ package pt;
 
 import java.util.List;
 
+/**
+ * Trida slouzi ke zpracovani dat po nacteni.
+ */
 public class ZpracovaniDat {
 
     private List<String> data;
     private Data baseDat;
 
+    /**
+     * Prijima pocet skladu, a zpracovava vsichni sklady
+     * @param pocetSkladu
+     */
     private void zpracujSklady(int pocetSkladu){
         int indexSkladu = 1;
         int indexPoslSkladu = pocetSkladu * 5;
@@ -25,6 +32,11 @@ public class ZpracovaniDat {
         }
     }
 
+    /**
+     * Prijima pocet oaz a zpracovava vsichni oazy
+     * @param pocetOaz
+     * @param indexPoslSkladu
+     */
     private void zpracujOazy(int pocetOaz, int indexPoslSkladu){
         int indexOaz = 1;
         int indexPoslOazy = indexPoslSkladu + (pocetOaz * 2) + 1;
@@ -43,6 +55,11 @@ public class ZpracovaniDat {
         }
     }
 
+    /**
+     * Zpracovava vsichni cesty
+     * @param pocetCest
+     * @param indexPoslOazy
+     */
     private void zpracujCesty(int pocetCest, int indexPoslOazy){
 
         int indexPoslCesty = indexPoslOazy + (pocetCest * 2) + 1;
@@ -65,6 +82,12 @@ public class ZpracovaniDat {
         }
     }
 
+    /**
+     * Metoda prijima List s datama(po odstraneni vsech komentaru) ktere byli nactene ze souboru a
+     * parsuje jich do spravnych datovych struktur
+     * @param data
+     * @param baseDat
+     */
     public void zpracovani(List<String> data, Data baseDat){
         this.data = data;
         this.baseDat = baseDat;
@@ -155,7 +178,7 @@ public class ZpracovaniDat {
             int casCekani = Integer.parseInt(data.get(i + 3));
 
             Pozadavek pozadavek = new Pozadavek(idPozadavku, casPrichodu, indexOazy, mnozstviKosu, casCekani);
-            baseDat.inputPozadavka(pozadavek);
+            baseDat.inputPozadavek(pozadavek);
             baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).addPoz(pozadavek);
             idPozadavku++;
 

@@ -5,21 +5,33 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
+/**
+ * Trida reprezentujici samotnou simulaci. Tato trida ridi vsechno co tyka simulaci
+ */
 public class Simulace {
 
     private final Data BASE_DAT;
     private boolean bezi = true;
 
+    /**
+     * Konstruktor tridy simulace
+     * @param baseDat
+     */
     public Simulace(Data baseDat){
         this.BASE_DAT = baseDat;
     }
 
+    /**
+     * Metoda ridi celou simulaci. Na zacatku pomoci Dijkstra, hleda cesty od vsech skladu do vsech oaz.
+     * po kazdou iteraci prochazi vsichni velbloudy i vsichni pozadavky a hleda casove nejblizsi akci aby zjistit minimalni krok posuvu casu cele simulace
+     * Pokud tento cas najde, posouva simulace pro pozadavky ktere k tomu to casu prisli, vola metodu zprVsechPoz()
+     * Behem simulace muze dojit k tomu, ze nejsou jeste vsichni pozadavky splnene, ale minimalni krok neexistuje v takovem pripade
+     * Hledame minimalni mezi casy pristiho doplneni skladu
+     * @throws CloneNotSupportedException
+     */
     public void startSimulace() throws CloneNotSupportedException {
         double minKrokCas = BASE_DAT.getMinKrokCasu();
         List<Pozadavek> aktPozList = new ArrayList<>();
-
-        DijkstraAlgoritmus dijkstra = new DijkstraAlgoritmus(BASE_DAT);
-        dijkstra.spustAlgoritmus();
 
         while(minKrokCas != Data.MAX_VALUE && bezi){
 
@@ -52,7 +64,9 @@ public class Simulace {
 
     /**
      * Prijima list pozadavku, a na zacatku pomoci metody kontrolPoz()
-     * kontroluje, zda vsichni pozadavky maji aspon jednu cestu, kterou da splnit aspon jednim velbloudem
+     * kontroluje, zda vsichni pozadavky maji aspon jednu cestu, kterou da splnit aspon jednim velbloudem,
+     * pak, vola metodu spusteni velblouda pro dany pozadavek, a pokud spusteni probehlo uspesne(byl nalezen vhodny velbloud)
+     * pozadavek zacina splnovat
      * @param pozadavekList
      * @throws CloneNotSupportedException
      */
@@ -117,7 +131,8 @@ public class Simulace {
     /**
      * Metoda prijima pozadavek, a vhodnou na dany moment cestu pro dany pozadavek
      * a zacina hledat vhodneho velblouda na sklade, pomoci metody getVhodnyVelbl()
-     * pokud vhodny velbloud byl nalezen, posila toho velblouda na cestu
+     * pokud vhodny velbloud byl nalezen, posila toho velblouda na cestu (pokud tento velbloud ma zatizeni mensi nez potrebuje pro
+     * splneni daneho pozadavku, objednavka se rozdeluje mezi nekolika velbloudy)
      * @param pozadavek
      * @param cesta
      * @return
@@ -149,8 +164,10 @@ public class Simulace {
 
     }
 
-
-
+    /**
+     * Pokud byl nalezen nesplnitelny pozadavek, tato metoda zastavi simulace a vypise spravny log
+     * @param pozadavek
+     */
     private void nesplnitelnyPoz(Pozadavek pozadavek){
         System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n", Math.round(BASE_DAT.getAktualniCas()),
                 pozadavek.getIdOazy());
@@ -181,6 +198,7 @@ public class Simulace {
 
     /**
      * Metoda kontroluje vsichni cesty jednoho pozadavku zda lze tuto cestu projit nejdelsim velbloudem
+     * taky kontroluje zda nevyprsel cas splneni pozadavku, a zda nejaky velbloud ten pozadavek dokaze splnit
      * @param pozadavek
      * @return true, pokud existuje cesta, kterou lze projit nejdelsim velbloudem false, pokud ne
      */

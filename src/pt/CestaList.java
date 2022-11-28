@@ -9,8 +9,11 @@ import java.util.List;
  */
 public class CestaList{
 
+    /** Je li k danemu casu spocten index cesty*/
     private boolean jeSpoctenIndex = false;
+    /** Dalka maximalni usecky cesty*/
     private double maxUsecka = 0;
+    /** Dalka cele cesty*/
     private double dalkaCesty = 0;
     private double indexNejlepsiCesty = 0;
 

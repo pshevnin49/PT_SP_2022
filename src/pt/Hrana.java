@@ -32,6 +32,11 @@ public class Hrana implements Cloneable{
         this.vzdalenost = vzdalenost;
     }
 
+    /**
+     * Trida klone vraci kopii objektu, neni odkaz na stejny objekt
+     * @return kopii
+     * @throws CloneNotSupportedException
+     */
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();

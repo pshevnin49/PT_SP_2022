@@ -2,6 +2,9 @@ package pt;
 
 import java.util.Random;
 
+/**
+ * Trida reprezentuje druh velbloudu
+ */
 public class DruhVelbloudu {
 
     private final String NAZEV;
@@ -13,8 +16,20 @@ public class DruhVelbloudu {
     private final int MAX_ZATIZENI;
     private final double POMER_DRUHU_VELBL;
     private final Random RAND;
+    /** Pocet nagenerovanych velbloudu daneho druhu*/
     private int POCET_VELBL = 0;
 
+    /**
+     * Konstruktor tridy druh velbloudu
+     * @param nazev
+     * @param minRychlost
+     * @param maxRychlost
+     * @param minVzdalenost
+     * @param maxVzdalenost
+     * @param dobaPiti
+     * @param maxZatizeni
+     * @param pomerDruhuVelbloudu
+     */
     public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double minVzdalenost, double maxVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
         this.NAZEV = nazev;
         this.MAX_RYCHLOST = maxRychlost;
@@ -47,10 +62,7 @@ public class DruhVelbloudu {
         return POCET_VELBL;
     }
 
-    public void vypis(){
-        System.out.println(NAZEV + " max rychlost:" + MAX_RYCHLOST + " min rychlost:" + MIN_RYCHLOST + " max vzd.:" + MAX_VZDALENOST + " min vzd.: " + MIN_VZDALENOST);
-    }
-
+    /** Rand rychlost generujici podle rovnomerneho rozdeleni*/
     public double randRych() {
         return MIN_RYCHLOST + (MAX_RYCHLOST - MIN_RYCHLOST) * RAND.nextDouble();
     }
@@ -59,6 +71,10 @@ public class DruhVelbloudu {
         POCET_VELBL++;
     }
 
+    /**
+     * Metoda generuje vzdalenost podle normalniho rozdeleni
+     * @return
+     */
     public double randVzdal() {
         double stredniHodn = (MIN_VZDALENOST + MAX_VZDALENOST)/2;
         double odchylka = (MAX_VZDALENOST - MIN_VZDALENOST)/4;
