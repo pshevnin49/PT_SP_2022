@@ -12,7 +12,7 @@ public class DruhVelbloudu {
     private final double MIN_RYCHLOST;
     private final double MAX_VZDALENOST;
     private final double MIN_VZDALENOST;
-    private final int DOBA_PITI;
+    private final double DOBA_PITI;
     private final int MAX_ZATIZENI;
     private final double POMER_DRUHU_VELBL;
     private final Random RAND;
@@ -30,7 +30,7 @@ public class DruhVelbloudu {
      * @param maxZatizeni
      * @param pomerDruhuVelbloudu
      */
-    public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double minVzdalenost, double maxVzdalenost, int dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
+    public DruhVelbloudu(String nazev, double minRychlost, double maxRychlost, double minVzdalenost, double maxVzdalenost, double dobaPiti, int maxZatizeni, double pomerDruhuVelbloudu) {
         this.NAZEV = nazev;
         this.MAX_RYCHLOST = maxRychlost;
         this.MIN_RYCHLOST = minRychlost;
@@ -42,7 +42,7 @@ public class DruhVelbloudu {
         RAND = new Random();
     }
 
-    public int getDobaPiti() {
+    public double getDobaPiti() {
         return DOBA_PITI;
     }
 

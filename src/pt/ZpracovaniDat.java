@@ -128,7 +128,7 @@ public class ZpracovaniDat {
             double maxRychlost = Double.parseDouble(data.get(i + 2));
             double minVzdalenost = Double.parseDouble(data.get(i + 3));
             double maxVzdalenost = Double.parseDouble(data.get(i + 4));
-            int dobaPiti = Integer.parseInt(data.get(i + 5));
+            double dobaPiti = Double.parseDouble(data.get(i + 5));
 
             int maxZatizeni = Integer.parseInt(data.get(i + 6));
             double pomerDruhu = Double.parseDouble(data.get(i + 7));

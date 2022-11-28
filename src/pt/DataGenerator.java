@@ -50,7 +50,8 @@ public class DataGenerator {
         file.write(pocetCest + "\n");
         for(int i = 0; i < pocetCest; i++){
             double sklad = Math.round(getRovnomerRozdel(1, pocetSkladu));
-            double oaza = Math.round(getRovnomerRozdel(1, pocetOaz));file.write(String.format(Locale.US, "%d %d\n",(int)sklad, (int)oaza));
+            double oaza = Math.round(getRovnomerRozdel(pocetSkladu, pocetSkladu + pocetOaz));
+            file.write(String.format(Locale.US, "%d %d\n",(int)sklad, (int)oaza));
         }
 
         file.write(pocetDruhuVelbloudu + "\n");
@@ -63,7 +64,7 @@ public class DataGenerator {
             double dobaPiti = getRovnomerRozdel(1, MAX_DOBA_PITI);
             double zatizeni = getRovnomerRozdel(MAX_ZATIZENI, MAX_ZATIZENI + 50);
             double pomer = 1;
-            file.write(String.format(Locale.US, "%s %.2f %.2f %d %d %d %.2f %.2f\n", druh, minRychlost, maxRychlost, (int)minVzdal, (int)maxVzdal, (int)dobaPiti, zatizeni, pomer));
+            file.write(String.format(Locale.US, "%s %.2f %.2f %.2f %.2f %.2f %d %.2f\n", druh, minRychlost, maxRychlost, minVzdal, maxVzdal, dobaPiti, (int)zatizeni, pomer));
 
         }
         else {
@@ -78,7 +79,7 @@ public class DataGenerator {
                 double zatizeni = getRovnomerRozdel(MAX_ZATIZENI, MAX_ZATIZENI + 50);
                 double pomer = getRovnomerRozdel(0, 1 - procSum);
                 procSum += pomer;
-                file.write(String.format(Locale.US, "%s %.2f %.2f %d %d %d %.2f %.2f\n", druh, minRychlost, maxRychlost, (int) minVzdal, (int) maxVzdal, (int) dobaPiti, zatizeni, pomer));
+                file.write(String.format(Locale.US, "%s %.2f %.2f %.2f %.2f %.2f %d %.2f\n", druh, minRychlost, maxRychlost, minVzdal, maxVzdal, dobaPiti, (int)zatizeni, pomer));
             }
 
 
@@ -90,16 +91,17 @@ public class DataGenerator {
             double dobaPiti = getRovnomerRozdel(1, MAX_DOBA_PITI);
             double zatizeni = getRovnomerRozdel(MAX_ZATIZENI, MAX_ZATIZENI + 50);
             double pomer = 1 - procSum;
-            file.write(String.format(Locale.US, "%s %.2f %.2f %d %d %d %.2f %.2f\n", druh, minRychlost, maxRychlost, (int) minVzdal, (int) maxVzdal, (int) dobaPiti, zatizeni, pomer));
+            file.write(String.format(Locale.US, "%s %.2f %.2f %.2f %.2f %.2f %d %.2f\n", druh, minRychlost, maxRychlost, minVzdal, maxVzdal, dobaPiti, (int)zatizeni, pomer));
         }
+
         file.write(pocetPozadavku + "\n");
         double casPrichodu = 0;
         for(int i = 0; i < pocetPozadavku; i++){
-           double idOazy = getRovnomerRozdel(1, MAX_ID_OAZY);
-           double pocetKosu = getRovnomerRozdel(1, POCET_KOSU);
-           double casOcekavani = getRovnomerRozdel(10000, CAS_OCEKAVANI);
-           file.write(String.format(Locale.US, "%.2f %d %d %d\n", casPrichodu, (int)idOazy, (int)pocetKosu, (int)casOcekavani));
-           casPrichodu += getRovnomerRozdel(1, 10);
+            double idOazy = getRovnomerRozdel(1, pocetOaz);
+            double pocetKosu = getRovnomerRozdel(1, POCET_KOSU);
+            double casOcekavani = getRovnomerRozdel(10000, CAS_OCEKAVANI);
+            file.write(String.format(Locale.US, "%.2f %d %d %d\n", casPrichodu, (int)idOazy, (int)pocetKosu, (int)casOcekavani));
+            casPrichodu += getRovnomerRozdel(1, 10);
         }
 
         file.flush();

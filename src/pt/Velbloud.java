@@ -13,7 +13,7 @@ public class Velbloud {
     private final double RYCHLOST;
     private final double VZDALENOST_MAX;
     private final Data BASE_DAT;
-    private final int DOBA_PITI;
+    private final double DOBA_PITI;
 
     private CestaList cesta;
     private boolean jeNaCesteZpatky;
@@ -298,7 +298,7 @@ public class Velbloud {
         stav = StavVelbloudu.PIJE;
     }
 
-    public int getDobaPiti(){
+    public double getDobaPiti(){
         return DOBA_PITI;
     }
 
