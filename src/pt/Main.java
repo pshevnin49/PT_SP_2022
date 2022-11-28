@@ -21,10 +21,9 @@ public class Main {
         System.out.println("\t******Main Menu*******");
 
         System.out.println("----------------------------------------------------");
-        System.out.println("|Prikaz:   1 - Generovani dat a spusteni simulace  |");
-        System.out.println("|          2 - Generovani dat                  	   |");
-        System.out.println("|          3 - Nacist data a pustit simulaci   	   |");
-        System.out.println("|          4 - Spustit v rezimu debug              |");
+        System.out.println("|Prikaz:   1 - Generovani dat                      |");
+        System.out.println("|          2 - Nacist data a pustit simulaci   	   |");
+        System.out.println("|          3 - Spustit v rezimu debug              |");
         System.out.println("----------------------------------------------------");
 
         int vstup;
@@ -34,29 +33,8 @@ public class Main {
         } while (vstup < 1 || vstup > 4);
 
         try {
+
             if(vstup == 1){
-                String name = "data.txt";
-                System.out.println("Zadejte pocet skladu:");
-                int pocetSkladu = scn.nextInt();
-                System.out.println("Zadejte pocet oaz:");
-                int pocetOaz = scn.nextInt();
-                System.out.println("Zadejte pocet cest:");
-                int pocetCest = scn.nextInt();
-                System.out.println("Zadejte druhu velbloudu:");
-                int pocetDruhu = scn.nextInt();
-                System.out.println("Zadejte pocet pozadavek:");
-                int pocetPozadavek = scn.nextInt();
-
-                if(pocetSkladu <= 0|| pocetOaz <= 0 || pocetCest <= 0 || pocetDruhu <= 0 || pocetPozadavek <= 0){
-                    System.out.println("Spatny format dat pro generace, ukonceni programu.");
-                    scn.close();
-                    return;
-                }
-                generovaniDat(name, pocetSkladu, pocetOaz, pocetCest, pocetDruhu, pocetPozadavek);
-                spusteniSimulace("data.txt");
-
-            }
-            else if(vstup == 2){
                 System.out.println("Zadejte jmeno souboru koncici na .txt:");
                 String jmenoSouboru = scn.next();
                 System.out.println("Zadejte pocet skladu:");
@@ -78,12 +56,12 @@ public class Main {
                 generovaniDat(jmenoSouboru, pocetSkladu, pocetOaz, pocetCest, pocetDruhu, pocetPozadavek);
 
             }
-            else if(vstup == 3){
+            else if(vstup == 2){
                 System.out.println("Zadejte jmeno souboru koncici na .txt:");
                 String jmenoSouboru = scn.next();
                 spusteniSimulace(jmenoSouboru);
             }
-            else if(vstup == 4){
+            else if(vstup == 3){
                 System.out.println("Zadejte jmeno souboru koncici na .txt:");
                 String jmenoSouboru = scn.next();
                 Simulace simulace;
@@ -91,8 +69,8 @@ public class Main {
                 simulace = spusteniDebug(jmenoSouboru);
                 boolean bezi;
                 do {
-                    System.out.println("Zmazknete 1 aby posunout simulace o jeden krok");
-                    System.out.println("Zmazknete libovlone cislo aby nechat dobehnout");
+                    System.out.println("Zmacknete 1 aby posunout simulace o jeden krok");
+                    System.out.println("Zmacknete libovlone cislo aby nechat dobehnout do konce");
                     vstup = scn.nextInt();
 
                     simulace.debugRezim();
