@@ -3,20 +3,27 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Trida ve ktere je implementovan Dijkstreho algoritmus pro hledani cest od jedneho bodu grafu
+ * ke vsem ostatnim
+ */
 public class DijkstraAlgoritmus {
 
     private final Data BASE_DAT;
     private List<Bod> nezpracovane;
 
-    private Bod minStanice = null;
-
+    /**
+     * Konstruktor tridy
+     * @param baseDat
+     */
     public DijkstraAlgoritmus(Data baseDat){
         this.BASE_DAT = baseDat;
     }
     int idOazy = 0;
 
     /**
-     * Metoda prochazi vsichni sklady, a
+     * Metoda prochazi vsichni sklady, a spousti pro nich hledani
+     * cesto do vsech
      */
     public void spustAlgoritmus() throws CloneNotSupportedException {
         for(int i = 0; i < BASE_DAT.getVsichniSklady().size(); i++){
@@ -26,11 +33,10 @@ public class DijkstraAlgoritmus {
     }
 
     /**
-     * Metoda prochazi cely graf pomoci Dijkstruveho algoritmu, a hleda vsichni
-     * nejkratsi cesty do oazy daneho indexu. Pak vraci list nejkratsich cest od
-     * vsech skladu do teto oazy
+     * Metoda priijima sklad, a spocita cesty od daneho skladu do vsech
+     * ostatnich bodu grafu. Na zacatku vklada sklad do listu nezpracovane, a zacina volat metodu
+     * zpracuj bod pro nezpracovany bod s nejmensi vzdalenosti, dokud tento list nebude prazdny
      * @param sklad
-     * @return listCest (serazeny od nejkratsi do nejdelsi)
      * @throws CloneNotSupportedException
      */
     public void spoctiCestyOdSkladu(Bod sklad) throws CloneNotSupportedException {
@@ -42,11 +48,16 @@ public class DijkstraAlgoritmus {
         nezpracovane.add(sklad);
 
         while(!nezpracovane.isEmpty()){
-
+            double minDalka = 0;
             int index = 0;
-            if(minStanice != null){
-                index = nezpracovane.indexOf(minStanice);
+
+            for(int i = 0; i < nezpracovane.size(); i++){
+                if(Data.jeMensi(nezpracovane.get(i).getDistance(), minDalka)){
+                    minDalka = nezpracovane.get(i).getDistance();
+                    index = i;
+                }
             }
+
             nezpracovane.get(index).setJeZpracovany(true);
             zpracujBod(nezpracovane.get(index));
             nezpracovane.remove(index);
@@ -60,12 +71,14 @@ public class DijkstraAlgoritmus {
     /**
      * Prijima stanice a spocita vzdalenosti vsech jeji sousedi,
      * pokud nalezena vzdalenost bude mensi nez aktualni vzdalenost, prepise tuto vzdalenost
+     * Pak kontroluje, jstli bod neni zpracovan (vsichni jeho sousedi uz maji spoctenou dalku)
+     * kdyz ne, pridava bod do listu nezpracovane
      * @param stanice
      */
     private void zpracujBod(Bod stanice) throws CloneNotSupportedException {
 
         List<Hrana> hrany = stanice.getHrany();
-        minStanice = null;
+        //minStanice = null;
         double minDalka = 0;
 
         for(int i = 0; i < hrany.size(); i++){
@@ -84,7 +97,6 @@ public class DijkstraAlgoritmus {
 
                 if(Data.jeMensi(hrana.getStanice().getDistance(), minDalka) && !hrana.getStanice().getZpracovava()){
                     minDalka = hrana.getStanice().getDistance();
-                    minStanice = hrana.getStanice();
                 }
 
                 if(!hrana.getStanice().getZpracovava()){

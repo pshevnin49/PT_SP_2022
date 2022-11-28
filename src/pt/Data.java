@@ -2,38 +2,53 @@ package pt;
 
 import java.util.*;
 
+/**
+ * Trida data slouzi pro chraneni a prace s datama cele simulace
+ */
 public class Data {
 
-    private final List<Bod> DATA;
+    /** GRAF slouzi ke chraneni celeho grafu*/
+    private final List<Bod> GRAF;
+    /** List vsech velbloudu*/
     private final List<Velbloud> VSICHNI_VELBL;
+    /** List vsech skladu*/
     private final List<Sklad> VSICHNI_SKLADY;
+    /** List vsech oaz*/
     private final List<Oaza> VSICHNI_OAZY;
+    /** List vsech druhu velbloudu*/
     private final List<DruhVelbloudu> DRUHU_VELBL;
+    /** List vsech velbloudu ktere aktualne jsiu na ceste*/
     private final Set<Velbloud> VELBL_NA_CESTE;
+    /** Vsichni docasne nesplnene pozadavky*/
+    private final List<Pozadavek> NESPL_POZ;
 
-    private final List<Pozadavek> nesplnennePozadavky;
-
+    /** Log, ktery vypise v pripade nesplnitelneho pozadavku*/
     private String errLog = null;
+    /** Aktualni cas simulace*/
     private double aktualniCas;
+
+    /** Index posledniho vygenerovaneho velbloudu*/
     private int indexVelbloudu;
 
-    private double maxStrRychlostVelbloudu;
-    private double maxStrDalkaVelbloudu;
-
-    private double maxDalka;
-    private double maxRychlost;
-
+    /** Velbloud ktery ma stredni rychlost, a stredni max vzdalenost. Slouzi pro testovani cest*/
     private Velbloud stredniVelbl;
+    /** Velbloud ktery ma maximalni rychlost, a stredni max vzdalenost toho druhu, ktery ma maximalni rychlost. Slouzi pro testovani cest*/
     private Velbloud rychlejsiVelbl;
+    /** Velbloud ma nejvetsi max vzdalenost, a stredni rychlost druhu s max vzdalenosti*/
     private Velbloud nejdelsiVelbl;
 
+    /** Maximalni double cislo*/
     public static final double MAX_VALUE = 1.7976931348623157E308;
+    /** Minimalni double cislo*/
     public static final double EPS = 0.00000000001;
 
+    /**
+     * Konstruktor tridy data
+     */
     public Data(){
-        this.DATA = new ArrayList<>();
+        this.GRAF = new ArrayList<>();
         this.DRUHU_VELBL = new ArrayList<>();
-        this.nesplnennePozadavky = new ArrayList<>();
+        this.NESPL_POZ = new ArrayList<>();
         VSICHNI_VELBL = new ArrayList<>();
         VSICHNI_SKLADY = new ArrayList<>();
         VSICHNI_OAZY = new ArrayList<>();
@@ -80,10 +95,10 @@ public class Data {
 
         int index = 0;
         List<Pozadavek> aktualniPozadavky = new ArrayList<>();
-        while(index < nesplnennePozadavky.size()){
-            if(nesplnennePozadavky.get(index).getCasPrichodu() <= aktualniCas){
-                aktualniPozadavky.add(nesplnennePozadavky.get(index));
-                nesplnennePozadavky.remove(index);
+        while(index < NESPL_POZ.size()){
+            if(NESPL_POZ.get(index).getCasPrichodu() <= aktualniCas){
+                aktualniPozadavky.add(NESPL_POZ.get(index));
+                NESPL_POZ.remove(index);
             }
             else{
                 index++;
@@ -91,13 +106,21 @@ public class Data {
         }
         return aktualniPozadavky;
     }
+
+    /**
+     * Pridava novy druh velbloudu
+     * @param druh
+     */
     public void inputDruhVelbloudu(DruhVelbloudu druh){
         this.DRUHU_VELBL.add(druh);
     }
 
-
-    public void inputPozadavka(Pozadavek pozadavek){
-        this.nesplnennePozadavky.add(pozadavek);
+    /**
+     * Pridava novy pozadavek
+     * @param pozadavek
+     */
+    public void inputPozadavek(Pozadavek pozadavek){
+        this.NESPL_POZ.add(pozadavek);
     }
 
     /**
@@ -117,8 +140,8 @@ public class Data {
             }
         }
 
-        for(int i = 0; i < nesplnennePozadavky.size(); i++){
-            novyKrok = nesplnennePozadavky.get(i).getCasPrichodu();
+        for(int i = 0; i < NESPL_POZ.size(); i++){
+            novyKrok = NESPL_POZ.get(i).getCasPrichodu();
 
             if(jeVetsi(krok, novyKrok)){
                 krok = novyKrok;
@@ -128,6 +151,12 @@ public class Data {
         return krok - aktualniCas;
     }
 
+    /**
+     * Metoda hleda sklad, ktery ma minimalni casovy krok do navetseni cisla kosu
+     * Vyuziva jen tehdy, kdy neexistuje zadny jiny zasovy krok (velbloudy neposouvaji, vsichni pozadavky uz prisli)
+     * ale existuji nesplnene pozadavky
+     * @return minimalni casovy krok
+     */
     public double getMinKrokSkladu(){
         double krok = MAX_VALUE;
         double novyKrok;
@@ -170,13 +199,17 @@ public class Data {
      * Prochazi vsichni zastavky, a pripravuje k Dijkstra algoritmu
      */
     public void pripravZastavky(){
-        for(int i = 0; i < DATA.size(); i++){
-            DATA.get(i).setDistance(Data.MAX_VALUE);
-            DATA.get(i).setJeZpracovany(false);
-            DATA.get(i).obnoveniCesty();
+        for(int i = 0; i < GRAF.size(); i++){
+            GRAF.get(i).setDistance(Data.MAX_VALUE);
+            GRAF.get(i).setJeZpracovany(false);
+            GRAF.get(i).obnoveniCesty();
         }
     }
 
+    /**
+     * Vraci celkovou vzdalenost, kterou usli vsichni velbloudy
+     * @return vzdalenost
+     */
     public double getCelkovaVzdalenost(){
         double vzdalenost = 0;
         for(int i = 0; i < VSICHNI_VELBL.size(); i++){
@@ -185,10 +218,18 @@ public class Data {
         return vzdalenost;
     }
 
+    /**
+     * Pridava velblouda do aktualne cestujicich
+     * @param velbloud
+     */
     public void velbloudNaCeste(Velbloud velbloud){
         VELBL_NA_CESTE.add(velbloud);
     }
 
+    /**
+     * Odstarnuje velblouda z aktualne cestujicich
+     * @param velbloud
+     */
     public void velbloudZkoncilCestu(Velbloud velbloud){
         VELBL_NA_CESTE.remove(velbloud);
     }
@@ -200,7 +241,7 @@ public class Data {
      * @param zastavka
      */
     public void inputZastavka(Bod zastavka){
-        this.DATA.add(zastavka);
+        this.GRAF.add(zastavka);
     }
 
     public void inputOaza(Oaza oaza){
@@ -211,41 +252,12 @@ public class Data {
         this.VSICHNI_SKLADY.add(sklad);
     }
 
-    public void setMaxDalka(double maxDalka) {
-        this.maxDalka = maxDalka;
-    }
-
-    public void setMaxRychlost(double maxRychlost) {
-        this.maxRychlost = maxRychlost;
-    }
-
-    public double getMaxDalka() {
-        return maxDalka;
-    }
-
-    public double getMaxRychlost() {
-        return maxRychlost;
-    }
-
     public String getErrLog(){
         return errLog;
     }
 
     public void setErrLog(String log){
         errLog = log;
-    }
-
-    public void setMaxStrRychlostVelbloudu(double maxRychlost){
-        this.maxStrRychlostVelbloudu = maxRychlost;
-    }
-    public void setMaxStrDalkaVelbloudu(double maxDalka){
-        this.maxStrDalkaVelbloudu = maxDalka;
-    }
-    public double getMaxStrRychlostVelbloudu(){
-        return maxStrRychlostVelbloudu;
-    }
-    public double getMaxStrDalkaVelbloudu(){
-        return maxStrDalkaVelbloudu;
     }
 
     public List<Sklad> getVsichniSklady(){
@@ -264,11 +276,8 @@ public class Data {
         return DRUHU_VELBL;
     }
 
-    public List<Pozadavek> getPozadavky() {
-        return nesplnennePozadavky;
-    }
     public List<Bod> getGraf(){
-        return DATA;
+        return GRAF;
     }
 
     public double getAktualniCas(){

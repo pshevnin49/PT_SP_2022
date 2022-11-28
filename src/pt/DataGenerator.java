@@ -26,7 +26,6 @@ public class DataGenerator {
     private static final int CAS_OCEKAVANI = 10000;
     private static final Random RAND = new Random();
 
-
     public void generatorDat(int pocetSkladu, int pocetOaz, int pocetCest , int pocetDruhuVelbloudu, int pocetPozadavku, String fileName) throws IOException {
         FileWriter fileWriter = new FileWriter(fileName);
         BufferedWriter file = new BufferedWriter(fileWriter);
@@ -92,7 +91,6 @@ public class DataGenerator {
 
         file.flush();
         file.close();
-
     }
 
     /**

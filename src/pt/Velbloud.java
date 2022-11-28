@@ -3,7 +3,9 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Trida reprezentuje Velblouda
+ */
 public class Velbloud {
 
     private final Sklad DOMOVSKA_STANICE;
@@ -17,7 +19,8 @@ public class Velbloud {
     private boolean jeNaCesteZpatky;
 
     private CestaList cestaZpatky;
-    private DruhVelbloudu druhVelbloudu = null;
+    private DruhVelbloudu druhVelbloudu;
+    /** Enum Stav velbloudu (co tedi dela)*/
     private StavVelbloudu stav;
 
     private double vzdalenostBezPiti;
@@ -26,6 +29,7 @@ public class Velbloud {
     private Pozadavek aktualniPozadavek;
     private double casSplneniAkce;
 
+    /** Logy vsech tras(splneni jednoho pozadavku) ktere velbloud prosel */
     private List<LogTrasy> logyTras;
     private LogTrasy aktualniLog;
 
@@ -38,6 +42,13 @@ public class Velbloud {
     private int vsichniKose;
     private int vsichniPoz;
 
+    /**
+     * Bezny konstruktor tridy velbloud, slouzi ke generaci velblouda daneho druhu
+     * @param id
+     * @param druhVelbloudu
+     * @param domovskaStanice
+     * @param baseDat
+     */
     public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, Data baseDat) {
         this.ID = id;
         this.casVytvoreni = baseDat.getAktualniCas();
@@ -53,7 +64,8 @@ public class Velbloud {
     }
 
     /**
-     * Tento konstruktor slouzi k generaci merice velbloudy (jako stredni, rychlejsi a t.d velbloudy)
+     * Tento konstruktor slouzi k generaci prumernych velbloudu na zacatku programu velbloudy (jako stredni, rychlejsi a t.d velbloudy)
+     * tyto velbloudi jsou vyuzity jen pro kontrolu cest (nic neprenaseji)
      * @param id
      * @param baseDat
      * @param rychlost
@@ -74,7 +86,7 @@ public class Velbloud {
 
     /**
      * Hlavni ridici metoda velbloudu. Kazdy krok kontroluje ma li byt splnena akce kterou aktualne dela velbloud
-     * Pokud velbloud este nevratil domu vraci false, pokud vratil, vraci true;
+     * Pokud velbloud jeste nevratil domu vraci false, pokud vratil, vraci true;
      * @return
      */
     public boolean kontrolaCasu(){
@@ -124,6 +136,9 @@ public class Velbloud {
         posuvDoDalsiSt();
     }
 
+    /**
+     * Velbloud zacina jit zpatky do domovskeho zkladu
+     */
     private void zacniCestuZpatky(){
         cesta = cestaZpatky;
         vzdalenostBezPiti = 0;
@@ -240,9 +255,11 @@ public class Velbloud {
     private void posuvDoDalsiSt(){
         stav = StavVelbloudu.POSOUVA;
         Hrana bodCesty = cesta.get();
-        if(Data.jeVetsi(getCasCesty(bodCesty.getVzdalenost()), maxVzdalBezPiti)){
-            maxVzdalBezPiti = getCasCesty(bodCesty.getVzdalenost());
+
+        if(Data.jeVetsi(bodCesty.getVzdalenost(), maxVzdalBezPiti)){
+            maxVzdalBezPiti = bodCesty.getVzdalenost();
         }
+
         casSplneniAkce = BASE_DAT.getAktualniCas() + getCasCesty(bodCesty.getVzdalenost());
         celyCasCesty += getCasCesty(bodCesty.getVzdalenost());
         vzdalenostBezPiti += cesta.get().getVzdalenost();
@@ -285,6 +302,9 @@ public class Velbloud {
         return DOBA_PITI;
     }
 
+    /**
+     * Velbloud prijel do potrebne oazy a vyklada kose
+     */
     private void zacniVykladat(){
         vsichniPoz += 1;
         vsichniKose += aktualniPocetKosu;
@@ -297,7 +317,11 @@ public class Velbloud {
         }
     }
 
-
+    /**
+     * Spocita za jaky cas velbloud zvladne dany usek cesty
+     * @param dalka
+     * @return
+     */
     private double getCasCesty(double dalka){
         double cas;
         cas = dalka / RYCHLOST;
@@ -305,7 +329,7 @@ public class Velbloud {
     }
 
     public double getCelkovaVzd(){
-        return  celkovaVzdalenost;
+        return celkovaVzdalenost;
     }
 
     /**
@@ -330,13 +354,16 @@ public class Velbloud {
         return cestaZpatky;
     }
 
+    /**
+     * Vraci String logu
+     * @return
+     */
     public String getLog(){
         String log = String.format("  Velbloud c: %d; druh: %s;  rychlost: %.2f;  maxVzdalBezPiti: %.2f \n", ID, druhVelbloudu.getNazev(), RYCHLOST, maxVzdalBezPiti);
 
         for(int i = 0; i < logyTras.size(); i++){
             log += logyTras.get(i).toString();
         }
-
 
         log += String.format("    Odpocival celkem: %.2f; cela vzdalenost: %.2f", (BASE_DAT.getAktualniCas() - casVytvoreni - celyCasCesty), celkovaVzdalenost);
 

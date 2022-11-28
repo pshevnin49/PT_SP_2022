@@ -1,14 +1,16 @@
 package pt;
-
+/** Trida reprezentujici pozadavek*/
 public class Pozadavek {
 
     private final double CAS_PRICHODU;
     private final int ID_OAZY;
     private final int POCET_KOSU;
     private final int ID;
+    /** Cas ktery oaza ceka na pozadavek od doby prichodu pozadavku*/
     private final double CAS_OCEKAVANI;
     private final double CAS_DORUCENI;
 
+    /** Pocet kosu ktere uz byly dorucene do oazy a vylozene*/
     private int vylozeneKose;
     private double casFactickehoDoruceni;
     private int nalozeneKose;
@@ -67,6 +69,10 @@ public class Pozadavek {
         this.casFactickehoDoruceni = casFactickehoDoruceni;
     }
 
+    /**
+     * Vraci string logu daneho pozadavku
+     * @return
+     */
     public String getLog(){
         String log = String.format("    Pozadavek id: %d; nejpozdejsi cas doruceni: %.2f; pocet kosu: %d; cas faktickeho doruceni %.2f; id skladu: %d; id velbloudu %d \n", ID, CAS_DORUCENI
                 , POCET_KOSU, casFactickehoDoruceni, velbloud.getDomovskaStanice().getId(), velbloud.getId());
