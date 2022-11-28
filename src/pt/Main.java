@@ -1,15 +1,14 @@
 package pt;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String [] args) throws FileNotFoundException, CloneNotSupportedException {
+    public static void main(String [] args) throws IOException, CloneNotSupportedException {
 
         long start = System.currentTimeMillis();
-        CteniDat cteniDat = new CteniDat("centre_small.txt");
+        CteniDat cteniDat = new CteniDat("sparse_bit_small.txt");
         Data baseDat = new Data();
         List<String> data = cteniDat.cteni();
 
@@ -21,7 +20,7 @@ public class Main {
 
         SouborStatistiky statistiky = new SouborStatistiky(baseDat);
         try {
-            statistiky.zapisStatistiku();
+            statistiky.genSoubrStatistik();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

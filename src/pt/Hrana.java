@@ -1,25 +1,31 @@
 package pt;
 
+/**
+ * Trida reprezentuje hranu grafu
+ * Ma odkaz na pristi stanice (bod grafu) a vzdalenost do
+ * toho bodu
+ */
 public class Hrana implements Cloneable{
 
     private double vzdalenost;
-    private Bod stanice;
+    private final Bod FINAL;
+
+    /**
+     * Konstruktor tridy hrana
+     * @param stanice odkaz na bod
+     * @param vzdalenost vzdalenost do toho bodu
+     */
     public Hrana(Bod stanice, double vzdalenost){
-
-        this.stanice = stanice;
+        this.FINAL = stanice;
         this.vzdalenost = vzdalenost;
-
     }
+
     public double getVzdalenost(){
         return vzdalenost;
     }
 
     public Bod getStanice(){
-        return stanice;
-    }
-
-    public void vypis(){
-        System.out.println("    Soused: " + stanice.getId() + " dalka: " + vzdalenost);
+        return FINAL;
     }
 
     public void setVzdalenost(double vzdalenost) {
@@ -27,7 +33,7 @@ public class Hrana implements Cloneable{
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 }

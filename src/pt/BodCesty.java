@@ -27,8 +27,8 @@ public class BodCesty implements Cloneable{
     public BodCesty getNext(){
         return next;
     }
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
+
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 

@@ -14,7 +14,7 @@ public abstract class Bod {
     protected List<Hrana> hrany;
 
     private double distance;
-    private Data baseDat;
+    private final Data baseDat;
 
     public Bod(int id, double x, double y, Data baseDat){
         this.id = id;
@@ -84,14 +84,6 @@ public abstract class Bod {
         hrany.add(hrana);
     }
 
-    void vypis(){
-        System.out.println(id + ". x:" + x + " y:" + y);
-        System.out.println("Sousedi: ");
-
-        for(int i = 0; i < hrany.size(); i++){
-            hrany.get(i).vypis();
-        }
-    }
     public double spocitejVzdalenost(Bod stanice) {
         return Math.sqrt((x - stanice.getX()) * (x - stanice.getX()) + (y - stanice.getY()) * (y - stanice.getY()));
     }

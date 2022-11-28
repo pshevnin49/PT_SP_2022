@@ -2,11 +2,17 @@ package pt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
+
 
 public class Velbloud {
 
-    private Sklad domovskaStanice;
+    private final Sklad DOMOVSKA_STANICE;
+    private final int ID;
+    private final double RYCHLOST;
+    private final double VZDALENOST_MAX;
+    private final Data BASE_DAT;
+    private final int DOBA_PITI;
+
     private CestaList cesta;
     private boolean jeNaCesteZpatky;
 
@@ -14,20 +20,14 @@ public class Velbloud {
     private DruhVelbloudu druhVelbloudu = null;
     private StavVelbloudu stav;
 
-    private int id;
-    private double rychlost;
     private double vzdalenostBezPiti;
     private int aktualniPocetKosu;
 
     private Pozadavek aktualniPozadavek;
-    private double vzdalenostMax;
-    private Data baseDat;
     private double casSplneniAkce;
 
     private List<LogTrasy> logyTras;
     private LogTrasy aktualniLog;
-
-    private double casPoslVystupu;
 
     private double celkovaVzdalenost = 0;
     private double casVytvoreni;
@@ -38,19 +38,17 @@ public class Velbloud {
     private int vsichniKose;
     private int vsichniPoz;
 
-    private int dobaPiti;
-
     public Velbloud(int id, DruhVelbloudu druhVelbloudu, Sklad domovskaStanice, Data baseDat) {
-        this.id = id;
+        this.ID = id;
         this.casVytvoreni = baseDat.getAktualniCas();
-        this.rychlost = druhVelbloudu.randRych();
-        this.vzdalenostMax = druhVelbloudu.randVzdal();
-        this.domovskaStanice = domovskaStanice;
+        this.RYCHLOST = druhVelbloudu.randRych();
+        this.VZDALENOST_MAX = druhVelbloudu.randVzdal();
+        this.DOMOVSKA_STANICE = domovskaStanice;
         this.druhVelbloudu = druhVelbloudu;
-        this.baseDat = baseDat;
+        this.BASE_DAT = baseDat;
         this.stav = StavVelbloudu.CEKA;
         this.aktualniPocetKosu = 0;
-        this.dobaPiti = druhVelbloudu.getDobaPiti();
+        this.DOBA_PITI = druhVelbloudu.getDobaPiti();
         this.logyTras = new ArrayList<>();
     }
 
@@ -63,15 +61,15 @@ public class Velbloud {
      * @param dobaPiti
      */
     public Velbloud(int id, Data baseDat, double rychlost, double vzdalenost, double dobaPiti) {
-        this.id = id;
-        this.rychlost = rychlost;
-        this.vzdalenostMax = vzdalenost;
-        this.domovskaStanice = null;
+        this.ID = id;
+        this.RYCHLOST = rychlost;
+        this.VZDALENOST_MAX = vzdalenost;
+        this.DOMOVSKA_STANICE = null;
         this.druhVelbloudu = null;
-        this.baseDat = baseDat;
+        this.BASE_DAT = baseDat;
         this.stav = StavVelbloudu.CEKA;
         this.aktualniPocetKosu = 0;
-        this.dobaPiti = (int) dobaPiti;
+        this.DOBA_PITI = (int) dobaPiti;
     }
 
     /**
@@ -80,7 +78,7 @@ public class Velbloud {
      * @return
      */
     public boolean kontrolaCasu(){
-        if(!Data.jeVetsi(casSplneniAkce, baseDat.getAktualniCas())){
+        if(!Data.jeVetsi(casSplneniAkce, BASE_DAT.getAktualniCas())){
             switch(stav){
                 case CEKA:
                     //System.out.println("break v switch case zvetseniCasu");
@@ -103,7 +101,11 @@ public class Velbloud {
                 case VYKLADA:
                     zacniCestuZpatky();
                     break;
+
+                default:
+                    break;
             }
+
         }
         return false;
     }
@@ -134,21 +136,21 @@ public class Velbloud {
      * kdyz vratil domu, vraci true, v opacnem pripade - false
      */
     private boolean prijelDoStanici(){
-        double aktualniCas = baseDat.getAktualniCas();
+        double aktualniCas = BASE_DAT.getAktualniCas();
 
         if(cesta.getList().size() == 1){
             if(!jeNaCesteZpatky){
 
-                double casVylozeni = aktualniCas + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
+                double casVylozeni = aktualniCas + DOMOVSKA_STANICE.getCasNalozeni() * aktualniPocetKosu;
 
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
-                        Math.round(aktualniCas), id, cesta.get().getStanice().getId(), aktualniPocetKosu, Math.round(casVylozeni),
+                        Math.round(aktualniCas), ID, cesta.get().getStanice().getId(), aktualniPocetKosu, Math.round(casVylozeni),
                         Math.round((aktualniPozadavek.getCasPrichodu() + aktualniPozadavek.getCasOcekavani()) - casVylozeni)
                 );
                 zacniVykladat();
             }
             else{
-                System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", Math.round(aktualniCas), id, domovskaStanice.getId());
+                System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", Math.round(aktualniCas), ID, DOMOVSKA_STANICE.getId());
                 prijelDomu();
                 return true;
             }
@@ -165,15 +167,15 @@ public class Velbloud {
                 pitiStanice = "v oaze";
             }
 
-            if(Data.jeVetsi(getCasCesty(cesta.get().getVzdalenost()), (vzdalenostMax - vzdalenostBezPiti))){
+            if(Data.jeVetsi(getCasCesty(cesta.get().getVzdalenost()), (VZDALENOST_MAX - vzdalenostBezPiti))){
 
-                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n", Math.round(aktualniCas), id, druhStanice,
+                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n", Math.round(aktualniCas), ID, druhStanice,
                         cesta.get().getStanice().getId());
                 posuvDoDalsiSt();
             }
             else{
 
-                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n", Math.round(aktualniCas), id, druhStanice,
+                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n", Math.round(aktualniCas), ID, druhStanice,
                         cesta.get().getStanice().getId(), druhVelbloudu.getNazev(), Math.round(aktualniCas + druhVelbloudu.getDobaPiti()));
 
                 vlozLogPiti(pitiStanice);
@@ -188,7 +190,7 @@ public class Velbloud {
      * @param pitiStanice
      */
     private void vlozLogPiti(String pitiStanice){
-        double aktualniCas = baseDat.getAktualniCas();
+        double aktualniCas = BASE_DAT.getAktualniCas();
         String logPiti = String.format("Zastavil pro piti %s, c: %d cas: %.2f", pitiStanice, cesta.get().getStanice().getId(), aktualniCas);
         aktualniLog.vlozZastavku(logPiti);
     }
@@ -197,11 +199,11 @@ public class Velbloud {
      * Prijezd do domovske stanici
      */
     private void prijelDomu(){
-        aktualniLog.setCasNavratu(baseDat.getAktualniCas());
+        aktualniLog.setCasNavratu(BASE_DAT.getAktualniCas());
         logyTras.add(aktualniLog);
         jeNaCesteZpatky = false;
         stav = StavVelbloudu.CEKA;
-        domovskaStanice.pridejVelblouda(this);
+        DOMOVSKA_STANICE.pridejVelblouda(this);
         casSplneniAkce = Data.MAX_VALUE;
     }
 
@@ -212,8 +214,8 @@ public class Velbloud {
      */
     public void zacniNakladat(int pocetKosu, CestaList cesta, Pozadavek pozadavek) throws CloneNotSupportedException {
 
-        System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(baseDat.getAktualniCas()),
-                id, domovskaStanice.getId(), pocetKosu, Math.round(baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu));
+        System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n", Math.round(BASE_DAT.getAktualniCas()),
+                ID, DOMOVSKA_STANICE.getId(), pocetKosu, Math.round(BASE_DAT.getAktualniCas() + DOMOVSKA_STANICE.getCasNalozeni() * pocetKosu));
 
         pozadavek.setVelbloud(this);
 
@@ -222,14 +224,14 @@ public class Velbloud {
         aktualniPozadavek = pozadavek;
 
         trasaID++;
-        aktualniLog = new LogTrasy(trasaID, baseDat.getAktualniCas(), pozadavek.getIdOazy(), pocetKosu);
+        aktualniLog = new LogTrasy(trasaID, BASE_DAT.getAktualniCas(), pozadavek.getIdOazy(), pocetKosu);
 
-        baseDat.velbloudNaCeste(this);
-        domovskaStanice.odstranKose(pocetKosu);
+        BASE_DAT.velbloudNaCeste(this);
+        DOMOVSKA_STANICE.odstranKose(pocetKosu);
         this.cesta = (CestaList) cesta.clone();
         cestaZpatky = getCestuZpatky();
         stav = StavVelbloudu.NAKLADA;
-        casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * pocetKosu;
+        casSplneniAkce = BASE_DAT.getAktualniCas() + DOMOVSKA_STANICE.getCasNalozeni() * pocetKosu;
     }
 
     /**
@@ -241,29 +243,29 @@ public class Velbloud {
         if(Data.jeVetsi(getCasCesty(bodCesty.getVzdalenost()), maxVzdalBezPiti)){
             maxVzdalBezPiti = getCasCesty(bodCesty.getVzdalenost());
         }
-        casSplneniAkce = baseDat.getAktualniCas() + getCasCesty(bodCesty.getVzdalenost());
+        casSplneniAkce = BASE_DAT.getAktualniCas() + getCasCesty(bodCesty.getVzdalenost());
         celyCasCesty += getCasCesty(bodCesty.getVzdalenost());
         vzdalenostBezPiti += cesta.get().getVzdalenost();
         cesta.odstran();
     }
 
     public double getAktualniCas(){
-        return baseDat.getAktualniCas();
+        return BASE_DAT.getAktualniCas();
     }
     public double getCasPristiAkce(){
         return casSplneniAkce;
     }
     public Sklad getDomovskaStanice() {
-        return domovskaStanice;
+        return DOMOVSKA_STANICE;
     }
     public double getRychlost() {
-        return rychlost;
+        return RYCHLOST;
     }
     public double getVzdalenostMax() {
-        return vzdalenostMax;
+        return VZDALENOST_MAX;
     }
     public int getId(){
-        return id;
+        return ID;
     }
 
 
@@ -275,12 +277,12 @@ public class Velbloud {
             maxVzdalBezPiti = vzdalenostBezPiti;
         }
         vzdalenostBezPiti = 0;
-        casSplneniAkce = baseDat.getAktualniCas() + druhVelbloudu.getDobaPiti();
+        casSplneniAkce = BASE_DAT.getAktualniCas() + druhVelbloudu.getDobaPiti();
         stav = StavVelbloudu.PIJE;
     }
 
     public int getDobaPiti(){
-        return dobaPiti;
+        return DOBA_PITI;
     }
 
     private void zacniVykladat(){
@@ -289,7 +291,7 @@ public class Velbloud {
         aktualniPozadavek.zvetsiVylozeneKose(aktualniPocetKosu);
         stav = StavVelbloudu.VYKLADA;
         aktualniPocetKosu = 0;
-        casSplneniAkce = baseDat.getAktualniCas() + domovskaStanice.getCasNalozeni() * aktualniPocetKosu;
+        casSplneniAkce = BASE_DAT.getAktualniCas() + DOMOVSKA_STANICE.getCasNalozeni() * aktualniPocetKosu;
         if(aktualniPozadavek.getNevylozeneKose() <= 0){
             aktualniPozadavek.setCasFactickehoDoruceni(casSplneniAkce);
         }
@@ -298,7 +300,7 @@ public class Velbloud {
 
     private double getCasCesty(double dalka){
         double cas;
-        cas = dalka / rychlost;
+        cas = dalka / RYCHLOST;
         return cas;
     }
 
@@ -313,7 +315,7 @@ public class Velbloud {
      */
     private CestaList getCestuZpatky(){
 
-        CestaList cestaZpatky = new CestaList(baseDat);
+        CestaList cestaZpatky = new CestaList(BASE_DAT);
         int indexZpatky = 0;
 
         for(int i = (cesta.getList().size() - 1); i >= 0; i--){
@@ -329,14 +331,14 @@ public class Velbloud {
     }
 
     public String getLog(){
-        String log = String.format("  Velbloud c: %d; druh: %s;  rychlost: %.2f;  maxVzdalBezPiti: %.2f \n", id, druhVelbloudu.getNazev(), rychlost, maxVzdalBezPiti);
+        String log = String.format("  Velbloud c: %d; druh: %s;  rychlost: %.2f;  maxVzdalBezPiti: %.2f \n", ID, druhVelbloudu.getNazev(), RYCHLOST, maxVzdalBezPiti);
 
         for(int i = 0; i < logyTras.size(); i++){
             log += logyTras.get(i).toString();
         }
 
 
-        log += String.format("    Odpocival celkem: %.2f; cela vzdalenost: %.2f", (baseDat.getAktualniCas() - casVytvoreni - celyCasCesty), celkovaVzdalenost);
+        log += String.format("    Odpocival celkem: %.2f; cela vzdalenost: %.2f", (BASE_DAT.getAktualniCas() - casVytvoreni - celyCasCesty), celkovaVzdalenost);
 
         return log;
     }

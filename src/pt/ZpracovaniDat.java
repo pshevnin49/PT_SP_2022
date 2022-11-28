@@ -4,12 +4,10 @@ import java.util.List;
 
 public class ZpracovaniDat {
 
+    private List<String> data;
     private Data baseDat;
 
-    public void zpracovani(List<String> data, Data baseDat){
-
-        this.baseDat = baseDat;
-        int pocetSkladu = Integer.parseInt(data.get(0));
+    private void zpracujSklady(int pocetSkladu){
         int indexSkladu = 1;
         int indexPoslSkladu = pocetSkladu * 5;
 
@@ -25,8 +23,9 @@ public class ZpracovaniDat {
             baseDat.inputSklad((Sklad) sklad);
             baseDat.inputZastavka(sklad);
         }
+    }
 
-        int pocetOaz = Integer.parseInt(data.get(indexPoslSkladu + 1));
+    private void zpracujOazy(int pocetOaz, int indexPoslSkladu){
         int indexOaz = 1;
         int indexPoslOazy = indexPoslSkladu + (pocetOaz * 2) + 1;
 
@@ -40,11 +39,12 @@ public class ZpracovaniDat {
             baseDat.inputOaza((Oaza) oaza);
             baseDat.inputZastavka(oaza);
 
-            indexSkladu++;
             indexOaz++;
         }
+    }
 
-        int pocetCest = Integer.parseInt(data.get(indexPoslOazy + 1));
+    private void zpracujCesty(int pocetCest, int indexPoslOazy){
+
         int indexPoslCesty = indexPoslOazy + (pocetCest * 2) + 1;
 
         for(int i = indexPoslOazy + 2; i < indexPoslCesty; i += 2){
@@ -63,6 +63,26 @@ public class ZpracovaniDat {
             soused.vlozHranu(zastavka);
 
         }
+    }
+
+    public void zpracovani(List<String> data, Data baseDat){
+        this.data = data;
+        this.baseDat = baseDat;
+
+        int pocetSkladu = Integer.parseInt(data.get(0));
+        int indexPoslSkladu = pocetSkladu * 5;
+
+        zpracujSklady(pocetSkladu);
+
+        int pocetOaz = Integer.parseInt(data.get(indexPoslSkladu + 1));
+        int indexPoslOazy = indexPoslSkladu + (pocetOaz * 2) + 1;
+
+        zpracujOazy(pocetOaz, indexPoslSkladu);
+
+        int pocetCest = Integer.parseInt(data.get(indexPoslOazy + 1));
+        int indexPoslCesty = indexPoslOazy + (pocetCest * 2) + 1;
+
+        zpracujCesty(pocetCest, indexPoslOazy);
 
         int pocetDruhu = Integer.parseInt(data.get(indexPoslCesty + 1));
         int indexPoslDruhu = indexPoslCesty + (pocetDruhu * 8) + 1;
@@ -129,7 +149,6 @@ public class ZpracovaniDat {
         int indexPoslPozadavku = indexPoslDruhu + (pocetPozadavku * 4) + 1;
 
         for(int i = indexPoslDruhu + 2; i < indexPoslPozadavku; i += 4){
-
             double casPrichodu = Double.parseDouble(data.get(i));
             int indexOazy = Integer.parseInt(data.get(i + 1));
             int mnozstviKosu = Integer.parseInt(data.get(i + 2));
@@ -142,4 +161,6 @@ public class ZpracovaniDat {
 
         }
     }
+
+
 }

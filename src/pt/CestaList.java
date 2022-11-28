@@ -12,13 +12,15 @@ public class CestaList{
     private double indexNejlepsiCesty = 0;
 
     private boolean spoctenCasVelbl = false;
+    private boolean spoctenCasStrVelbl = false;
+
     private double casRychlVelbl = 0;
     private double casNejdelVelbl = 0;
     private double casStrVelbl = 0;
 
     private final Data baseDat;
 
-    private List<Hrana> cesta;
+    private final List<Hrana> cesta;
 
     public CestaList(Data baseDat){
         this.baseDat = baseDat;
@@ -48,14 +50,10 @@ public class CestaList{
      */
     public void spocitejIndexCesty(){
         double dalka = 0;
-        double pocetStanic = 0;
 
         if(!jeSpoctenIndex){
             for (Hrana bodCesty : cesta){
-                pocetStanic++;
-
                 dalka += bodCesty.getVzdalenost();
-
                 if(Data.jeVetsi(bodCesty.getVzdalenost(), maxUsecka)){
                     maxUsecka = bodCesty.getVzdalenost();
                 }
@@ -65,11 +63,9 @@ public class CestaList{
 
             if(Data.jeVetsi(maxUsecka, baseDat.getStredniVelbl().getVzdalenostMax())){ // pokud cestu nelze splnit strednim velbloudem
                 indexNejlepsiCesty = dalkaCesty * 1.5; // nebo 2
-
                 if(Data.jeVetsi(maxUsecka, baseDat.getNejdelsiVelbl().getVzdalenostMax())){
-                    indexNejlepsiCesty = dalkaCesty * 7;; // mozna jeste zmenim
+                    indexNejlepsiCesty = dalkaCesty * 7; // mozna jeste zmenim
                 }
-
             }
             else{
                 indexNejlepsiCesty = dalkaCesty;
@@ -87,15 +83,12 @@ public class CestaList{
     public void casVelbloudu(){
 
         double maxDalka = 0;
-        double bezPitiStr = 0;
         double bezPitiRychl = 0;
         double bezPitiNejdel = 0;
 
-        double casCestyStr = 0;
         double casCestyRychl = 0;
         double casCestyNejdel = 0;
 
-        Velbloud velblStr = baseDat.getStredniVelbl();
         Velbloud velblRychl = baseDat.getRychlejsiVelbl();
         Velbloud velblNejdel = baseDat.getNejdelsiVelbl();
 
@@ -104,14 +97,6 @@ public class CestaList{
                 if(Data.jeVetsi(bodCesty.getVzdalenost(), maxDalka)){
                     maxDalka = bodCesty.getVzdalenost();
                 }
-
-                if(Data.jeVetsi(velblStr.getVzdalenostMax(), bezPitiStr + bodCesty.getVzdalenost())){
-                    bezPitiStr = 0;
-                    casCestyStr += velblStr.getDobaPiti();
-                }
-
-                casCestyStr += bodCesty.getVzdalenost() / velblStr.getRychlost();
-                bezPitiStr += bodCesty.getVzdalenost();
 
                 if(Data.jeVetsi(velblNejdel.getVzdalenostMax(), bezPitiNejdel + bodCesty.getVzdalenost())){
                     bezPitiNejdel = 0;
@@ -139,16 +124,44 @@ public class CestaList{
 
             if(Data.jeVetsi(maxDalka, velblNejdel.getVzdalenostMax())){
                 casCestyNejdel = -1;
-                System.out.println(maxDalka + " maxDalka");
-                System.out.println(velblNejdel.getVzdalenostMax() + " velblNejdel.getVzdalenostMax()");
             }
             casNejdelVelbl = casCestyNejdel;
+
+
+        }
+    }
+
+    public void casStrVelbl(){
+        double maxDalka = 0;
+        double bezPitiStr = 0;
+        double casCestyStr = 0;
+        Velbloud velblStr = baseDat.getStredniVelbl();
+
+        if(!spoctenCasStrVelbl){
+            for (Hrana bodCesty : cesta){
+
+                if(Data.jeVetsi(bodCesty.getVzdalenost(), maxDalka)){
+                    maxDalka = bodCesty.getVzdalenost();
+                }
+
+                if(Data.jeVetsi(velblStr.getVzdalenostMax(), bezPitiStr + bodCesty.getVzdalenost())){
+                    bezPitiStr = 0;
+                    casCestyStr += velblStr.getDobaPiti();
+                }
+
+                casCestyStr += bodCesty.getVzdalenost() / velblStr.getRychlost();
+                bezPitiStr += bodCesty.getVzdalenost();
+
+            }
+
+            spoctenCasStrVelbl = true;
 
             if(Data.jeVetsi(maxDalka, velblStr.getVzdalenostMax())){
                 casCestyStr = -1;
             }
             casStrVelbl = casCestyStr;
         }
+
     }
 
     /**
@@ -239,7 +252,7 @@ public class CestaList{
     }
 
     public double getCasStrVelbl(int pocetKosu){
-        casVelbloudu();
+        casStrVelbl();
 
         Sklad sklad = (Sklad) cesta.get(0).getStanice();
         double casNalozeni = sklad.getCasNalozeni();
@@ -253,20 +266,14 @@ public class CestaList{
 
     public boolean zvladneNejdelVelbl(){
         casVelbloudu();
-
-        if(casNejdelVelbl == -1){
-            return false;
-        }
-        return true;
+        return (casNejdelVelbl == -1);
     }
 
     public boolean zvladneStrVelbl(){
         casVelbloudu();
 
-        if(Data.jeVetsi(baseDat.getStredniVelbl().getVzdalenostMax(), maxUsecka)){
-            return true;
-        }
-        return false;
+        return (Data.jeVetsi(baseDat.getStredniVelbl().getVzdalenostMax(), maxUsecka));
+
     }
 
     public double getIndexCesty(){
@@ -282,16 +289,6 @@ public class CestaList{
     public double getMaxUsecka(){
         spocitejIndexCesty();
         return maxUsecka;
-    }
-
-    public void vypis(){
-
-
-        for (Hrana bodCesty : cesta){
-            System.out.print("from: " + bodCesty.getStanice().getId()  + " -> " + bodCesty.getVzdalenost() + " -> ");
-
-        }
-        System.out.println(getCelaDalka() + "O");
     }
 
     Hrana get(){
