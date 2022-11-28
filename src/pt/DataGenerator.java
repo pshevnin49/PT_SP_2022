@@ -50,8 +50,7 @@ public class DataGenerator {
         file.write(pocetCest + "\n");
         for(int i = 0; i < pocetCest; i++){
             double sklad = Math.round(getRovnomerRozdel(1, pocetSkladu));
-            double oaza = Math.round(getRovnomerRozdel(1, pocetOaz));
-            file.write(String.format(Locale.US, "%d %d\n",(int)sklad, (int)oaza));
+            double oaza = Math.round(getRovnomerRozdel(1, pocetOaz));file.write(String.format(Locale.US, "%d %d\n",(int)sklad, (int)oaza));
         }
 
         file.write(pocetDruhuVelbloudu + "\n");
