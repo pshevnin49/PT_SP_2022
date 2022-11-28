@@ -18,7 +18,6 @@ public class Data {
     private int indexVelbloudu;
 
     private double maxStrRychlostVelbloudu;
-
     private double maxStrDalkaVelbloudu;
 
     private double maxDalka;
@@ -30,7 +29,6 @@ public class Data {
 
     public static final double MAX_VALUE = 1.7976931348623157E308;
     public static final double EPS = 0.00000000001;
-
 
     public Data(){
         this.DATA = new ArrayList<>();

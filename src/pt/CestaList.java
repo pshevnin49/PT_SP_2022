@@ -4,6 +4,9 @@ package pt;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Trida reprezentuje cestu. (napriklad cestu od skladu do oazy)
+ */
 public class CestaList{
 
     private boolean jeSpoctenIndex = false;
@@ -131,6 +134,11 @@ public class CestaList{
         }
     }
 
+    /**
+     * Spocita zvladne li projit danou cestu stredni velbloud,
+     * a pokud to zvladne, spocita cas. Pokud nezvladne, zpisuje -1
+     * do casu cesty
+     */
     public void casStrVelbl(){
         double maxDalka = 0;
         double bezPitiStr = 0;
