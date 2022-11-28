@@ -226,6 +226,9 @@ public class Data {
         VELBL_NA_CESTE.add(velbloud);
     }
 
+    public Set<Velbloud> getVelbloudyNaCeste(){
+        return VELBL_NA_CESTE;
+    }
     /**
      * Odstarnuje velblouda z aktualne cestujicich
      * @param velbloud
