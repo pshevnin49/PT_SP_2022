@@ -24,11 +24,6 @@ public class BodCesty implements Cloneable{
         this.next = next;
     }
 
-
-    public void setNext(BodCesty novyBod){
-        this.next = novyBod;
-    }
-
     public BodCesty getNext(){
         return next;
     }

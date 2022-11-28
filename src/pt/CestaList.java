@@ -87,7 +87,6 @@ public class CestaList{
     public void casVelbloudu(){
 
         double maxDalka = 0;
-
         double bezPitiStr = 0;
         double bezPitiRychl = 0;
         double bezPitiNejdel = 0;
@@ -219,7 +218,6 @@ public class CestaList{
         return casRychlVelbl + 2 * pocetKosu * casNalozeni;
     }
 
-
     /**
      * Vraci cas ktery potrebuje nejdelsi velbloud na danou cestu
      * pokud tuto cestu nedokaze zvladnout, vraci -1
@@ -302,6 +300,7 @@ public class CestaList{
 
     void odstran(){
         if(cesta.size() > 0){
+            cesta.get(0).getVzdalenost();
             cesta.remove(0);
         }
     }

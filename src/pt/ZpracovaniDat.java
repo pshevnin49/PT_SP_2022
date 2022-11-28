@@ -137,6 +137,7 @@ public class ZpracovaniDat {
 
             Pozadavek pozadavek = new Pozadavek(idPozadavku, casPrichodu, indexOazy, mnozstviKosu, casCekani);
             baseDat.inputPozadavka(pozadavek);
+            baseDat.getVsichniOazy().get(pozadavek.getIdOazy() - 1).addPoz(pozadavek);
             idPozadavku++;
 
         }

@@ -1,11 +1,13 @@
 package pt;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
 
     public static void main(String [] args) throws FileNotFoundException, CloneNotSupportedException {
+
         long start = System.currentTimeMillis();
         CteniDat cteniDat = new CteniDat("centre_small.txt");
         Data baseDat = new Data();
@@ -17,8 +19,14 @@ public class Main {
         Simulace simulace = new Simulace(baseDat);
         simulace.startSimulace();
 
-        long stop = System.currentTimeMillis();
+        SouborStatistiky statistiky = new SouborStatistiky(baseDat);
+        try {
+            statistiky.zapisStatistiku();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        long stop = System.currentTimeMillis();
         long end = stop - start;
 
         int minuty = (int) (end/60000);
