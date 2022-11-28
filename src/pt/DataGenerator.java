@@ -102,11 +102,9 @@ public class DataGenerator {
      * @return hodnotu v rovnomernem rozdeleni
      */
     private double getGaussian(double min, double max){
-        double rozptyl = (max - min) / 2;
-        double centrum = max - rozptyl;
-        double random = RAND.nextGaussian();
-        random = random - (int)random;
-        return centrum + random * rozptyl;
+        double rozdil = max - min;
+        double random = RAND.nextDouble() * rozdil;
+        return min + random;
     }
 
 }
